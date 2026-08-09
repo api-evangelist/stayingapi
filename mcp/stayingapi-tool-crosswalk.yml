@@ -1,0 +1,109 @@
+generated: '2026-08-09'
+method: derived
+source: >-
+  mcp/stayingapi-mcp.yml (provider-published tool list) bound to
+  openapi/stayingapi-openapi-original.json operationIds
+description: >-
+  StayingAPI is one of the cleaner MCP/REST alignments in the catalog: the seven read-only
+  MCP tools map one-to-one onto seven of the nine REST operations, and the provider says so
+  explicitly. There are no MCP-only tools. Two REST operations have no tool — the POST body
+  form of search (redundant with the GET tool) and GET /account (billing introspection the
+  server keeps out of the agent's hands). Each tool's real input contract is the backing
+  operation's parameters in the OpenAPI; live tools/list is OAuth-gated so per-tool
+  inputSchema could not be read directly, and confidence reflects that.
+surfaces:
+  openapi:
+    file: openapi/stayingapi-openapi-original.json
+    url: https://api.stayingapi.com/openapi.json
+    version: 3.1.0
+    operations: 9
+    gated: false
+  mcp:
+    url: https://mcp.stayingapi.com/mcp
+    transport: streamable-http
+    tools_list_gated: true
+    gate: OAuth 2.1 + PKCE bearer token required (401 on anonymous tools/list)
+  graphql:
+    present: false
+crosswalk:
+  - tool: search_stays
+    category: discovery
+    rest:
+      - searchGet
+    binding: rest
+    confidence: high
+    note: >-
+      GET /search. Inputs: location (required), checkIn, checkOut, platforms, platform,
+      adults, children, rooms, currency, limit, cursor, sort.
+  - tool: check_availability
+    category: availability
+    rest:
+      - availability
+    binding: rest
+    confidence: high
+    note: GET /availability — platform + listingId (or listingIds/url) + startDate/endDate.
+  - tool: get_listing
+    category: detail
+    rest:
+      - listing
+    binding: rest
+    confidence: high
+    note: GET /listing/{platform}/{id}.
+  - tool: get_price
+    category: pricing
+    rest:
+      - price
+    binding: rest
+    confidence: high
+    note: GET /price — platform, listingId or url, checkIn/checkOut, occupancy, currency.
+  - tool: compare_prices
+    category: pricing
+    rest:
+      - priceCompare
+    binding: rest
+    confidence: high
+    note: GET /price-compare — name or googleHotelId, location, checkIn/checkOut.
+  - tool: get_reviews
+    category: reviews
+    rest:
+      - reviews
+    binding: rest
+    confidence: high
+    note: GET /reviews — platform, listingId or url, limit, cursor.
+  - tool: get_job
+    category: async
+    rest:
+      - pollJob
+    binding: rest
+    confidence: high
+    note: >-
+      GET /jobs/{jobId}. Shared async contract — a live tool call that has to scrape returns
+      a pending job and the agent polls this tool until terminal; payload at data.result.
+mcp_only: []
+rest_only:
+  - operationId: searchPost
+    path: POST /search
+    reason: >-
+      JSON-body form of GET /search; the MCP tool layer carries the same parameters as a
+      structured tool input, so no separate tool is exposed.
+  - operationId: account
+    path: GET /account
+    reason: >-
+      Plan, credit balance and rate-limit introspection. Not exposed as an MCP tool — the
+      OAuth connector is bound to the user's account and the server does not surface billing
+      state to the model.
+coverage:
+  tools_named: 7
+  tools_bound_to_rest: 7
+  mcp_only: 0
+  rest_operations_total: 9
+  rest_operations_with_tool: 7
+  rest_only: 2
+notes:
+  - >-
+    Confidence is high rather than verified because the mapping comes from the provider's
+    own published statement ("seven read-only tools mapping 1:1 to the REST endpoints") plus
+    name/semantic alignment, not from an authenticated tools/list response.
+  - >-
+    All seven tools are read-only; the MCP surface exposes no write, booking or payment
+    capability, consistent with the single published OAuth scope stays.read.

@@ -1,0 +1,56 @@
+# StayingAPI
+
+> Agent-native accommodation data API — availability, search, and cross-OTA price comparison across Airbnb, Booking.com, Vrbo and Google Hotels, normalized to one unified schema. REST + a native MCP server, built for developers and AI agents.
+
+StayingAPI normalizes Airbnb, Booking.com, Vrbo and Google Hotels to the same
+Property, Price, Availability and Review shapes, so you code once and query every
+platform. Every response is the same `{ data, meta }` envelope. Live calls are
+asynchronous (HTTP 202 + a jobId → poll `GET /v1/jobs/{id}`, payload at
+`data.result`); the deterministic sandbox and cache hits are synchronous. Failed,
+empty and blocked calls are never billed. There is a native MCP server for agents.
+
+## Documentation
+- [Documentation index](https://stayingapi.com/docs): Start here — the full developer + agent documentation.
+- [Quickstart](https://stayingapi.com/docs/quickstart): Zero to your first successful call: a free key, then curl / JS / Python against the sandbox.
+- [Authentication](https://stayingapi.com/docs/authentication): Bearer API keys, the deterministic stay_test_ sandbox vs live stay_live_ keys, email-verification gate.
+- [Response & error envelope](https://stayingapi.com/docs/envelope): The one canonical envelope: success (200), async-accepted (202) and error (4xx/5xx); partial fan-out.
+- [Errors](https://stayingapi.com/docs/errors): The locked error-type catalog and the guarantee that failed, empty and blocked calls are never billed.
+- [The unified schema](https://stayingapi.com/docs/schema): Property, Availability, Price, PriceCompare and Review — the same shapes across every platform.
+- [Pagination, rate limits & jobs](https://stayingapi.com/docs/conventions): Cursor pagination, per-plan rate limits, and the 202 → jobId async pattern for live scrapes.
+- [Async jobs](https://stayingapi.com/docs/endpoints/jobs): GET /v1/jobs/{jobId} — poll a long-running live scrape; the payload arrives at data.result.
+
+## API (machine-readable)
+- [OpenAPI 3.1 spec](https://api.stayingapi.com/openapi.json): The full machine-readable REST contract. Also mirrored at https://stayingapi.com/openapi.json.
+- [REST base URL](https://api.stayingapi.com/v1): All endpoints are under /v1. Bearer API key auth.
+- [Account endpoint](https://stayingapi.com/docs/endpoints/account): GET /v1/account — read your plan, available/held credits and rate limit from code.
+
+## MCP (for AI agents)
+- [MCP server](https://mcp.stayingapi.com): Native Model Context Protocol server (Streamable HTTP), OAuth 2.1 + PKCE.
+- [Connect the MCP server](https://stayingapi.com/docs/mcp): How to add StayingAPI to Claude and other agents as a connector.
+- [OAuth protected-resource metadata](https://mcp.stayingapi.com/.well-known/oauth-protected-resource): RFC 9728 metadata for the MCP resource server.
+
+## Agent Skills (installable)
+- [Skills discovery index](https://stayingapi.com/.well-known/agent-skills/index.json): agentskills.io index of installable StayingAPI skills.
+- [stayingapi-search](https://stayingapi.com/skills/stayingapi-search/SKILL.md): Search stays and compare prices across the four platforms via the REST API.
+- [stayingapi-mcp](https://stayingapi.com/skills/stayingapi-mcp/SKILL.md): Connect an agent to the MCP server (OAuth 2.1 + PKCE) and use the seven read-only tools.
+
+## Workflows (importable automations)
+- [Workflows catalog](https://stayingapi.com/workflows): Ready-to-use accommodation automations — each ships an AI-agent SKILL.md and an importable n8n workflow JSON. Filter by platform and topic; every workflow skill is also in the agent-skills index above.
+- [Cross-OTA price comparison](https://stayingapi.com/workflows/cross-ota-price-comparison): Flagship workflow: compare one property across booking platforms → a cheapest-rate report.
+
+## Open source (GitHub)
+- [GitHub org](https://github.com/stayingapi): Open resource repos generated from the product: per-platform API guides (airbnb-api, booking-com-api, vrbo-api, google-hotels-api, hotel-api, travel-api) with six-language examples, plus the shared repos below.
+- [travel-workflows](https://github.com/stayingapi/travel-workflows): The importable n8n workflows + portable agent skills, folder-per-workflow.
+- [travel-skills](https://github.com/stayingapi/travel-skills): The portable SKILL.md agent skills (MIT-0).
+- [hotel-mcp](https://github.com/stayingapi/hotel-mcp): Connect guide + MCP-registry manifests for the hosted MCP server.
+
+## SDK
+- [TypeScript / JavaScript SDK](https://stayingapi.com/docs/sdk): The official @stayingapi/sdk — typed, with auth, retries, auto-pagination and async-job polling built in.
+
+## Pricing & limits
+- [Pricing, credits & rate limits](https://stayingapi.com/pricing): Plans, per-endpoint credit costs, and per-plan rate limits (the source of truth for all numbers).
+
+## Optional
+- [Status](https://status.stayingapi.com): live component status + uptime; machine-readable at https://status.stayingapi.com/status.json.
+- [llms-full.txt](https://stayingapi.com/llms-full.txt): A fuller, docs-depth machine map of the same surface.
+- [Homepage (markdown)](https://stayingapi.com/index.md): The homepage value proposition as markdown.

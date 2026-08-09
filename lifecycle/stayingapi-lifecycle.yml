@@ -1,0 +1,85 @@
+generated: '2026-08-09'
+method: searched
+source: https://stayingapi.com/docs/stability
+description: >-
+  StayingAPI publishes an explicit stability contract: semantic versioning with the major in
+  the URI path, a named list of what is additive versus breaking, a six-month minimum
+  deprecation notice carrying a Sunset response header, and a 30-day notice on any credit
+  cost increase. A machine-readable status page reports per-component health and uptime.
+versioning:
+  scheme: uri-path
+  current: v1
+  location: first path segment — never a header or query parameter
+  docs: https://stayingapi.com/docs/stability
+  additive_no_bump:
+    - new endpoints
+    - new optional request parameters
+    - new response fields
+    - new enum values
+    - new error codes and warning codes
+    - which upstream source fulfils a request
+  breaking_requires_major:
+    - removing, renaming or narrowing a field's type
+    - changing a field's documented meaning
+    - removing endpoints, request parameters or error codes
+    - altering the envelope structure or the authentication format
+  client_contract: Clients must tolerate unknown fields, enum values and error codes.
+deprecation:
+  policy_url: https://stayingapi.com/docs/stability
+  notice_period: minimum six months
+  sunset_header: true
+  deprecation_header: null
+  rfc8594: partial — Sunset response header is committed; no Deprecation header is stated
+  changelog_entry_required: true
+  parallel_run: >-
+    When a new major version launches, both versions run in parallel during the migration
+    window so existing /v1 integrations keep working.
+pricing_changes:
+  increase_notice: at least 30 days, via changelog and account notification
+  decrease_or_new_endpoint_pricing: effective immediately
+sla:
+  url: https://stayingapi.com/pricing
+  uptime_target: 99.9%
+  scope: Enterprise plan only — "99.9% uptime SLA + service credits"
+  note: >-
+    The stability page itself states no SLA or support-window commitment; the 99.9% target
+    is an Enterprise plan line item on the pricing page and in the v1.0 changelog entry.
+status_page:
+  url: https://status.stayingapi.com
+  machine_readable: https://status.stayingapi.com/status.json
+  status: 200
+  components:
+    - id: api
+      name: REST API
+      host: api.stayingapi.com
+    - id: mcp
+      name: MCP Server
+      host: mcp.stayingapi.com
+    - id: web
+      name: Website & Dashboard
+      host: stayingapi.com
+  fields:
+    - overall
+    - components[].status
+    - components[].latencyMs
+    - components[].uptime.day/week/month
+    - incidentFreeDays
+    - lastChecked
+    - pollIntervalSeconds
+  note: >-
+    status.json carries "service": "scoutingapi" — an internal service name that does not
+    match the product; recorded as observed, not corrected.
+retention:
+  job_results: 24 hours (job_not_found after expiry)
+  credits: >-
+    Monthly subscription credits do not roll over; top-up credits are valid 30+ days; the
+    free tier's 300 credits are valid 90 days.
+deprecated_operations: []
+changelog: changelog/stayingapi-changelog.yml
+x-evidence:
+  - url: https://stayingapi.com/docs/stability
+    http_status: 200
+  - url: https://status.stayingapi.com/status.json
+    http_status: 200
+  - url: https://stayingapi.com/changelog
+    http_status: 200

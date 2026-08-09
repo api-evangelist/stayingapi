@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "2025-06-18",
+  "name": "StayingAPI",
+  "description": "Agent-native accommodation data API — availability, search, and cross-OTA price comparison across Airbnb, Booking.com, Vrbo and Google Hotels, normalized to one unified schema. REST + a native MCP server, built for developers and AI agents.",
+  "documentation": "https://stayingapi.com/docs/mcp",
+  "website": "https://stayingapi.com",
+  "servers": [
+    {
+      "url": "https://mcp.stayingapi.com/mcp",
+      "transport": "streamable-http",
+      "authentication": {
+        "type": "oauth2",
+        "flows": [
+          "authorization_code"
+        ],
+        "pkce": "S256",
+        "protectedResourceMetadata": "https://mcp.stayingapi.com/.well-known/oauth-protected-resource"
+      }
+    }
+  ]
+}

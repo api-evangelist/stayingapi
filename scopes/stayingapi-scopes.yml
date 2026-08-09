@@ -1,0 +1,44 @@
+generated: '2026-08-09'
+method: searched
+source: https://mcp.stayingapi.com/.well-known/oauth-authorization-server
+docs: https://stayingapi.com/docs/mcp
+description: >-
+  StayingAPI's OAuth surface belongs to the hosted MCP server, not the REST API (REST uses a
+  Bearer API key with no scopes). A single read scope is advertised by both the RFC 8414
+  authorization-server metadata and the RFC 9728 protected-resource metadata, which matches
+  the server's posture of seven read-only tools.
+schemes:
+  - name: mcpOAuth
+    source: well-known/stayingapi-oauth-authorization-server.json
+    resource: https://mcp.stayingapi.com/mcp
+    authorization_servers:
+      - https://mcp.stayingapi.com/mcp/oauth
+    flows:
+      - flow: authorizationCode
+        authorizationUrl: https://mcp.stayingapi.com/mcp/oauth/authorize
+        tokenUrl: https://mcp.stayingapi.com/mcp/oauth/token
+        registrationUrl: https://mcp.stayingapi.com/mcp/oauth/register
+        code_challenge_methods:
+          - S256
+scopes:
+  - scope: stays.read
+    description: >-
+      Read-only access to StayingAPI accommodation data through the MCP server — search,
+      availability, listing detail, price, cross-OTA price comparison, reviews and job
+      polling. No write scope is published; every MCP tool is read-only.
+    flows:
+      - authorizationCode
+    sources:
+      - well-known/stayingapi-oauth-authorization-server.json
+      - well-known/stayingapi-oauth-protected-resource.json
+notes:
+  - The REST OpenAPI declares only http/bearer; it has no oauth2 securityScheme and therefore
+    no spec-derived scopes.
+  - >-
+    An insufficient-scope condition is present in the REST error catalog as sub-code
+    scope_insufficient (403 permission_denied).
+x-evidence:
+  - url: https://mcp.stayingapi.com/.well-known/oauth-authorization-server
+    http_status: 200
+  - url: https://mcp.stayingapi.com/.well-known/oauth-protected-resource
+    http_status: 200

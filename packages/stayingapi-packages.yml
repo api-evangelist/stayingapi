@@ -1,0 +1,63 @@
+generated: '2026-08-09'
+method: searched
+source: https://registry.npmjs.org/@stayingapi/sdk
+description: >-
+  StayingAPI ships one first-party client library: a typed TypeScript/JavaScript SDK on npm
+  that handles Bearer auth, retries, cursor auto-pagination and — the important one —
+  automatic polling of the 202 async job contract, so callers always see the synchronous
+  { data, meta } shape. No first-party Python, Go, Ruby, Java, PHP or Rust package is
+  published; the GitHub resource repos carry six-language examples against raw HTTP instead.
+packages:
+  - language: typescript
+    registry: npm
+    name: '@stayingapi/sdk'
+    url: https://www.npmjs.com/package/@stayingapi/sdk
+    install: npm install @stayingapi/sdk
+    version: 1.1.1
+    published: '2026-07-27'
+    repository: https://github.com/AM2studio/staying-api
+    repository_directory: packages/sdk
+    homepage: https://stayingapi.com/docs/sdk
+    description: >-
+      Official TypeScript/JavaScript SDK for the StayingAPI cross-platform accommodation
+      data API.
+    entry_client: StayingApiClient
+    features:
+      - Bearer API key auth (stay_test_ / stay_live_)
+      - Automatic 202 -> jobId polling to completion
+      - Cursor auto-pagination
+      - Retries with backoff
+    official: true
+registries_checked:
+  - registry: npm
+    query: '@stayingapi/sdk'
+    status: 200
+    result: found
+  - registry: npm
+    query: '@stayingapi/mcp'
+    status: 404
+    result: none
+  - registry: npm
+    query: stayingapi
+    status: 404
+    result: none
+  - registry: pypi
+    query: stayingapi
+    status: 404
+    result: none
+  - registry: pypi
+    query: staying-api
+    status: 404
+    result: none
+  - registry: rubygems
+    query: stayingapi
+    status: 404
+    result: none
+notes:
+  - >-
+    The npm repository field points at github.com/AM2studio/staying-api (the vendor's
+    monorepo), not the public github.com/stayingapi resource org — the monorepo is private.
+  - >-
+    The public github.com/stayingapi account carries 15 open resource repos (per-platform
+    API guides with six-language examples, portable SKILL.md skills, n8n workflows, and the
+    MCP connect guide) rather than installable packages.

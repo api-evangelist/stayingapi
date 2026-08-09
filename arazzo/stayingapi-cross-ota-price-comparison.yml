@@ -1,0 +1,111 @@
+arazzo: 1.0.1
+info:
+  title: StayingAPI — cross-OTA price comparison
+  summary: Find a property, compare its price across OTAs, and read the cheapest offer.
+  description: >-
+    The flagship StayingAPI flow. Search for a property by location and dates, take the first
+    match, then run a cross-OTA comparison for the same stay window and read the computed min
+    and median. Every step is a read; nothing is booked. Run it with a stay_test_ sandbox key
+    for synchronous 200s at zero credits — a stay_live_ key may answer 202 with a jobId, in
+    which case poll GET /v1/jobs/{jobId} (see stayingapi-async-job-poll.yml).
+  version: 1.0.0
+sourceDescriptions:
+  - name: stayingapi
+    url: ../openapi/stayingapi-openapi-original.json
+    type: openapi
+workflows:
+  - workflowId: cross-ota-price-comparison
+    summary: Search a location, then compare one property's price across booking platforms.
+    description: >-
+      Step 1 discovers candidate properties. Step 2 asks StayingAPI to price the named
+      property across every OTA Google reports and returns min / median plus the offer list.
+    inputs:
+      type: object
+      required:
+        - location
+        - checkIn
+        - checkOut
+      properties:
+        location:
+          type: string
+          description: 'City or lat,lng — e.g. "Split, HR"'
+        checkIn:
+          type: string
+          description: YYYY-MM-DD
+        checkOut:
+          type: string
+          description: YYYY-MM-DD
+        platforms:
+          type: string
+          description: CSV of airbnb,booking,vrbo,google
+          default: airbnb,booking
+        adults:
+          type: integer
+          default: 2
+    steps:
+      - stepId: searchStays
+        description: Cross-platform discovery for the location and stay window.
+        operationId: searchGet
+        parameters:
+          - name: location
+            in: query
+            value: $inputs.location
+          - name: checkIn
+            in: query
+            value: $inputs.checkIn
+          - name: checkOut
+            in: query
+            value: $inputs.checkOut
+          - name: platforms
+            in: query
+            value: $inputs.platforms
+          - name: adults
+            in: query
+            value: $inputs.adults
+          - name: limit
+            in: query
+            value: 5
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          propertyName: $response.body#/data/0/name
+          platform: $response.body#/data/0/platform
+          listingId: $response.body#/data/0/platformListingId
+          requestId: $response.body#/meta/requestId
+      - stepId: comparePrices
+        description: >-
+          Compare that property across OTAs. min and median are StayingAPI-computed and
+          exclude offers quoted in another currency.
+        operationId: priceCompare
+        parameters:
+          - name: name
+            in: query
+            value: $steps.searchStays.outputs.propertyName
+          - name: location
+            in: query
+            value: $inputs.location
+          - name: checkIn
+            in: query
+            value: $inputs.checkIn
+          - name: checkOut
+            in: query
+            value: $inputs.checkOut
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          min: $response.body#/data/min
+          median: $response.body#/data/median
+          offers: $response.body#/data/offers
+          creditsCharged: $response.body#/meta/creditsCharged
+    outputs:
+      propertyName: $steps.searchStays.outputs.propertyName
+      cheapestTotal: $steps.comparePrices.outputs.min
+      medianTotal: $steps.comparePrices.outputs.median
+      offers: $steps.comparePrices.outputs.offers
+x-apievangelist:
+  generated: '2026-08-09'
+  method: generated
+  source: openapi/stayingapi-openapi-original.json
+  note: >-
+    operationIds searchGet and priceCompare verified verbatim in the harvested spec. A live
+    key can return 202 on either step; handle it with the async-job workflow.

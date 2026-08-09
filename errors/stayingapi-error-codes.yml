@@ -1,0 +1,351 @@
+generated: '2026-08-09'
+method: searched
+source: https://stayingapi.com/docs/errors
+format: proprietary-envelope
+description: >-
+  StayingAPI publishes a locked error catalog: 9 coarse error types and 35 sub-codes, every one of them
+  enumerated in the OpenAPI (components.schemas.Error) and given its own documentation page at https://stayingapi.com/docs/errors/<code>,
+  which the error's own docUrl field points at. The envelope is proprietary rather than RFC 9457 application/problem+json.
+  error.code is the single source of truth for the sub-code; error.type is the class. creditsCharged is
+  always 0 on an error — failed, empty, blocked and not-found calls are never billed.
+envelope:
+  shape: '{ error: { type, code, message, param, requestId, creditsCharged, retryable, docUrl } }'
+  content_type: application/json
+  source_of_truth_field: error.code
+  doc_url_pattern: https://stayingapi.com/docs/errors/<code>
+  credits_charged: 0
+  request_id_header: X-Request-Id
+  rfc9457: false
+types:
+- type: invalid_request
+  status: 400
+  retryable: false
+  meaning: Malformed or invalid parameters.
+- type: authentication_error
+  status: 401
+  retryable: false
+  meaning: Missing, malformed or revoked API key.
+- type: insufficient_credits
+  status: 402
+  retryable: false
+  meaning: Balance below the call cost; never partially charged.
+- type: permission_denied
+  status: 403
+  retryable: false
+  meaning: Authenticated but not permitted.
+- type: not_found
+  status: 404
+  retryable: false
+  meaning: The addressed resource does not exist.
+- type: rate_limited
+  status: 429
+  retryable: true
+  meaning: Token bucket exhausted; Retry-After is sent.
+- type: internal_error
+  status: 500
+  retryable: false
+  meaning: Unhandled StayingAPI-side fault; quote requestId to support.
+- type: upstream_unavailable
+  status: 503
+  retryable: true
+  meaning: All upstream sources failed or were blocked; no charge.
+- type: upstream_timeout
+  status: 504
+  retryable: true
+  meaning: Synchronous upstream work timed out, or converts to an async job.
+error_codes:
+- code: missing_parameter
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: A required parameter is absent (e.g. checkOut given checkIn).
+  remediation: Add the missing parameter named in error.param and retry.
+  docUrl: https://stayingapi.com/docs/errors/missing_parameter
+- code: invalid_parameter
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: A parameter is present but malformed (bad type, format or enum value).
+  remediation: Correct the value of the parameter named in error.param.
+  docUrl: https://stayingapi.com/docs/errors/invalid_parameter
+- code: invalid_date_range
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: checkOut / endDate is not strictly after checkIn / startDate.
+  remediation: Ensure the end date is after the start date.
+  docUrl: https://stayingapi.com/docs/errors/invalid_date_range
+- code: date_in_past
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: A supplied date (checkIn / startDate) is in the past (evaluated in UTC).
+  remediation: Use a date of today or later.
+  docUrl: https://stayingapi.com/docs/errors/date_in_past
+- code: child_ages_mismatch
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: childAges[] length does not equal children.
+  remediation: Provide exactly one age (0–17) per child.
+  docUrl: https://stayingapi.com/docs/errors/child_ages_mismatch
+- code: stay_too_long
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: The booking window exceeds the per-endpoint maximum stay.
+  remediation: Shorten the stay (search allows 1–30 nights).
+  docUrl: https://stayingapi.com/docs/errors/stay_too_long
+- code: window_too_long
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: The query date window exceeds the per-endpoint cap (availability > 365 days).
+  remediation: Request a window of 365 days or fewer.
+  docUrl: https://stayingapi.com/docs/errors/window_too_long
+- code: invalid_listing_url
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: The supplied url is not a recognisable listing URL for the platform.
+  remediation: Pass a full, valid listing URL, or use listingId instead.
+  docUrl: https://stayingapi.com/docs/errors/invalid_listing_url
+- code: invalid_property_type
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: A propertyType[] value is not in the enum.
+  remediation: Use one of hotel | apartment | house | villa | cottage | other.
+  docUrl: https://stayingapi.com/docs/errors/invalid_property_type
+- code: invalid_amenity
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: An amenities[] token is not in the canonical taxonomy.
+  remediation: Use a token from the amenity taxonomy on the schema page.
+  docUrl: https://stayingapi.com/docs/errors/invalid_amenity
+- code: invalid_price_range
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: priceMin / priceMax is invalid (negative, or priceMax < priceMin).
+  remediation: Ensure priceMax ≥ priceMin ≥ 0.
+  docUrl: https://stayingapi.com/docs/errors/invalid_price_range
+- code: invalid_language
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: A language filter value is not a valid ISO-639-1 code.
+  remediation: Use a two-letter ISO-639-1 language code (e.g. en).
+  docUrl: https://stayingapi.com/docs/errors/invalid_language
+- code: invalid_sort
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: A sort value is not in the endpoint's allowed enum.
+  remediation: Use a sort value listed for the endpoint.
+  docUrl: https://stayingapi.com/docs/errors/invalid_sort
+- code: invalid_cursor
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: The pagination cursor is malformed or not base64-decodable.
+  remediation: Pass the nextCursor returned by the previous page verbatim, or omit it.
+  docUrl: https://stayingapi.com/docs/errors/invalid_cursor
+- code: limit_out_of_range
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: limit is < 1 or > 100.
+  remediation: Use a limit between 1 and 100.
+  docUrl: https://stayingapi.com/docs/errors/limit_out_of_range
+- code: mutually_exclusive_params
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: Conflicting or ambiguous identifiers were supplied (e.g. both listingId and url, or none).
+  remediation: Supply exactly one identifier form.
+  docUrl: https://stayingapi.com/docs/errors/mutually_exclusive_params
+- code: platform_not_enabled
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: A requested platform is not enabled for the request (fast-follow, or not on the plan).
+  remediation: 'Request a platform enabled for your plan (the core four: vrbo, booking, airbnb, google).'
+  docUrl: https://stayingapi.com/docs/errors/platform_not_enabled
+- code: no_enabled_platform
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: After resolving platforms[], no platform remains to query.
+  remediation: Include at least one enabled platform.
+  docUrl: https://stayingapi.com/docs/errors/no_enabled_platform
+- code: needs_country
+  type: invalid_request
+  status: 400
+  retryable: false
+  description: >-
+    A bare booking.com slug was passed to /v1/listing without a country. Booking slugs are NOT globally
+    unique — the same slug exists per country — so the target cannot be safely resolved.
+  remediation: >-
+    Disambiguate the country: pass ?country=<cc> (ISO-3166 alpha-2, e.g. co), a "{country}/{slug}" id,
+    or a full booking.com/hotel/{country}/{slug}.html URL. Not retryable — the bare slug is ambiguous
+    by construction.
+  docUrl: https://stayingapi.com/docs/errors/needs_country
+- code: missing_api_key
+  type: authentication_error
+  status: 401
+  retryable: false
+  description: No Authorization header.
+  remediation: 'Send Authorization: Bearer stay_test_… or stay_live_….'
+  docUrl: https://stayingapi.com/docs/errors/missing_api_key
+- code: invalid_api_key
+  type: authentication_error
+  status: 401
+  retryable: false
+  description: The Authorization header is present but the key is unknown or malformed.
+  remediation: Check the key value and that its env (test/live) matches the surface.
+  docUrl: https://stayingapi.com/docs/errors/invalid_api_key
+- code: revoked_api_key
+  type: authentication_error
+  status: 401
+  retryable: false
+  description: The key was revoked or soft-deleted.
+  remediation: Create a new key in the dashboard.
+  docUrl: https://stayingapi.com/docs/errors/revoked_api_key
+- code: scope_insufficient
+  type: permission_denied
+  status: 403
+  retryable: false
+  description: The key / token lacks a scope required for the operation.
+  remediation: Use a key that includes the required scope.
+  docUrl: https://stayingapi.com/docs/errors/scope_insufficient
+- code: email_unverified
+  type: permission_denied
+  status: 403
+  retryable: false
+  description: >-
+    The API key is valid, but the account email has not been verified yet — so LIVE credit (calls made
+    with a stay_live_ key) is locked until you confirm your email (§7.5.1). Your stay_test_ sandbox key
+    is unaffected and keeps returning deterministic fixtures at zero cost.
+  remediation: >-
+    Verify your account email to unlock live credits — open the verification link sent when you signed
+    up, or resend it from your dashboard. Live calls succeed immediately once your email is confirmed;
+    in the meantime keep building against your stay_test_ sandbox key, which never requires verification
+    and never costs a credit.
+  docUrl: https://stayingapi.com/docs/errors/email_unverified
+- code: subscription_required
+  type: permission_denied
+  status: 403
+  retryable: false
+  description: >-
+    The account tried to buy a top-up (POST /v1/billing/topups) without an active paid subscription. Top-up
+    credits are a SUBSCRIBER add-on — a free / unsubscribed account cannot purchase them.
+  remediation: >-
+    Start a paid plan (starter, pro, or scale) — top-ups become available immediately once a subscription
+    is active. Non-retryable: retrying without upgrading will keep returning this error.
+  docUrl: https://stayingapi.com/docs/errors/subscription_required
+- code: listing_not_found
+  type: not_found
+  status: 404
+  retryable: false
+  description: The addressed listing / property does not exist upstream.
+  remediation: Verify the platform + listing id. A not-found listing is never billed.
+  docUrl: https://stayingapi.com/docs/errors/listing_not_found
+- code: job_not_found
+  type: not_found
+  status: 404
+  retryable: false
+  description: Unknown or expired jobId.
+  remediation: Poll a jobId returned by a recent 202 (results are retained 24 h).
+  docUrl: https://stayingapi.com/docs/errors/job_not_found
+- code: identity_mismatch
+  type: not_found
+  status: 404
+  retryable: false
+  description: >-
+    The resolved listing's canonical identity (booking country/slug, or vrbo numeric id) did not match
+    what was requested — StayingAPI refuses to return a different (wrong) property rather than serve plausible-looking
+    wrong data.
+  remediation: >-
+    Pass the exact canonical identifier — the full listing URL, a "{country}/{slug}" booking id, or the
+    numeric vrbo id. Not retryable — the mismatch is deterministic. The call is never billed.
+  docUrl: https://stayingapi.com/docs/errors/identity_mismatch
+- code: credit_balance_too_low
+  type: insufficient_credits
+  status: 402
+  retryable: false
+  description: The balance is below the call's cost.
+  remediation: Top up credits or upgrade your plan. No credits are charged on this error.
+  docUrl: https://stayingapi.com/docs/errors/credit_balance_too_low
+- code: rate_limit_exceeded
+  type: rate_limited
+  status: 429
+  retryable: true
+  description: The token bucket is exhausted (per-key for REST, per-user for MCP).
+  remediation: Honour Retry-After and back off with jitter. The SDK does this automatically.
+  docUrl: https://stayingapi.com/docs/errors/rate_limit_exceeded
+- code: all_actors_failed
+  type: upstream_unavailable
+  status: 503
+  retryable: true
+  description: Every primary + fallback source for the request failed.
+  remediation: Retry with exponential backoff. The call is free.
+  docUrl: https://stayingapi.com/docs/errors/all_actors_failed
+- code: actor_blocked
+  type: upstream_unavailable
+  status: 503
+  retryable: true
+  description: Upstream anti-bot / block detected with no usable rows.
+  remediation: Retry with backoff. The call is free.
+  docUrl: https://stayingapi.com/docs/errors/actor_blocked
+- code: upstream_degraded
+  type: upstream_unavailable
+  status: 503
+  retryable: true
+  description: Every upstream source for the request failed or was blocked.
+  remediation: Branch on error.type and error.code; see the error catalog and the response-envelope docs.
+  docUrl: https://stayingapi.com/docs/errors/upstream_degraded
+- code: actor_timeout
+  type: upstream_timeout
+  status: 504
+  retryable: true
+  description: Synchronous upstream source work timed out without producing data.
+  remediation: Retry with backoff, or expect the request to convert to an async job.
+  docUrl: https://stayingapi.com/docs/errors/actor_timeout
+- code: internal_error
+  type: internal_error
+  status: 500
+  retryable: false
+  description: An unhandled StayingAPI-side fault.
+  remediation: Retry idempotent reads with backoff; quote the requestId to support if it persists.
+  docUrl: https://stayingapi.com/docs/errors/internal_error
+async_failure:
+  note: >-
+    An async job that fails still returns HTTP 200. data.status == "failed" and the failure is nested
+    at data.error as a PlatformFailureError (type, code, message, retryable), with creditsCharged 0. Detect
+    it via data.status, never via a top-level error key.
+  schema: openapi/stayingapi-openapi-original.json#/components/schemas/PlatformFailureError
+warnings:
+  note: >-
+    Non-fatal conditions ride on meta.warnings[] of a 200 — each { code, message, platform, docUrl }.
+    An empty result set is a warning (e.g. no_results), not an error, and charges 0.
+coverage:
+  types: 9
+  sub_codes: 35
+  documented_pages: 35
+x-evidence:
+- url: https://api.stayingapi.com/openapi.json
+  http_status: 200
+  note: components.schemas.Error enums
+- url: https://stayingapi.com/docs/errors
+  http_status: 200
+- url: https://stayingapi.com/docs/errors/invalid_cursor
+  http_status: 200
+  note: one of 35 per-code pages fetched
+notes:
+- >-
+  The subscription_required page references POST /v1/billing/topups, an operation not present in the public
+  OpenAPI — the billing surface is dashboard-side and undocumented in the machine-readable contract.
+- >-
+  No RFC 9457 problem+json media type is offered on any response, so no problem-types artifact is derived.

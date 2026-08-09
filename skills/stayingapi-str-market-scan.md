@@ -1,0 +1,136 @@
+---
+name: stayingapi-str-market-scan
+description: Scan a short-term-rental market — discover listings across platforms, price the top N for your dates, and append a normalized row-per-listing dataset to a Google Sheet. Powered by the StayingAPI REST API / MCP server.
+version: 1.0.0
+homepage: https://stayingapi.com/workflows/str-market-scan
+license: Proprietary — see https://stayingapi.com/terms
+tools: [search, price, listing]
+auth: bearer-api-key | oauth2-pkce
+---
+
+# STR market scan → Google Sheet dataset
+
+Underwriting a short-term-rental market means one repeatable dataset: what is listed, on which platform, at what price, with how many beds and what rating. This workflow fans a search across platforms to discover listings in your area and dates, keeps the top N, re-prices each precisely with the dedicated price endpoint, and appends a normalized row per listing — name, platform, beds, occupancy, rating (on its native scale), nightly and total price, and URL — to a Google Sheet or CSV. Re-run it on a cadence to build a time series for comps and occupancy signals.
+
+- **Base URL:** `https://api.stayingapi.com/v1` (REST) · **MCP:** `https://mcp.stayingapi.com/mcp`
+- **Auth:** `Authorization: Bearer stay_live_…` (free sandbox: `stay_test_…`).
+- **Get a free key** (no card): https://stayingapi.com/signup · Full machine contract: https://api.stayingapi.com/openapi.json
+
+## Steps
+
+1. **Define the market + dates** — Give the workflow a location, the check-in / check-out dates, occupancy, which platforms to scan, how many results to discover per platform, and how many of them to price precisely.
+2. **Discover listings across platforms** — It calls GET /v1/search across the requested platforms and merges every match into one normalized Property list — the discovery pass.
+3. **Price the top N precisely** — It ranks the discovered listings, keeps the top N, and calls GET /v1/price for each with the exact dates and occupancy — a precise per-date quote per listing.
+4. **Append the market dataset** — Each listing becomes one normalized row (name, platform, beds, occupancy, rating + scale, nightly + total price, URL) appended to a Google Sheet or CSV — re-run on a cadence for a time series.
+
+## When to use this
+
+The user (an STR investor/analyst or a data team) wants a **repeatable market dataset**: every
+listing in an area + dates, with price, beds, rating and URL, as rows to underwrite or trend.
+
+## How to do it (two passes)
+
+1. **Discover** — `GET /v1/search` with `location` (+ `checkIn`/`checkOut`, `platforms`, `limit`,
+   `sort`, `currency`). Merge `data[]` across platforms; each Property already carries a
+   `price`, `bedrooms`, `guestRating`/`ratingScale`, `url`.
+2. **Price precisely** — for the top N listings, call `GET /v1/price` with `platform` +
+   `listingId` (the `platformListingId`) + the exact dates. Use `price.totalPrice`; fall back to the
+   search price if a quote is empty.
+3. **Emit one normalized row per listing**: name, platform, listingId, city, bedrooms,
+   maxOccupancy, guestRating+ratingScale, nightlyPrice, totalPrice, currency, url.
+
+## Cost & scope control
+
+Cost scales with the search breadth (`limit` × platforms) and the number of listings you price
+(`topN`). Start small; failed/empty legs are never billed and sandbox is free. Optionally enrich a
+row with `GET /v1/listing/{platform}/{id}` for amenities/photos.
+
+## Time series
+
+Re-run on a schedule and append a run-date column to build a comps-and-occupancy time series.
+
+### Example — REST
+
+```bash
+# 1) Discover listings in the market
+curl -sS "https://api.stayingapi.com/v1/search?location=Split,HR&checkIn=2026-07-13&checkOut=2026-07-20&platforms=airbnb,vrbo,booking&sort=price_asc&limit=20" \
+  -H "Authorization: Bearer $STAYINGAPI_KEY"
+
+# 2) Price one discovered listing precisely (repeat for your top N)
+curl -sS "https://api.stayingapi.com/v1/price?platform=airbnb&listingId=42307961&checkIn=2026-07-13&checkOut=2026-07-20&adults=2&currency=EUR" \
+  -H "Authorization: Bearer $STAYINGAPI_KEY"
+```
+
+### Example — @stayingapi/sdk
+
+```ts
+import { StayingApiClient } from '@stayingapi/sdk';
+
+const scout = new StayingApiClient({ apiKey: process.env.STAYINGAPI_KEY });
+const dates = { checkIn: '2026-07-13', checkOut: '2026-07-20', adults: 2, currency: 'EUR' };
+
+// 1) discover
+const { data: listings } = await scout.search({
+  location: 'Split, HR',
+  platforms: ['airbnb', 'vrbo', 'booking'],
+  sort: 'price_asc',
+  limit: 20,
+  ...dates,
+});
+
+// 2) price the top N and build a dataset row each
+const topN = listings.slice(0, 10);
+const rows = [];
+for (const p of topN) {
+  const { data: price } = await scout.price({
+    platform: p.platform,
+    listingId: p.platformListingId,
+    ...dates,
+  });
+  rows.push({
+    name: p.name,
+    platform: p.platform,
+    beds: p.bedrooms,
+    rating: p.guestRating,
+    total: price.totalPrice ?? p.price?.totalPrice,
+    url: p.url,
+  });
+}
+console.table(rows);
+```
+
+## Async & partial failures
+
+A live call that has to scrape returns `202` with `data.jobId`, `data.pollUrl` and
+`data.estimatedSeconds` (the `202` itself charges 0). Poll `GET /v1/jobs/{jobId}` (free)
+until `data.status` is TERMINAL — `completed` **or** `failed`.
+
+- **`completed`** → the payload is at `data.result` (the same schema the sync call returns;
+  `data` itself is just `{jobId, result, status}`). `meta` carries `partial`,
+  `platformResults[]` and `warnings[]`. A completed job may still return an **empty**
+  result (`data.result: []`) — the reason is in `meta.warnings[]` (e.g. `no_results`), and
+  empty results charge 0.
+- **`failed`** → HTTP is still **200**, not an HTTP error. The failure is nested at
+  `data.error` (`code`, `type`, `message`, `retryable`). Detect it with
+  `data.status === "failed"`, **not** a top-level `error`. `creditsCharged` is 0, and `meta`
+  carries only `{requestId, creditsCharged, platforms}` — do **not** read `partial`,
+  `platformResults` or `warnings` on a failed job.
+
+Pace your polling: honour the `Retry-After` header, back off between attempts, and cap the
+number of attempts. A tight loop hits `429 rate_limit_exceeded` (120 requests/minute).
+
+The `@stayingapi/sdk` auto-polls and applies this contract for you.
+
+## Platform coverage for this workflow
+
+This workflow calls `/v1/listing`, which `google` does **not** support — those return `400 platform_not_enabled`. Scope this workflow to `airbnb`, `booking` or `vrbo` for that step. (`google` is fine for search, availability, price and price-compare.)
+
+## Credit awareness
+
+Costs are per-endpoint and metered by result (v3). **Failed, empty and blocked calls are never
+billed**, and sandbox (`stay_test_`) calls are always free. The exact, current costs live only in
+https://stayingapi.com/pricing and the machine-readable https://api.stayingapi.com/openapi.json — read them there, don't assume.
+
+---
+
+**Get your free key → https://stayingapi.com/signup** · Docs: https://stayingapi.com/docs · Workflow: https://stayingapi.com/workflows/str-market-scan

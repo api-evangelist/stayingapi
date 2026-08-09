@@ -1,12 +1,17 @@
 name: StayingAPI
 description: >-
   Unified accommodation-data API returning live search, availability, price, cross-OTA price comparison, and normalized
-  reviews across Airbnb, Booking.com, Vrbo, and Google Hotels via a single normalized JSON schema. Delivered over REST,
-  a hosted MCP server, and a typed TypeScript SDK on one shared credit balance.
+  reviews across Airbnb, Booking.com, Vrbo, and Google Hotels via a single normalized JSON schema, so one integration
+  covers four platforms. Delivered over a nine-operation REST API, a hosted MCP server with seven read-only tools, and
+  a typed TypeScript SDK, all drawing on one shared credit balance. Live calls are asynchronous — a scrape returns
+  HTTP 202 with a jobId to poll — while a deterministic stay_test_ sandbox answers synchronously at zero credits.
+  Failed, empty and blocked calls are never billed. Launched July 2026 with a published stability policy, a locked
+  35-code error catalog, an llms.txt, an RFC 9727 api-catalog and fourteen installable agent skills.
 url: https://stayingapi.apievangelist.com/apis.yml
 created: '2026-08-03'
-modified: '2026-08-03'
+modified: '2026-08-09'
 specificationVersion: '0.21'
+image: https://stayingapi.com/icon.svg
 tags:
   - travel
   - hospitality
@@ -53,8 +58,15 @@ apis:
     properties:
       - type: OpenAPI
         url: https://api.stayingapi.com/openapi.json
+      - type: OpenAPI
+        name: OpenAPI 3.1 (harvested verbatim)
+        url: openapi/stayingapi-openapi-original.json
+      - type: Overlay
+        url: overlays/stayingapi-openapi-overlay.yaml
       - type: Documentation
         url: https://stayingapi.com/docs
+      - type: APIReference
+        url: https://stayingapi.com/docs/endpoints/search
   - name: StayingAPI MCP Server
     description: >-
       Hosted MCP server (Streamable HTTP, OAuth 2.1/PKCE) exposing 7 read-only tools mapping 1:1 to the REST endpoints:
@@ -82,8 +94,12 @@ apis:
     properties:
       - type: MCP
         url: https://mcp.stayingapi.com/mcp
+      - type: MCPServer
+        url: mcp/stayingapi-mcp.yml
+      - type: ToolCrosswalk
+        url: mcp/stayingapi-tool-crosswalk.yml
       - type: Documentation
-        url: https://stayingapi.com/docs
+        url: https://stayingapi.com/docs/mcp
   - name: StayingAPI Agent Skills
     description: >-
       Published portable SKILL.md agent skill in the stayingapi/travel-skills GitHub repo, referenced from the SDK docs,
@@ -111,11 +127,104 @@ apis:
     properties:
       - type: AgentSkills
         url: https://github.com/stayingapi/travel-skills
+      - type: AgentSkill
+        url: skills/_index.yml
 maintainers:
   - FN: StayingAPI
+    email: hello@stayingapi.com
     url: https://stayingapi.com
 generated:
   by: apis.io/add
   model: claude-opus-4-8
   confidence: 95
   at: '2026-08-03T11:56:23.475Z'
+common:
+- type: DomainSecurity
+  url: security/stayingapi-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/stayingapi-agentic-access.yml
+- type: Authentication
+  url: authentication/stayingapi-authentication.yml
+- type: OpenAPI
+  url: openapi/stayingapi-openapi-original.json
+- type: LLMsTxt
+  url: llms/stayingapi-llms.txt
+- type: WellKnown
+  url: well-known/stayingapi-well-known.yml
+- type: APICatalog
+  url: https://stayingapi.com/.well-known/api-catalog
+- type: MCPServer
+  url: mcp/stayingapi-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/stayingapi-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Packages
+  url: packages/stayingapi-packages.yml
+- type: SDKs
+  url: packages/stayingapi-packages.yml
+- type: OAuthScopes
+  url: scopes/stayingapi-scopes.yml
+- type: Conventions
+  url: conventions/stayingapi-conventions.yml
+- type: ErrorCatalog
+  url: errors/stayingapi-error-codes.yml
+- type: Lifecycle
+  url: lifecycle/stayingapi-lifecycle.yml
+- type: StatusPage
+  url: https://status.stayingapi.com
+- type: Deprecation
+  url: https://stayingapi.com/docs/stability
+- type: ChangeLog
+  url: changelog/stayingapi-changelog.yml
+- type: ChangeLog
+  name: Public changelog
+  url: https://stayingapi.com/changelog
+- type: Sandbox
+  url: sandbox/stayingapi-sandbox.yml
+- type: Console
+  name: Try-It console
+  url: https://stayingapi.com/docs/try-it
+- type: Conformance
+  url: conformance/stayingapi-conformance.yml
+- type: DataModel
+  url: data-model/stayingapi-data-model.yml
+- type: Overlay
+  url: overlays/stayingapi-openapi-overlay.yaml
+- type: RateLimits
+  url: rate-limits/stayingapi-rate-limits.yml
+- type: Plans
+  url: plans/stayingapi-plans.yml
+- type: Arazzo
+  name: Cross-OTA price comparison
+  url: arazzo/stayingapi-cross-ota-price-comparison.yml
+- type: Arazzo
+  name: Check availability, then price the stay
+  url: arazzo/stayingapi-availability-then-price.yml
+- type: DeveloperPortal
+  url: https://stayingapi.com/docs
+- type: Documentation
+  url: https://stayingapi.com/docs
+- type: APIReference
+  url: https://stayingapi.com/docs/endpoints/search
+- type: GettingStarted
+  url: https://stayingapi.com/docs/quickstart
+- type: Support
+  url: https://stayingapi.com/contact
+- type: GitHubOrganization
+  url: https://github.com/stayingapi
+- type: Pricing
+  url: https://stayingapi.com/pricing
+- type: SignUp
+  url: https://stayingapi.com/signup
+- type: Login
+  url: https://stayingapi.com/login
+- type: TermsOfService
+  url: https://stayingapi.com/terms
+- type: PrivacyPolicy
+  url: https://stayingapi.com/privacy
+x-enrichment:
+  date: '2026-08-09'
+  status: enriched
+  artifacts_added: 44
+  pass: local-v1

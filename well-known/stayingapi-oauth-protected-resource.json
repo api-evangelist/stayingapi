@@ -1,0 +1,1 @@
+{"resource":"https://mcp.stayingapi.com/mcp","authorization_servers":["https://mcp.stayingapi.com/mcp/oauth"],"scopes_supported":["stays.read"],"bearer_methods_supported":["header"]}

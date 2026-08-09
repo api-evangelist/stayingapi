@@ -1,0 +1,77 @@
+generated: '2026-08-09'
+method: searched
+source: openapi/stayingapi-openapi-original.json
+docs: https://stayingapi.com/docs/authentication
+description: >-
+  StayingAPI runs two distinct auth surfaces. The REST API at api.stayingapi.com/v1 uses a
+  Bearer API key with an environment-encoding prefix (stay_test_ = deterministic sandbox,
+  stay_live_ = live). The hosted MCP server at mcp.stayingapi.com/mcp uses OAuth 2.1 with
+  PKCE (S256) and dynamic client registration, advertised through RFC 8414 authorization
+  server metadata and RFC 9728 protected-resource metadata. Both draw on the same account
+  and the same single credit balance.
+summary:
+  types:
+    - http
+    - oauth2
+  api_key_in:
+    - header
+  oauth2_flows:
+    - authorizationCode
+schemes:
+  - name: bearerAuth
+    type: http
+    scheme: bearer
+    surface: REST
+    description: >-
+      Bearer API key sent as `Authorization: Bearer <key>`. stay_test_ = deterministic
+      sandbox (0 credits, synchronous); stay_live_ = live.
+    key_prefixes:
+      - stay_test_
+      - stay_live_
+    sources:
+      - openapi/stayingapi-openapi-original.json
+      - https://stayingapi.com/docs/authentication
+  - name: mcpOAuth
+    type: oauth2
+    surface: MCP
+    description: >-
+      OAuth 2.1 authorization code + PKCE (S256) with dynamic client registration for the
+      hosted MCP server. Not declared in the REST OpenAPI; discovered from the live
+      /.well-known metadata on mcp.stayingapi.com.
+    flows:
+      - flow: authorizationCode
+        issuer: https://mcp.stayingapi.com/mcp/oauth
+        authorizationUrl: https://mcp.stayingapi.com/mcp/oauth/authorize
+        tokenUrl: https://mcp.stayingapi.com/mcp/oauth/token
+        registrationUrl: https://mcp.stayingapi.com/mcp/oauth/register
+        code_challenge_methods:
+          - S256
+        token_endpoint_auth_methods:
+          - none
+          - client_secret_basic
+        scopes:
+          - stays.read
+    sources:
+      - well-known/stayingapi-oauth-authorization-server.json
+      - well-known/stayingapi-oauth-protected-resource.json
+      - https://stayingapi.com/docs/mcp
+key_management:
+  dashboard: https://stayingapi.com/dashboard/keys
+  rotation: Keys can be created, labelled, rotated and revoked from the dashboard.
+  storage: Secret is displayed once at creation and stored only as a hash.
+  revocation: Revoked keys immediately return 401 revoked_api_key.
+  verification_gate: >-
+    Live credits are unusable until account email is verified; a 403 permission_denied /
+    email_unverified is returned until then. Sandbox keys work throughout.
+x-evidence:
+  - url: https://api.stayingapi.com/openapi.json
+    http_status: 200
+    note: components.securitySchemes.bearerAuth
+  - url: https://mcp.stayingapi.com/.well-known/oauth-authorization-server
+    http_status: 200
+  - url: https://mcp.stayingapi.com/.well-known/oauth-protected-resource
+    http_status: 200
+  - url: https://mcp.stayingapi.com/mcp
+    http_status: 401
+    note: >-
+      WWW-Authenticate: Bearer resource_metadata="https://mcp.stayingapi.com/mcp/.well-known/oauth-protected-resource"

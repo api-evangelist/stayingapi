@@ -1,0 +1,116 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for StayingAPI
+  version: 1.0.0
+extends: openapi/stayingapi-openapi-original.json
+x-apievangelist:
+  generated: '2026-08-09'
+  method: generated
+  source: >-
+    Derived from the harvested spec at https://api.stayingapi.com/openapi.json plus the
+    artifacts in this repo. Never mutate the original — this overlay carries our additions.
+  note: >-
+    The scorer parses the ORIGINAL spec, so this overlay improves our derived artifacts and
+    downstream tooling, not StayingAPI's raw contract score.
+actions:
+  - target: $.info
+    description: Repo cross-links so an agent can find the surrounding artifacts from the spec alone.
+    update:
+      x-apievangelist-provider: stayingapi
+      x-apievangelist-artifacts:
+        conventions: conventions/stayingapi-conventions.yml
+        errors: errors/stayingapi-error-codes.yml
+        authentication: authentication/stayingapi-authentication.yml
+        scopes: scopes/stayingapi-scopes.yml
+        lifecycle: lifecycle/stayingapi-lifecycle.yml
+        changelog: changelog/stayingapi-changelog.yml
+        sandbox: sandbox/stayingapi-sandbox.yml
+        data_model: data-model/stayingapi-data-model.yml
+        conformance: conformance/stayingapi-conformance.yml
+        mcp: mcp/stayingapi-mcp.yml
+        tool_crosswalk: mcp/stayingapi-tool-crosswalk.yml
+        skills: skills/_index.yml
+        rate_limits: rate-limits/stayingapi-rate-limits.yml
+        plans: plans/stayingapi-plans.yml
+      x-apievangelist-llms-txt: https://stayingapi.com/llms.txt
+      x-apievangelist-api-catalog: https://stayingapi.com/.well-known/api-catalog
+  - target: $.info
+    description: >-
+      Record the second auth surface. The REST spec declares only http/bearer; the hosted MCP
+      server uses OAuth 2.1 + PKCE with scope stays.read, which the spec never mentions.
+    update:
+      x-apievangelist-mcp-server:
+        url: https://mcp.stayingapi.com/mcp
+        transport: streamable-http
+        auth: oauth2 authorization_code + PKCE S256
+        scopes:
+          - stays.read
+        tools: 7
+        crosswalk: mcp/stayingapi-tool-crosswalk.yml
+  - target: $.info
+    description: >-
+      Make the cross-cutting runtime semantics machine-visible — OpenAPI does not express the
+      async 202 threshold, the credit metering rules or the rate-limit headers.
+    update:
+      x-apievangelist-conventions:
+        pagination: cursor (opaque base64; limit 1-100 default 20; meta.pagination.nextCursor)
+        async_threshold_seconds: 8
+        async_pattern: 202 + jobId -> poll GET /v1/jobs/{jobId} -> payload at data.result
+        idempotency: not supported — read-only surface, retries naturally safe
+        request_id_header: X-Request-Id
+        rate_limit_headers:
+          - X-RateLimit-Limit
+          - X-RateLimit-Remaining
+          - X-RateLimit-Reset
+          - Retry-After
+        metering: >-
+          failed, empty, blocked and not-found calls are never billed; cached results bill at
+          tier; polling and GET /account are always 0 credits
+  - target: $.components.schemas.Error
+    description: Point the locked error enum at the harvested per-code catalog.
+    update:
+      x-apievangelist-error-catalog: errors/stayingapi-error-codes.yml
+      x-apievangelist-error-code-count: 35
+      x-apievangelist-error-type-count: 9
+      x-apievangelist-rfc9457: false
+  - target: $.components.schemas.Platform
+    description: >-
+      Flag the gap between the declared platform enum and the platforms that are actually
+      callable — a request for expedia, hotels or tripadvisor returns 400 platform_not_enabled.
+    update:
+      x-apievangelist-enabled-platforms:
+        - airbnb
+        - booking
+        - vrbo
+        - google
+      x-apievangelist-declared-not-enabled:
+        - expedia
+        - hotels
+        - tripadvisor
+  - target: $.paths['/search'].get
+    description: Bind the operation to the MCP tool that fronts it.
+    update:
+      x-apievangelist-mcp-tool: search_stays
+  - target: $.paths['/availability'].get
+    update:
+      x-apievangelist-mcp-tool: check_availability
+  - target: $.paths['/listing/{platform}/{id}'].get
+    update:
+      x-apievangelist-mcp-tool: get_listing
+  - target: $.paths['/price'].get
+    update:
+      x-apievangelist-mcp-tool: get_price
+  - target: $.paths['/price-compare'].get
+    update:
+      x-apievangelist-mcp-tool: compare_prices
+  - target: $.paths['/reviews'].get
+    update:
+      x-apievangelist-mcp-tool: get_reviews
+  - target: $.paths['/jobs/{jobId}'].get
+    update:
+      x-apievangelist-mcp-tool: get_job
+  - target: $.paths['/account'].get
+    description: No MCP tool fronts this operation — recorded as a deliberate REST-only surface.
+    update:
+      x-apievangelist-mcp-tool: null
+      x-apievangelist-rest-only: true

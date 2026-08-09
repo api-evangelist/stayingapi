@@ -1,0 +1,79 @@
+generated: '2026-08-09'
+method: searched
+source: https://stayingapi.com/docs/authentication
+docs:
+  - https://stayingapi.com/docs/authentication
+  - https://stayingapi.com/docs/try-it
+  - https://stayingapi.com/docs/quickstart
+description: >-
+  StayingAPI separates test from live at the key prefix and changes the transport, not the
+  schema: a stay_test_ key returns deterministic fixtures, always free, and always
+  synchronously — the 202 + job-polling contract only appears on live scrapes. That makes
+  the sandbox the fastest way to build against the async-free happy path, and it is why the
+  provider ships a browser Try-It console that answers with a real 200 at zero credits.
+key_separation:
+  live_prefix: stay_live_
+  test_prefix: stay_test_
+  transport: 'Authorization: Bearer <key>'
+  environment_echo:
+    - meta.environment (live | test)
+    - meta.sandbox (boolean)
+    - GET /v1/account -> data.key.env (live | sandbox)
+modes:
+  - mode: sandbox
+    key_prefix: stay_test_
+    credits: 0 — always free
+    responses: synchronous HTTP 200; never a live scrape
+    data: deterministic Airbnb + Booking fixtures
+    availability: works immediately, before email verification
+  - mode: live
+    key_prefix: stay_live_
+    credits: charged per the published per-endpoint credit costs
+    responses: >-
+      HTTP 200 on a cache hit; HTTP 202 + jobId when projected runtime exceeds the ~8s async
+      threshold, then poll GET /v1/jobs/{jobId}
+    gate: >-
+      Live credits are locked until account email is verified; until then a live call
+      returns 403 permission_denied / email_unverified.
+console:
+  url: https://stayingapi.com/docs/try-it
+  description: >-
+    Browser Try-It console — a parameter editor and request builder that runs against the
+    deterministic sandbox for a real 200 at zero credits, with no key required. Users can
+    substitute their own stay_test_ or stay_live_ key.
+  endpoints:
+    - /v1/search
+    - /v1/price
+    - /v1/price-compare
+    - /v1/availability
+    - /v1/listing
+    - /v1/reviews
+    - /v1/account
+free_tier:
+  credits: 300
+  card_required: false
+  validity: 90 days
+  rate_limit: 30 requests/minute
+  signup: https://stayingapi.com/signup
+  keys: https://stayingapi.com/dashboard/keys
+test_values:
+  published: false
+  note: >-
+    The provider publishes the key prefixes and describes the fixtures as "deterministic
+    Airbnb + Booking sandbox fixtures", but does NOT publish concrete example listing ids,
+    sample fixture payloads or magic test identifiers. None are invented here. This is the
+    one real gap in an otherwise strong sandbox story — a published fixture id per platform
+    would let an agent write a test without first minting a key.
+sdk_behavior: >-
+  '@stayingapi/sdk' auto-polls a live 202 to completion, so sandbox and live code paths look
+  identical to the caller.
+x-evidence:
+  - url: https://stayingapi.com/docs/authentication
+    http_status: 200
+  - url: https://stayingapi.com/docs/try-it
+    http_status: 200
+  - url: https://api.stayingapi.com/openapi.json
+    http_status: 200
+    note: >-
+      securitySchemes.bearerAuth description names the stay_test_ / stay_live_ split;
+      Meta.environment and Meta.sandbox echo it on every response.

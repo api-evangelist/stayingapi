@@ -1,0 +1,61 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://api.stayingapi.com/v1",
+      "service-desc": [
+        {
+          "href": "https://api.stayingapi.com/openapi.json",
+          "type": "application/json",
+          "title": "OpenAPI 3.1 description"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://stayingapi.com/docs",
+          "type": "text/html",
+          "title": "StayingAPI documentation"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://stayingapi.com/llms.txt",
+          "type": "text/markdown",
+          "title": "llms.txt"
+        }
+      ]
+    },
+    {
+      "anchor": "https://stayingapi.com",
+      "related": [
+        {
+          "href": "https://api.stayingapi.com/v1",
+          "title": "REST API (v1)"
+        },
+        {
+          "href": "https://api.stayingapi.com/openapi.json",
+          "type": "application/json",
+          "title": "OpenAPI specification"
+        },
+        {
+          "href": "https://mcp.stayingapi.com",
+          "title": "MCP server (agents)"
+        },
+        {
+          "href": "https://stayingapi.com/.well-known/mcp.json",
+          "type": "application/json",
+          "title": "MCP server card"
+        },
+        {
+          "href": "https://stayingapi.com/.well-known/agent-skills/index.json",
+          "type": "application/json",
+          "title": "Installable Agent Skills index"
+        },
+        {
+          "href": "https://stayingapi.com/docs",
+          "type": "text/html",
+          "title": "Documentation"
+        }
+      ]
+    }
+  ]
+}

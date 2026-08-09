@@ -1,0 +1,93 @@
+generated: '2026-08-09'
+method: searched
+source: live probes of every StayingAPI host
+description: >-
+  StayingAPI publishes an unusually complete /.well-known surface for a young provider: an
+  RFC 9727 api-catalog linkset on the marketing host, an MCP server card on both the web and
+  MCP hosts, an installable agent-skills index, and full OAuth 2.1 discovery (RFC 8414 +
+  RFC 9728) on the MCP host. There is no security.txt on any host, and no A2A agent card.
+hosts:
+  - host: https://stayingapi.com
+    documents:
+      - path: /.well-known/api-catalog
+        status: 200
+        content_type: application/linkset+json
+        file: stayingapi-api-catalog.json
+        note: RFC 9727 linkset; anchors the REST base URL to the OpenAPI, docs and llms.txt.
+      - path: /.well-known/mcp.json
+        status: 200
+        content_type: application/json
+        file: stayingapi-mcp.json
+      - path: /.well-known/agent-skills/index.json
+        status: 200
+        content_type: application/json
+        file: stayingapi-agent-skills-index.json
+        note: agentskills.io index — 14 installable SKILL.md skills.
+      - path: /.well-known/oauth-authorization-server
+        status: 308
+        note: redirects to https://mcp.stayingapi.com/.well-known/oauth-authorization-server
+      - path: /.well-known/oauth-protected-resource
+        status: 308
+        note: redirects to the MCP host
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://api.stayingapi.com
+    note: >-
+      Every path under this host, including /.well-known/*, returns 401 authentication_error —
+      the API host authenticates before routing, so it exposes no anonymous discovery surface.
+    documents:
+      - path: /.well-known/security.txt
+        status: 401
+      - path: /.well-known/oauth-authorization-server
+        status: 401
+      - path: /.well-known/oauth-protected-resource
+        status: 401
+      - path: /.well-known/api-catalog
+        status: 401
+      - path: /.well-known/agent-card.json
+        status: 401
+      - path: /.well-known/agent.json
+        status: 401
+  - host: https://mcp.stayingapi.com
+    documents:
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        content_type: application/json
+        file: stayingapi-oauth-authorization-server.json
+        note: RFC 8414 — issuer, authorize/token/register endpoints, S256, scope stays.read.
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        content_type: application/json
+        file: stayingapi-oauth-protected-resource.json
+        note: RFC 9728 — resource https://mcp.stayingapi.com/mcp.
+      - path: /.well-known/mcp.json
+        status: 200
+        content_type: application/json
+        file: stayingapi-mcp-server-card.json
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+security_txt:
+  present: false
+  note: >-
+    No /.well-known/security.txt on stayingapi.com, api.stayingapi.com or
+    mcp.stayingapi.com (404/401 respectively), and no /security.txt at the web root.
+agent_card:
+  present: false
+  note: >-
+    Probed both /.well-known/agent-card.json and the legacy /.well-known/agent.json on all
+    three hosts — 404 on the web and MCP hosts, 401 on the API host. No a2a/ artifact is
+    written; an agent card is search-only and must never be authored on a provider's behalf.

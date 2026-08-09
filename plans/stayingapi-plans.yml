@@ -1,0 +1,149 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+provider: StayingAPI
+providerId: stayingapi
+generated: '2026-08-09'
+method: searched
+created: '2026-08-09'
+modified: '2026-08-09'
+tags:
+  - Travel
+  - Hospitality
+  - Accommodation Data
+  - Credits
+description: >-
+  StayingAPI is credit-metered on top of a monthly subscription: the plan buys a credit
+  allowance and a request-rate ceiling, and each endpoint consumes a published number of
+  credits per call. The metering rules are the interesting part — failed, empty, blocked and
+  not-found calls are never billed, polling and account reads are free, and cached results
+  still bill at full tier because caching is treated as margin rather than a discount.
+sources:
+  - https://stayingapi.com/pricing
+  - https://stayingapi.com/docs/credits
+  - https://api.stayingapi.com/openapi.json
+currency: USD
+unit: credit
+top_up:
+  price_per_credit: 0.01
+  validity: 30+ days
+  requires: an active paid subscription (otherwise 403 subscription_required)
+rollover: false
+plans:
+  - id: stayingapi-free
+    name: Free / Sandbox
+    type: free
+    price: 0
+    credits: 300
+    credits_period: one-time
+    credits_validity_days: 90
+    rate_limit_rpm: 30
+    card_required: false
+    features:
+      - Sandbox access (stay_test_ keys)
+      - Full unified schema
+      - REST + MCP server
+  - id: stayingapi-starter
+    name: Starter
+    type: subscription
+    price: 19
+    period: month
+    credits: 1900
+    credits_period: month
+    rate_limit_rpm: 60
+    features:
+      - Live keys
+      - Email support
+  - id: stayingapi-pro
+    name: Pro
+    type: subscription
+    price: 99
+    period: month
+    credits: 9900
+    credits_period: month
+    rate_limit_rpm: 120
+    features:
+      - All endpoints, all platforms
+      - Cross-OTA price comparison
+      - Usage analytics
+  - id: stayingapi-scale
+    name: Scale
+    type: subscription
+    price: 499
+    period: month
+    credits: 49900
+    credits_period: month
+    rate_limit_rpm: 300
+    features:
+      - Priority support
+      - Volume-ready caching
+  - id: stayingapi-enterprise
+    name: Enterprise
+    type: custom
+    price: null
+    credits: custom
+    rate_limit_rpm: custom
+    features:
+      - 99.9% uptime SLA + service credits
+      - Invoicing
+      - Optional EU data residency
+credit_costs:
+  - operationId: searchGet
+    endpoint: GET /search
+    cost: RATE x results per platform, minimum 5 credits
+    multipliers:
+      airbnb: 2x
+      booking: 1x
+      vrbo: 1x
+      google: 15 per page
+  - operationId: searchPost
+    endpoint: POST /search
+    cost: same as GET /search
+  - operationId: availability
+    endpoint: GET /availability
+    cost: max(5, ceil(days/2)) credits by requested date range
+    note: Vrbo availability carries a 12-credit floor as of v1.0.1.
+  - operationId: listing
+    endpoint: GET /listing/{platform}/{id}
+    cost: 3 credits per leg, flat
+    note: Vrbo listing is 15 credits as of v1.0.1.
+  - operationId: price
+    endpoint: GET /price
+    cost: 3 credits per leg, flat
+  - operationId: priceCompare
+    endpoint: GET /price-compare
+    cost: 30 credits flat via Google, or the sum of the per-platform price legs in direct mode
+  - operationId: reviews
+    endpoint: GET /reviews
+    cost: RATE x reviews, minimum 5 credits
+    multipliers:
+      airbnb: 5x
+      booking: 1x
+      vrbo: 1x
+  - operationId: account
+    endpoint: GET /account
+    cost: 0 credits
+  - operationId: pollJob
+    endpoint: GET /jobs/{jobId}
+    cost: 0 credits
+metering_rules:
+  - Failed, empty, blocked and not-found calls are never billed (creditsCharged is 0).
+  - Cached results bill at tier — caching is margin, not a discount.
+  - In a partial fan-out, each failed platform leg is charged 0.
+  - Sandbox (stay_test_) calls are always 0 credits.
+  - Credit cost increases get at least 30 days' notice; decreases take effect immediately.
+balance_introspection:
+  operation: GET /v1/account
+  fields:
+    - data.credits.balance
+    - data.credits.available
+    - data.credits.held
+    - data.credits.expiringSoon
+x-evidence:
+  - url: https://stayingapi.com/pricing
+    http_status: 200
+  - url: https://api.stayingapi.com/openapi.json
+    http_status: 200
+    note: per-operation credit costs are stated in each operation summary
+  - url: https://stayingapi.com/changelog
+    http_status: 200
+    note: v1.0.1 pricing calibration

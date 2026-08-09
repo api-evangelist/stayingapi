@@ -1,0 +1,171 @@
+generated: '2026-08-09'
+method: searched
+source: https://stayingapi.com/docs/conventions
+description: >-
+  How every StayingAPI operation behaves regardless of endpoint: one canonical { data, meta }
+  envelope, opaque cursor pagination, an 8-second async threshold that converts a live call
+  into a 202 + job to poll, per-plan request-rate limits with X-RateLimit-* headers, a
+  ULID request id on every response, URI-path major versioning, and a locked error envelope
+  whose sub-code is the single source of truth. Notably there is NO idempotency contract —
+  the public surface is read-only (eight GETs and one POST that is the body form of a GET),
+  so no idempotency key is documented or accepted.
+base_url: https://api.stayingapi.com/v1
+api_style: REST over HTTPS, query-parameter requests (one JSON-body variant), JSON responses
+
+authentication:
+  scheme: HTTP Bearer API key
+  key_types:
+    - stay_test_ (deterministic sandbox, always free, synchronous)
+    - stay_live_ (live scrapes, charged in credits)
+  docs: https://stayingapi.com/docs/authentication
+  detail: authentication/stayingapi-authentication.yml
+  mcp_alternative: OAuth 2.1 + PKCE at https://mcp.stayingapi.com/mcp (scope stays.read)
+
+idempotency:
+  supported: false
+  mechanism: null
+  rationale: >-
+    No idempotency key header or parameter is documented or present in the OpenAPI. The
+    surface is read-only — GET /search, /availability, /listing, /price, /price-compare,
+    /reviews, /account, /jobs/{jobId} plus POST /search, which is only the JSON-body form of
+    the GET and creates no resource. Retries are safe because operations are naturally
+    idempotent, and failed/empty/blocked calls are never billed.
+  docs: null
+
+pagination:
+  style: cursor
+  applies_to:
+    - GET /search
+    - GET /reviews
+  request_params:
+    limit: 1-100, default 20
+    cursor: opaque base64 cursor; pass meta.pagination.nextCursor from the previous response
+  response_fields:
+    location: meta.pagination
+    limit: page size echoed back
+    cursor: the cursor used for this page (null on the first page)
+    nextCursor: opaque cursor for the next page; null on the last page
+    hasMore: boolean
+  never: offset or page-number pagination
+  caveat: Async job results are not cursor-paginated (meta.pagination is null on a job result).
+  docs: https://stayingapi.com/docs/conventions
+
+async_jobs:
+  trigger: >-
+    A live call whose projected runtime exceeds the ~8s async threshold returns HTTP 202
+    instead of 200. Sandbox calls and live cache hits always answer synchronously with 200.
+  accepted_shape:
+    data: '{ jobId, status: pending, pollUrl, estimatedSeconds }'
+    meta: '{ requestId, creditsCharged: 0, platforms }'
+  poll: GET /v1/jobs/{jobId} — always 0 credits
+  backoff: Honour the Retry-After header on each poll; cap attempts (a tight loop hits 429).
+  terminal_states:
+    - completed
+    - failed
+  completed: >-
+    HTTP 200; the endpoint payload is at data.result (NOT data), in the same unified schema
+    the synchronous call returns. meta carries the full success meta; credits charge once.
+  failed: >-
+    HTTP is still 200. data.status == "failed" and the failure is nested at data.error
+    (type, code, message, retryable). creditsCharged is 0. Detect via data.status, never via
+    a top-level error key.
+  empty: >-
+    A completed job can return data.result: [] — the reason is in meta.warnings[] (e.g.
+    no_results) and empty results charge 0.
+  sdk: '@stayingapi/sdk auto-polls, so callers always see the synchronous shape.'
+  docs: https://stayingapi.com/docs/endpoints/jobs
+
+response_envelope:
+  success:
+    data: the endpoint payload — the only part that varies by endpoint
+    meta:
+      requestId: 'req_ + 26-char Crockford ULID (pattern ^req_[0-9A-HJKMNP-TV-Z]{26}$)'
+      platforms: platforms that participated in the fan-out
+      environment: live | test
+      sandbox: true when served from the deterministic sandbox
+      cached: served fully from cache (cache hits still bill at tier)
+      partial: at least one fan-out leg failed
+      creditsCharged: integer
+      currency: e.g. USD
+      pagination: Pagination object or null
+      platformResults: per-platform outcome
+      warnings: array of { code, message, platform, docUrl }
+  partial_fanout: >-
+    When some platforms fail and at least one succeeds you get HTTP 200 with
+    meta.partial = true, only the successful platforms in data, and each failed platform
+    charged 0.
+  docs: https://stayingapi.com/docs/envelope
+
+error_envelope:
+  shape: '{ error: { type, code, message, param, requestId, creditsCharged, retryable, docUrl } }'
+  source_of_truth: >-
+    error.code is the single source of truth for the sub-code; error.type is the coarse
+    class. 9 types and 35 sub-codes are locked in the OpenAPI enum.
+  billing: creditsCharged is always 0 on an error — failed, empty, blocked and not-found calls are free.
+  discoverability: docUrl points at https://stayingapi.com/docs/errors/<code> for the specific sub-code.
+  format: proprietary envelope — NOT RFC 9457 application/problem+json
+  detail: errors/stayingapi-error-codes.yml
+  docs: https://stayingapi.com/docs/errors
+
+request_tracing:
+  header: X-Request-Id
+  body_field: meta.requestId (and error.requestId)
+  format: 'req_ + 26-char Crockford ULID'
+  present_on: every 200 and 202 response, and every error
+  usage: quote the requestId to support on an internal_error
+
+rate_limiting:
+  scope: per plan, per key; the MCP server is a separate per-user bucket
+  response_code: 429
+  error_code: rate_limit_exceeded
+  headers:
+    - X-RateLimit-Limit
+    - X-RateLimit-Remaining
+    - X-RateLimit-Reset
+    - Retry-After
+  retry_after_on: 429 responses, and on 202/in-progress job polls as a back-off hint
+  limits: rate-limits/stayingapi-rate-limits.yml
+  docs: https://stayingapi.com/docs/conventions
+
+versioning:
+  scheme: uri-path
+  current: v1
+  location: first path segment — never a header or query parameter
+  additive_without_bump:
+    - new endpoints
+    - new optional request parameters
+    - new response fields
+    - new enum values
+    - new error codes and warning codes
+    - which upstream source fulfils a request
+  client_contract: Clients must tolerate unknown fields, enum values and error codes.
+  breaking_requires_new_major:
+    - removing, renaming or narrowing a field's type
+    - changing a field's documented meaning
+    - removing endpoints, request parameters or error codes
+    - altering the envelope structure or the authentication format
+  detail: lifecycle/stayingapi-lifecycle.yml
+  docs: https://stayingapi.com/docs/stability
+
+metering:
+  unit: credits
+  rules:
+    - Failed, empty, blocked and not-found calls are never billed.
+    - Cached results bill at tier — caching is margin, not a discount.
+    - Polling a job and GET /account are always 0 credits.
+    - Per-platform failed legs in a partial fan-out are charged 0.
+  balance_from_code: GET /v1/account -> data.credits.available
+  docs: https://stayingapi.com/pricing
+
+field_expansion:
+  supported: false
+metadata:
+  supported: false
+  note: No customer-writable metadata field — the API is read-only.
+
+cross_links:
+  errors: errors/stayingapi-error-codes.yml
+  lifecycle: lifecycle/stayingapi-lifecycle.yml
+  authentication: authentication/stayingapi-authentication.yml
+  rate_limits: rate-limits/stayingapi-rate-limits.yml
+  sandbox: sandbox/stayingapi-sandbox.yml

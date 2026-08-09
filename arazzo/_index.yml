@@ -1,0 +1,28 @@
+generated: '2026-08-09'
+method: derived
+source: arazzo/*.yml
+description: >-
+  Native Arazzo 1.0.1 workflows stitching StayingAPI's own operations into multi-step reads.
+  Every operationId is verified verbatim against openapi/stayingapi-openapi-original.json.
+  Seed them with a stay_test_ sandbox key so a fork runs synchronously at zero credits.
+workflows:
+  - file: stayingapi-cross-ota-price-comparison.yml
+    workflowId: cross-ota-price-comparison
+    title: Cross-OTA price comparison
+    summary: >-
+      Search a location for a stay window, take the first property, and compare its price
+      across OTAs — returning StayingAPI's computed min and median plus the offer list.
+    operations:
+      - searchGet
+      - priceCompare
+  - file: stayingapi-availability-then-price.yml
+    workflowId: availability-then-price
+    title: Check availability, then price the stay
+    summary: >-
+      Zero-credit balance check, day-by-day availability for one listing, a real price quote
+      for the same dates and occupancy, then normalized reviews.
+    operations:
+      - account
+      - availability
+      - price
+      - reviews

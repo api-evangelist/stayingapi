@@ -1,0 +1,89 @@
+{
+  "version": "1.0",
+  "skills": [
+    {
+      "name": "stayingapi-search",
+      "description": "Search and compare accommodation prices across Airbnb, Booking.com, Vrbo and Google Hotels via the StayingAPI REST API. Use when a user wants to find stays, check availability, get a price, compare one property across OTAs, or read reviews. Covers Bearer auth, the async 202→poll job contract, the unified response envelope, and error handling.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-search/SKILL.md"
+    },
+    {
+      "name": "stayingapi-mcp",
+      "description": "Connect an AI agent to the StayingAPI Model Context Protocol (MCP) server for accommodation search, availability, pricing, cross-OTA price comparison and reviews. Use when the agent runtime supports MCP connectors (e.g. Claude) and you want OAuth-based access without managing API keys. Covers the OAuth 2.1 + PKCE connect flow, the seven read-only tools, and when to prefer MCP vs REST.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-mcp/SKILL.md"
+    },
+    {
+      "name": "stayingapi-cross-ota-price-comparison",
+      "description": "Compare one property across booking platforms and report the cheapest rate, with savings vs. the median. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-cross-ota-price-comparison/SKILL.md"
+    },
+    {
+      "name": "stayingapi-availability-alert",
+      "description": "Watch a listing over a date window and get alerted the moment a wanted date becomes available. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-availability-alert/SKILL.md"
+    },
+    {
+      "name": "stayingapi-price-drop-watcher",
+      "description": "Watch a specific stay and get alerted the moment its total price falls to or below your threshold. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-price-drop-watcher/SKILL.md"
+    },
+    {
+      "name": "stayingapi-rate-parity-monitor",
+      "description": "Watch how your own listing's rate shows across OTAs on a schedule and flag any platform underselling the market median. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-rate-parity-monitor/SKILL.md"
+    },
+    {
+      "name": "stayingapi-str-market-scan",
+      "description": "Scan a short-term-rental market — discover listings across platforms, price the top N for your dates, and append a normalized row-per-listing dataset to a Google Sheet. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-str-market-scan/SKILL.md"
+    },
+    {
+      "name": "stayingapi-new-inventory-lead-gen",
+      "description": "Re-run a saved search on a schedule, diff it against the last run, and sync only the newly-listed properties into a CRM or Sheet as leads. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-new-inventory-lead-gen/SKILL.md"
+    },
+    {
+      "name": "stayingapi-review-intelligence-digest",
+      "description": "Pull normalized reviews for a property on a schedule and deliver a weekly digest — average rating, recurring themes, and the latest complaints to act on. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-review-intelligence-digest/SKILL.md"
+    },
+    {
+      "name": "stayingapi-comp-set-benchmark",
+      "description": "Benchmark your listing’s rate and availability against a defined comp-set and get a weekly position report. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-comp-set-benchmark/SKILL.md"
+    },
+    {
+      "name": "stayingapi-mcp-agent-scouting",
+      "description": "Connect StayingAPI as a Claude/Cursor MCP connector and scout stays, compare prices and check availability conversationally — no keys pasted. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-mcp-agent-scouting/SKILL.md"
+    },
+    {
+      "name": "stayingapi-cheapest-link-resolver",
+      "description": "Resolve a property + dates to the single cheapest bookable link (with price and OTA) as clean JSON — for a concierge bot, a \"book now\" button, or an internal tool. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-cheapest-link-resolver/SKILL.md"
+    },
+    {
+      "name": "stayingapi-event-radar",
+      "description": "Watch supply and prices around an event or peak date-window in a city and get alerted when demand tightens. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-event-radar/SKILL.md"
+    },
+    {
+      "name": "stayingapi-portfolio-feed",
+      "description": "A daily digest across a saved set of listings — price, rating and recent reviews per listing in one report. Powered by the StayingAPI REST API / MCP server.",
+      "version": "1.0.0",
+      "url": "https://stayingapi.com/skills/stayingapi-portfolio-feed/SKILL.md"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+generated: '2026-08-09'
+method: searched
+status: published
+source: https://stayingapi.com/.well-known/mcp.json
+docs: https://stayingapi.com/docs/mcp
+description: >-
+  StayingAPI operates a first-party hosted MCP server over Streamable HTTP, authenticated
+  with OAuth 2.1 + PKCE (S256) and dynamic client registration, drawing on the same account
+  and the same single credit balance as the REST keys but rate-limited on a separate
+  per-user bucket. Seven read-only tools map close to 1:1 onto the REST operations.
+server:
+  name: StayingAPI
+  transport: streamable-http
+  url: https://mcp.stayingapi.com/mcp
+  schema_version: '2025-06-18'
+  authentication:
+    type: oauth2
+    flows:
+      - authorization_code
+    pkce: S256
+    dynamic_client_registration: true
+    scopes:
+      - stays.read
+    protected_resource_metadata: https://mcp.stayingapi.com/.well-known/oauth-protected-resource
+    authorization_server_metadata: https://mcp.stayingapi.com/.well-known/oauth-authorization-server
+  cards:
+    - url: https://stayingapi.com/.well-known/mcp.json
+      file: ../well-known/stayingapi-mcp.json
+    - url: https://mcp.stayingapi.com/.well-known/mcp.json
+      file: ../well-known/stayingapi-mcp-server-card.json
+  registry_manifests:
+    repo: https://github.com/stayingapi/hotel-mcp
+    note: >-
+      The connect guide repo is public; server.json / smithery.yaml / glama.json manifests
+      were not individually verified in this pass.
+introspection:
+  tools_list: gated
+  probe:
+    method: POST tools/list (JSON-RPC 2.0)
+    url: https://mcp.stayingapi.com/mcp
+    http_status: 401
+    body: >-
+      {"error":{"type":"authentication_error","code":"missing_api_key","message":"An OAuth
+      Bearer access token is required."}}
+    www_authenticate: >-
+      Bearer resource_metadata="https://mcp.stayingapi.com/mcp/.well-known/oauth-protected-resource"
+  note: >-
+    Live tools/list requires an OAuth access token, so per-tool inputSchema could not be
+    captured anonymously. The tool list below is the provider's own published list (the
+    stayingapi-mcp SKILL.md and llms.txt), names and descriptions only; input contracts are
+    inherited from the backing REST operations via mcp/stayingapi-tool-crosswalk.yml.
+tools:
+  - name: search_stays
+    description: Search stays across platforms by location, dates, occupancy, filters.
+    source_operation: openapi/stayingapi-openapi-original.json#searchGet
+  - name: check_availability
+    description: Day-by-day availability for a known listing over a date window.
+    source_operation: openapi/stayingapi-openapi-original.json#availability
+  - name: get_listing
+    description: Full detail for one listing (amenities, photos, host, ratings).
+    source_operation: openapi/stayingapi-openapi-original.json#listing
+  - name: get_price
+    description: A real price quote for one listing for specific dates + occupancy.
+    source_operation: openapi/stayingapi-openapi-original.json#price
+  - name: compare_prices
+    description: Compare one property across OTAs with computed min + median.
+    source_operation: openapi/stayingapi-openapi-original.json#priceCompare
+  - name: get_reviews
+    description: Normalized, paginated reviews for one listing on one platform.
+    source_operation: openapi/stayingapi-openapi-original.json#reviews
+  - name: get_job
+    description: Poll status + fetch results of an async scrape job (costs 0).
+    source_operation: openapi/stayingapi-openapi-original.json#pollJob
+x-evidence:
+  - url: https://stayingapi.com/.well-known/mcp.json
+    http_status: 200
+  - url: https://mcp.stayingapi.com/.well-known/mcp.json
+    http_status: 200
+  - url: https://stayingapi.com/skills/stayingapi-mcp/SKILL.md
+    http_status: 200
+    note: provider-published tool list
+  - url: https://mcp.stayingapi.com/mcp
+    http_status: 401
+    note: tools/list gated

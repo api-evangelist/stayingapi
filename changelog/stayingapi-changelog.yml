@@ -1,0 +1,49 @@
+generated: '2026-08-09'
+method: searched
+source: https://stayingapi.com/changelog
+description: >-
+  StayingAPI keeps a dated, versioned public changelog. The product launched 2026-07-02 at
+  v1.0, so the entire history is short and is captured here in full rather than as a recent
+  window. Entries carry a semantic patch version and state whether the change is additive,
+  a data-quality correction or a pricing calibration.
+scheme: semver
+current_version: 1.0.2
+api_version: v1
+policy: >-
+  Deprecations get a changelog entry plus six months' notice; credit cost increases get at
+  least 30 days' notice via the changelog. See lifecycle/stayingapi-lifecycle.yml.
+entries:
+  - version: 1.0.2
+    date: '2026-07-27'
+    breaking: false
+    type: data-quality
+    highlights:
+      - >-
+        location.country was previously null for most of the world on all four platforms; it
+        now resolves to a correct ISO 3166-1 alpha-2 code uniformly across platforms.
+      - Added a country_unmapped warning for values that cannot be resolved.
+      - Dashboard now displays country names instead of codes.
+  - version: 1.0.1
+    date: '2026-07-24'
+    breaking: false
+    type: pricing-calibration
+    highlights:
+      - Vrbo /v1/listing is now 15 credits (was 3).
+      - /v1/availability now has a 12-credit floor (was 5).
+      - Vrbo search pricing unchanged — 1 credit per result, 5-credit minimum.
+      - All other platforms' pricing unchanged.
+      - Described as pre-launch calibration affecting no current customers.
+  - version: '1.0'
+    date: '2026-07-02'
+    breaking: false
+    type: launch
+    highlights:
+      - Launch of the unified REST API across Airbnb, Booking.com, Vrbo and Google Hotels.
+      - Cross-OTA price comparison endpoint introduced.
+      - Native MCP server with OAuth 2.1 / PKCE.
+      - Typed SDK with built-in auth, retries and pagination.
+      - Credit-based billing with a 300-credit free tier and tiered plans.
+      - Full documentation suite and a 99.9% uptime SLA (Enterprise).
+x-evidence:
+  - url: https://stayingapi.com/changelog
+    http_status: 200

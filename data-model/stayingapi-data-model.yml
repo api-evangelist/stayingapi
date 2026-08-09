@@ -1,0 +1,171 @@
+generated: '2026-08-09'
+method: derived
+source: openapi/stayingapi-openapi-original.json
+docs: https://stayingapi.com/docs/schema
+description: >-
+  StayingAPI's entity graph is deliberately flat and denormalized: there is no server-side
+  object store to reference, so nothing has a StayingAPI-issued primary key except the
+  request and job envelopes. Every domain entity is keyed by the COMPOSITE (platform,
+  listingId) pair borrowed from the upstream OTA, and Availability, Price, PriceCompare and
+  Review all hang off that pair rather than off a Property record. That is the whole point of
+  the product — one normalized shape over four foreign id spaces — and it is also the source
+  of the identity errors in the catalog (needs_country, identity_mismatch), because a
+  Booking.com slug is not globally unique.
+identity:
+  primary_key: composite (platform, listingId)
+  platform_enum:
+    - airbnb
+    - booking
+    - vrbo
+    - expedia
+    - hotels
+    - google
+    - tripadvisor
+  platform_enum_note: >-
+    The enum carries seven platforms, but the product markets and prices four (airbnb,
+    booking, vrbo, google). expedia / hotels / tripadvisor are declared but a request for
+    them returns 400 platform_not_enabled ("fast-follow, or not on the plan").
+  listing_id_shapes:
+    airbnb: numeric platform-native id
+    vrbo: numeric platform-native id
+    booking: slug string — NOT globally unique; requires a country (?country=cc or "{country}/{slug}")
+    google: slug / googleHotelId string
+  staying_issued_ids:
+    - name: requestId
+      prefix: req_
+      format: req_ + 26-char Crockford ULID
+      pattern: '^req_[0-9A-HJKMNP-TV-Z]{26}$'
+      scope: one per response; also returned as the X-Request-Id header
+    - name: jobId
+      prefix: job_
+      format: job_ + ULID
+      scope: one per async scrape; retained 24 hours
+entities:
+  - name: Property
+    schema: '#/components/schemas/Property'
+    key: [platform, platformListingId]
+    returned_by: [searchGet, searchPost, listing]
+    fields_of_note:
+      - id
+      - platform
+      - platformListingId
+      - url
+      - name
+      - propertyType (hotel|apartment|house|villa|cottage|other)
+      - location {lat,lng,city,region,country(ISO 3166-1 alpha-2),address}
+      - starRating / guestRating / ratingScale / reviewCount
+      - maxOccupancy / bedrooms / bathrooms
+      - amenities (closed enum taxonomy)
+  - name: Availability
+    schema: '#/components/schemas/Availability'
+    key: [platform, listingId]
+    returned_by: [availability]
+    shape: dates[] of {date, available, minNights, checkIn, checkOut, bookable}
+  - name: Price
+    schema: '#/components/schemas/Price'
+    key: [platform, listingId]
+    returned_by: [price]
+    shape: >-
+      currency, nightlyPrice, totalPrice, fees{cleaning,service,taxes}, nights,
+      occupancy{adults,children,childAges}, source, url
+  - name: PriceCompare
+    schema: '#/components/schemas/PriceCompare'
+    key: [property (name or googleHotelId), checkIn, checkOut]
+    returned_by: [priceCompare]
+    shape: >-
+      min, median, offers[] of {ota, totalPrice, currency, url} plus, in DIRECT mode only,
+      {platform, listingId, nightlyPrice, fees}
+    note: >-
+      The only computed entity in the model — min and median are StayingAPI-calculated and
+      exclude offers quoted in another currency because they are not comparable.
+  - name: Review
+    schema: '#/components/schemas/Review'
+    key: [platform, listingId, reviewId]
+    returned_by: [reviews]
+    shape: >-
+      rating, ratingScale, title, text, author, date, tripType, language, ownerResponse,
+      liked, disliked
+  - name: Account
+    schema: '#/components/schemas/Account'
+    key: authenticated key
+    returned_by: [account]
+    shape: plan{code,name,status}, key{env}, credits{balance,available,held,expiringSoon}, rateLimit{requestsPerMinute}
+  - name: Job
+    schema: '#/components/schemas/JobResponse'
+    key: [jobId]
+    returned_by: [pollJob]
+    states: [pending, running, completed, failed]
+    note: >-
+      A oneOf of JobInProgress / JobCompleted / JobFailed. On completed the endpoint payload
+      is at data.result — the same unified schema the synchronous call returns.
+  - name: Meta
+    schema: '#/components/schemas/Meta'
+    key: [requestId]
+    note: Envelope metadata attached to every 200 — the join point between a response and its fan-out legs.
+  - name: PlatformResult
+    schema: '#/components/schemas/PlatformResult'
+    key: [requestId, platform]
+    note: Per-platform outcome of a fan-out — status ok|failed|skipped, creditsCharged, cached, count, error.
+relationships:
+  - from: Property
+    to: Availability
+    type: has_many
+    via: (platform, listingId)
+    note: Not a $ref — joined by the composite platform id, resolved per request.
+  - from: Property
+    to: Price
+    type: has_one
+    via: (platform, listingId) + checkIn/checkOut/occupancy
+    note: A Price is only meaningful for a specific stay window and occupancy.
+  - from: Property
+    to: Review
+    type: has_many
+    via: (platform, listingId)
+  - from: PriceCompare
+    to: Price
+    type: has_many
+    via: offers[] — one leg per OTA (DIRECT mode legs carry platform + listingId)
+  - from: Meta
+    to: PlatformResult
+    type: has_many
+    via: meta.platformResults[]
+    ref: true
+  - from: Meta
+    to: Warning
+    type: has_many
+    via: meta.warnings[]
+    ref: true
+  - from: Meta
+    to: Pagination
+    type: has_one
+    via: meta.pagination (null on job results and non-list endpoints)
+    ref: true
+  - from: Job
+    to: Meta
+    type: has_one
+    via: JobCompleted.meta
+    ref: true
+  - from: PlatformResult
+    to: PlatformFailureError
+    type: has_one
+    via: platformResults[].error
+    ref: true
+  - from: ErrorEnvelope
+    to: Error
+    type: has_one
+    via: error
+    ref: true
+  - from: SuccessEnvelope
+    to: Meta
+    type: has_one
+    via: meta
+    ref: true
+notes:
+  - >-
+    Only 8 of the 20 component schemas participate in $ref relationships; the domain
+    entities (Property, Availability, Price, PriceCompare, Review) reference each other by
+    id VALUE, never by $ref, because each is fetched independently from a different upstream.
+  - >-
+    There is no Booking, Reservation, Customer or Payment entity. StayingAPI is read-only
+    accommodation data — it does not transact.
+  - No subway/ render exists for this provider yet.
