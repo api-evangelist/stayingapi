@@ -31,104 +31,111 @@ tags:
   - agent-native
   - openapi
 apis:
-  - name: StayingAPI REST API
-    description: >-
-      REST API with 8 endpoints (search, availability, listing, price, price-compare, reviews, account, jobs) returning
-      normalized accommodation data. HTTP Bearer API-key auth; live scrapes return 202+jobId to poll.
-    humanURL: https://stayingapi.com/docs/endpoints/search
-    baseURL: https://api.stayingapi.com/v1
-    tags:
-      - travel
-      - hospitality
-      - accommodation-data
-      - hotel-api
-      - vacation-rental
-      - short-term-rental
-      - airbnb
-      - booking.com
-      - vrbo
-      - google-hotels
-      - cross-ota-price-comparison
-      - availability
-      - reviews
-      - rest
-      - mcp
-      - agent-native
-      - openapi
-    properties:
-      - type: OpenAPI
-        url: https://api.stayingapi.com/openapi.json
-      - type: OpenAPI
-        name: OpenAPI 3.1 (harvested verbatim)
-        url: openapi/stayingapi-openapi-original.json
-      - type: Overlay
-        url: overlays/stayingapi-openapi-overlay.yaml
-      - type: Documentation
-        url: https://stayingapi.com/docs
-      - type: APIReference
-        url: https://stayingapi.com/docs/endpoints/search
-  - name: StayingAPI MCP Server
-    description: >-
-      Hosted MCP server (Streamable HTTP, OAuth 2.1/PKCE) exposing 7 read-only tools mapping 1:1 to the REST endpoints:
-      search_stays, check_availability, get_listing, get_price, compare_prices, get_reviews, get_job.
-    humanURL: https://stayingapi.com/docs
-    baseURL: https://mcp.stayingapi.com/mcp
-    tags:
-      - travel
-      - hospitality
-      - accommodation-data
-      - hotel-api
-      - vacation-rental
-      - short-term-rental
-      - airbnb
-      - booking.com
-      - vrbo
-      - google-hotels
-      - cross-ota-price-comparison
-      - availability
-      - reviews
-      - rest
-      - mcp
-      - agent-native
-      - openapi
-    properties:
-      - type: MCP
-        url: https://mcp.stayingapi.com/mcp
-      - type: MCPServer
-        url: mcp/stayingapi-mcp.yml
-      - type: ToolCrosswalk
-        url: mcp/stayingapi-tool-crosswalk.yml
-      - type: Documentation
-        url: https://stayingapi.com/docs/mcp
-  - name: StayingAPI Agent Skills
-    description: >-
-      Published portable SKILL.md agent skill in the stayingapi/travel-skills GitHub repo, referenced from the SDK docs,
-      plus n8n workflow recipes.
-    humanURL: https://github.com/stayingapi/travel-skills
-    baseURL: https://github.com/stayingapi/travel-skills
-    tags:
-      - travel
-      - hospitality
-      - accommodation-data
-      - hotel-api
-      - vacation-rental
-      - short-term-rental
-      - airbnb
-      - booking.com
-      - vrbo
-      - google-hotels
-      - cross-ota-price-comparison
-      - availability
-      - reviews
-      - rest
-      - mcp
-      - agent-native
-      - openapi
-    properties:
-      - type: AgentSkills
-        url: https://github.com/stayingapi/travel-skills
-      - type: AgentSkill
-        url: skills/_index.yml
+- name: StayingAPI MCP Server
+  description: >-
+    Hosted MCP server (Streamable HTTP, OAuth 2.1/PKCE) exposing 7 read-only tools mapping 1:1 to the
+    REST endpoints: search_stays, check_availability, get_listing, get_price, compare_prices, get_reviews,
+    get_job.
+  humanURL: https://stayingapi.com/docs
+  baseURL: https://mcp.stayingapi.com/mcp
+  tags:
+  - travel
+  - hospitality
+  - accommodation-data
+  - hotel-api
+  - vacation-rental
+  - short-term-rental
+  - airbnb
+  - booking.com
+  - vrbo
+  - google-hotels
+  - cross-ota-price-comparison
+  - availability
+  - reviews
+  - rest
+  - mcp
+  - agent-native
+  - openapi
+  properties:
+  - type: MCP
+    url: https://mcp.stayingapi.com/mcp
+  - type: MCPServer
+    url: mcp/stayingapi-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/stayingapi-tool-crosswalk.yml
+  - type: Documentation
+    url: https://stayingapi.com/docs/mcp
+- name: StayingAPI Agent Skills
+  description: >-
+    Published portable SKILL.md agent skill in the stayingapi/travel-skills GitHub repo, referenced from
+    the SDK docs, plus n8n workflow recipes.
+  humanURL: https://github.com/stayingapi/travel-skills
+  baseURL: https://github.com/stayingapi/travel-skills
+  tags:
+  - travel
+  - hospitality
+  - accommodation-data
+  - hotel-api
+  - vacation-rental
+  - short-term-rental
+  - airbnb
+  - booking.com
+  - vrbo
+  - google-hotels
+  - cross-ota-price-comparison
+  - availability
+  - reviews
+  - rest
+  - mcp
+  - agent-native
+  - openapi
+  properties:
+  - type: AgentSkills
+    url: https://github.com/stayingapi/travel-skills
+  - type: AgentSkill
+    url: skills/_index.yml
+- aid: stayingapi:stayingapi-account-api
+  name: StayingAPI Account API
+  description: Account, plan and credit balance
+  humanURL: https://stayingapi.com/docs/endpoints/search
+  baseURL: https://api.stayingapi.com/v1
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/stayingapi-account-api-openapi.yml
+  - type: Documentation
+    url: https://stayingapi.com/docs
+  - type: APIReference
+    url: https://stayingapi.com/docs/endpoints/search
+- aid: stayingapi:stayingapi-data-api
+  name: StayingAPI Data API
+  description: Accommodation data endpoints
+  humanURL: https://stayingapi.com/docs/endpoints/search
+  baseURL: https://api.stayingapi.com/v1
+  tags:
+  - Data
+  properties:
+  - type: OpenAPI
+    url: openapi/stayingapi-data-api-openapi.yml
+  - type: Documentation
+    url: https://stayingapi.com/docs
+  - type: APIReference
+    url: https://stayingapi.com/docs/endpoints/search
+- aid: stayingapi:stayingapi-jobs-api
+  name: StayingAPI Jobs API
+  description: Async job polling
+  humanURL: https://stayingapi.com/docs/endpoints/search
+  baseURL: https://api.stayingapi.com/v1
+  tags:
+  - Jobs
+  properties:
+  - type: OpenAPI
+    url: openapi/stayingapi-jobs-api-openapi.yml
+  - type: Documentation
+    url: https://stayingapi.com/docs
+  - type: APIReference
+    url: https://stayingapi.com/docs/endpoints/search
 maintainers:
   - FN: StayingAPI
     email: hello@stayingapi.com
@@ -146,7 +153,7 @@ common:
 - type: Authentication
   url: authentication/stayingapi-authentication.yml
 - type: OpenAPI
-  url: openapi/stayingapi-openapi-original.json
+  url: openapi/_original/stayingapi-openapi-original.json
 - type: LLMsTxt
   url: llms/stayingapi-llms.txt
 - type: WellKnown
