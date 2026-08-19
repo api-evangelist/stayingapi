@@ -1,0 +1,253 @@
+{
+  "item": [
+    {
+      "id": "1c5111bd-60d3-4868-909a-52334ac0b0e5",
+      "name": "Jobs",
+      "description": {
+        "content": "Async job polling",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0bf8b3cd-ee82-4cf1-aeb5-17bc8b514dcf",
+          "name": "Poll an async job (always 0 credits).",
+          "request": {
+            "name": "Poll an async job (always 0 credits).",
+            "description": {
+              "content": "Poll until status is terminal (completed | failed). While pending/running the response carries a Retry-After header. Enforces jobs.user_id == caller; unknown/not-owned/expired → job_not_found (404).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "jobs",
+                ":jobId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "jobId",
+                  "description": "(Required) job_-prefixed id."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "dd30e690-e92a-4982-8a68-c3a951ff7808",
+              "name": "Job status. pending/running carry a Retry-After header; completed carries the payload at data.result; FAILED is HTTP 200 with the failure nested at data.error (NOT a top-level error) and creditsCharged 0. Branch on data.status — see JobResponse.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "jobs",
+                    ":jobId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "jobId",
+                      "description": "(Required) job_-prefixed id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Present while the job is in progress.",
+                  "key": "Retry-After",
+                  "value": "7543"
+                },
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"jobId\": \"string\",\n    \"status\": \"running\",\n    \"pollUrl\": \"string\",\n    \"estimatedSeconds\": 5662\n  },\n  \"meta\": {\n    \"requestId\": \"string\",\n    \"creditsCharged\": 0,\n    \"platforms\": [\n      \"booking\",\n      \"hotels\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e15a25bc-bef0-49c3-8499-2a0793936ea0",
+              "name": "Authentication error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "jobs",
+                    ":jobId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "jobId",
+                      "description": "(Required) job_-prefixed id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"rate_limited\",\n    \"code\": \"invalid_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_WQ7YTTHVMCPAN0VCWMCZRC5SDT\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://fKhWyztrK.fojD,Xj1+YwpCs9p3KkE+ZcY3H+VWNY5cjpxgH9ZFJ3ijbher\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eece34e1-3184-4bf0-ba9f-0b5aeeadaff6",
+              "name": "job_not_found (unknown, not owned, or expired).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "jobs",
+                    ":jobId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "jobId",
+                      "description": "(Required) job_-prefixed id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"rate_limited\",\n    \"code\": \"invalid_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_WQ7YTTHVMCPAN0VCWMCZRC5SDT\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://fKhWyztrK.fojD,Xj1+YwpCs9p3KkE+ZcY3H+VWNY5cjpxgH9ZFJ3ijbher\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.stayingapi.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f22e7335-bb2b-4bb4-986f-a522e64230a2",
+    "name": "Staying Jobs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "One accommodation-data API for Airbnb, Booking.com, Vrbo and Google Hotels — availability, search and cross-OTA price comparison in a single unified schema. Every endpoint returns the canonical envelope (§6.3.3); errors use the locked sub-code catalog (§6.4). Failed, empty and blocked calls are never billed; cached results bill at tier (caching is margin, not a discount). Full docs: https://stayingapi.com/docs.\n\nContact Support:\n Name: StayingAPI",
+      "type": "text/plain"
+    }
+  }
+}

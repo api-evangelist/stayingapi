@@ -1,0 +1,1832 @@
+openapi: 3.2.0
+info:
+  title: Staying Data API
+  version: 1.0.0
+  description: 'One accommodation-data API for Airbnb, Booking.com, Vrbo and Google Hotels — availability, search and cross-OTA price comparison in a single unified schema. Every endpoint returns the canonical envelope (§6.3.3); errors use the locked sub-code catalog (§6.4). Failed, empty and blocked calls are never billed; cached results bill at tier (caching is margin, not a discount). Full docs: https://stayingapi.com/docs.'
+  contact:
+    name: StayingAPI
+    url: https://stayingapi.com/docs
+  license:
+    name: Proprietary
+servers:
+- url: https://api.stayingapi.com/v1
+  description: REST API (v1)
+security:
+- bearerAuth: []
+tags:
+- name: Data
+  description: Accommodation data endpoints
+paths:
+  /search:
+    get:
+      tags:
+      - Data
+      operationId: searchGet
+      summary: 'Search properties across platforms (per-result: RATE×results per platform, min 5 credits; airbnb 2×, booking/vrbo 1×, google 15/page).'
+      parameters:
+      - name: location
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Destination (city, region, address).
+      - name: checkIn
+        in: query
+        required: false
+        schema:
+          type: string
+        description: YYYY-MM-DD.
+      - name: checkOut
+        in: query
+        required: false
+        schema:
+          type: string
+        description: YYYY-MM-DD.
+      - name: platforms
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Comma-separated platforms; defaults to all enabled. `limit` applies per platform.
+      - name: platform
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Alias for `platforms=<value>` when requesting exactly one platform.
+      - name: adults
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Default 2.
+      - name: children
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Default 0; requires matching childAges.
+      - name: rooms
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Default 1.
+      - name: currency
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ISO-4217; default USD.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: '1–40; default 10. Applies per platform: a 3-platform search with limit=5 returns up to 15 results.'
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Opaque pagination cursor.
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: recommended | price_asc | price_desc | rating_desc.
+      responses:
+        '200':
+          description: Success.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Property'
+        '202':
+          description: Accepted — async job created; poll pollUrl. Retry-After hints the back-off.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before polling.
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncAccepted'
+        '400':
+          description: Validation error (invalid_request).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Authentication error (missing/invalid API key).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '402':
+          description: Insufficient credits (credit_balance_too_low).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limited (rate_limit_exceeded); carries Retry-After.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '503':
+          description: All upstream sources failed or were blocked (no charge).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    post:
+      tags:
+      - Data
+      operationId: searchPost
+      summary: Search properties (JSON body form of GET /search).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Success.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Property'
+        '202':
+          description: Accepted — async job created; poll pollUrl. Retry-After hints the back-off.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before polling.
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncAccepted'
+        '400':
+          description: Validation error (invalid_request).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Authentication error (missing/invalid API key).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '402':
+          description: Insufficient credits (credit_balance_too_low).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limited (rate_limit_exceeded); carries Retry-After.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '503':
+          description: All upstream sources failed or were blocked (no charge).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /availability:
+    get:
+      tags:
+      - Data
+      operationId: availability
+      summary: Nightly availability for a listing (max(5, ⌈days/2⌉) credits by requested date range).
+      description: 'Provide EXACTLY ONE identification form: listingId, listingIds, or url. None → missing_parameter; conflicting forms → mutually_exclusive_params; a url that is not a well-formed listing URL for the platform → invalid_listing_url.'
+      parameters:
+      - name: platform
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Platform'
+        description: Target platform (must be enabled for availability).
+      - name: listingId
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Platform listing id (one identification form).
+      - name: listingIds
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Comma-separated listing ids (one identification form).
+      - name: url
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Full listing URL for the platform (one identification form).
+      - name: startDate
+        in: query
+        required: true
+        schema:
+          type: string
+        description: YYYY-MM-DD (required).
+      - name: endDate
+        in: query
+        required: true
+        schema:
+          type: string
+        description: YYYY-MM-DD (required).
+      - name: onlyAvailable
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Only return available dates.
+      responses:
+        '200':
+          description: Success.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Availability'
+        '202':
+          description: Accepted — async job created; poll pollUrl. Retry-After hints the back-off.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before polling.
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncAccepted'
+        '400':
+          description: Validation error (invalid_request).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Authentication error (missing/invalid API key).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '402':
+          description: Insufficient credits (credit_balance_too_low).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limited (rate_limit_exceeded); carries Retry-After.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '503':
+          description: All upstream sources failed or were blocked (no charge).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /listing/{platform}/{id}:
+    get:
+      tags:
+      - Data
+      operationId: listing
+      summary: Full normalized listing (3 credits/leg, flat).
+      parameters:
+      - name: platform
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Platform'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: country
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ISO-3166 alpha-2 country hint (booking). Disambiguates a bare booking.com slug (slugs are not globally unique) without the %2F-encoded /hotel/{cc}/{slug} id — e.g. /v1/listing/booking/casa-de-alba?country=co. A bare booking slug with no country returns 400 needs_country.
+      - name: checkIn
+        in: query
+        required: false
+        schema:
+          type: string
+        description: YYYY-MM-DD.
+      - name: checkOut
+        in: query
+        required: false
+        schema:
+          type: string
+        description: YYYY-MM-DD.
+      - name: currency
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ISO-4217; default USD.
+      responses:
+        '200':
+          description: Success.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Property'
+        '202':
+          description: Accepted — async job created; poll pollUrl. Retry-After hints the back-off.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before polling.
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncAccepted'
+        '400':
+          description: Validation error (invalid_request).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Authentication error (missing/invalid API key).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '402':
+          description: Insufficient credits (credit_balance_too_low).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limited (rate_limit_exceeded); carries Retry-After.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '503':
+          description: All upstream sources failed or were blocked (no charge).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /price:
+    get:
+      tags:
+      - Data
+      operationId: price
+      summary: Live price for a listing + dates (3 credits/leg, flat).
+      parameters:
+      - name: platform
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Platform'
+        description: Target platform (must be enabled for price).
+      - name: listingId
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Platform listing id.
+      - name: checkIn
+        in: query
+        required: true
+        schema:
+          type: string
+        description: YYYY-MM-DD (required).
+      - name: checkOut
+        in: query
+        required: true
+        schema:
+          type: string
+        description: YYYY-MM-DD (required).
+      - name: currency
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ISO-4217; default USD.
+      responses:
+        '200':
+          description: Success.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Price'
+        '202':
+          description: Accepted — async job created; poll pollUrl. Retry-After hints the back-off.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before polling.
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncAccepted'
+        '400':
+          description: Validation error (invalid_request).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Authentication error (missing/invalid API key).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '402':
+          description: Insufficient credits (credit_balance_too_low).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limited (rate_limit_exceeded); carries Retry-After.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '503':
+          description: All upstream sources failed or were blocked (no charge).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /price-compare:
+    get:
+      tags:
+      - Data
+      operationId: priceCompare
+      summary: Cross-OTA price comparison — via Google (30 credits, flat) or across listing ids you supply (sum of the per-platform price legs).
+      description: 'TWO modes, one response type.
+
+
+        **Google-aggregator mode** (`name` / `location` / `googleHotelId`): we resolve the property on Google Hotels and report the offers it surfaces. You need no ids. Flat 30 credits.
+
+
+        **Direct fan-out mode** (`listings=`): you supply 2–6 `platform:listingId` pairs for the SAME property and we run one real price call per listing, in parallel, then normalize the comparison ourselves. Each offer carries `platform`, `listingId`, `nightlyPrice`, `nights` and a best-effort `fees` breakdown, and the response is marked `source: ''direct_fanout''`. Billed as the SUM of the per-platform price legs; a leg that fails or returns nothing is charged 0 and is reported in `meta.platformResults` with `meta.partial: true`.
+
+
+        FEE COVERAGE IS UNEVEN and this is deliberate rather than a gap we hide: Airbnb reports cleaning, service and taxes; Booking.com reports taxes only; Vrbo and Google report none. Compare on `totalPrice`, which is present and comparable everywhere. A null fee means we could not read it, NOT that the platform does not charge it.
+
+
+        `min` and `median` cover only the offers quoted in the response `currency`; offers in another currency are still returned but excluded from the summary.'
+      parameters:
+      - name: listings
+        in: query
+        required: false
+        schema:
+          type: string
+        description: DIRECT MODE. 2–6 comma-separated (or repeated) platform:listingId pairs for the same property, e.g. listings=airbnb:12345,booking:co/casa-de-alba,vrbo:987654. Split on the FIRST colon, so a full listing URL works as the id. Mutually exclusive with name/location/googleHotelId. An id containing a comma must be sent as a repeated param.
+      - name: name
+        in: query
+        required: false
+        schema:
+          type: string
+        description: GOOGLE MODE. Property name (one of name/location/googleHotelId).
+      - name: location
+        in: query
+        required: false
+        schema:
+          type: string
+        description: GOOGLE MODE. Location hint (one of name/location/googleHotelId).
+      - name: googleHotelId
+        in: query
+        required: false
+        schema:
+          type: string
+        description: GOOGLE MODE. Google hotel id (mutually exclusive with name/location).
+      - name: checkIn
+        in: query
+        required: true
+        schema:
+          type: string
+        description: YYYY-MM-DD (required).
+      - name: checkOut
+        in: query
+        required: true
+        schema:
+          type: string
+        description: YYYY-MM-DD (required).
+      - name: adults
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Default 2.
+      - name: children
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Default 0.
+      - name: currency
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ISO-4217; default USD.
+      responses:
+        '200':
+          description: Success.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PriceCompare'
+        '202':
+          description: Accepted — async job created; poll pollUrl. Retry-After hints the back-off.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before polling.
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncAccepted'
+        '400':
+          description: Validation error (invalid_request).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Authentication error (missing/invalid API key).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '402':
+          description: Insufficient credits (credit_balance_too_low).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limited (rate_limit_exceeded); carries Retry-After.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '503':
+          description: All upstream sources failed or were blocked (no charge).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /reviews:
+    get:
+      tags:
+      - Data
+      operationId: reviews
+      summary: 'Listing reviews (per-review: RATE×reviews, min 5 credits; airbnb 5×, booking/vrbo 1×).'
+      description: Provide EXACTLY ONE of listingId or url. None → missing_parameter; both → mutually_exclusive_params; a bad url → invalid_listing_url. Required params are platform plus either listingId or url. listingId should be the platform-native id from /v1/search `platformListingId`; a `stays_<platform>_<platformListingId>` object id is accepted, normalized, and may supply platform when platform is omitted.
+      parameters:
+      - name: platform
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Platform'
+        description: Target platform (must be enabled for reviews).
+      - name: listingId
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Platform-native id from /v1/search `platformListingId` (one identification form); a `stays_<platform>_<platformListingId>` id is accepted, normalized, and may supply platform when platform is omitted.
+      - name: url
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Full listing URL (one identification form).
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: 1–100; default 20.
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Opaque pagination cursor.
+      - name: language
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ISO-639-1 filter.
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: recent | rating_desc | rating_asc.
+      responses:
+        '200':
+          description: Success.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Review'
+        '202':
+          description: Accepted — async job created; poll pollUrl. Retry-After hints the back-off.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before polling.
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncAccepted'
+        '400':
+          description: Validation error (invalid_request).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Authentication error (missing/invalid API key).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '402':
+          description: Insufficient credits (credit_balance_too_low).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limited (rate_limit_exceeded); carries Retry-After.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '503':
+          description: All upstream sources failed or were blocked (no charge).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+components:
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        cursor:
+          type:
+          - string
+          - 'null'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          description: Opaque base64 cursor for the next page; null on the last page.
+        hasMore:
+          type: boolean
+    PlatformFailureError:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+        message:
+          type: string
+          minLength: 1
+        retryable:
+          type: boolean
+      required:
+      - type
+      - code
+      - message
+      - retryable
+    Meta:
+      type: object
+      description: Canonical response metadata present on every 200 (§6.3.3).
+      required:
+      - requestId
+      - platforms
+      - cached
+      - partial
+      - creditsCharged
+      - currency
+      properties:
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+          description: 'Correlation id (also the X-Request-Id header): req_ + 26-char Crockford ULID.'
+          example: req_01J8ZK3QF9ABCDEF0123456789
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Platform'
+        environment:
+          type: string
+          enum:
+          - live
+          - test
+          description: Authenticated key environment used for this response. `test` means deterministic sandbox fixtures, never a live scrape.
+        sandbox:
+          type: boolean
+          description: True when the response came from the deterministic sandbox (`stay_test_` key).
+        cached:
+          type: boolean
+          description: Served fully from cache. Cached results still bill at tier (margin, not discount).
+        partial:
+          type: boolean
+          description: At least one fan-out leg failed; failed legs are charged 0.
+        creditsCharged:
+          type: integer
+          minimum: 0
+        currency:
+          type: string
+          example: USD
+        pagination:
+          oneOf:
+          - $ref: '#/components/schemas/Pagination'
+          - type: 'null'
+        platformResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformResult'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Warning'
+    Availability:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+          - airbnb
+          - booking
+          - vrbo
+          - expedia
+          - hotels
+          - google
+          - tripadvisor
+        listingId:
+          type: string
+          minLength: 1
+        dates:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                pattern: ^\d{4}-\d{2}-\d{2}$
+              available:
+                type: boolean
+              minNights:
+                type: integer
+                exclusiveMinimum: 0
+                maximum: 9007199254740991
+              checkIn:
+                type: boolean
+              checkOut:
+                type: boolean
+              bookable:
+                type: boolean
+            required:
+            - date
+            - available
+            - minNights
+            - checkIn
+            - checkOut
+            - bookable
+      required:
+      - platform
+      - listingId
+      - dates
+    Property:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+        platform:
+          type: string
+          enum:
+          - airbnb
+          - booking
+          - vrbo
+          - expedia
+          - hotels
+          - google
+          - tripadvisor
+        platformListingId:
+          type: string
+          minLength: 1
+        url:
+          type: string
+          format: uri
+        name:
+          type: string
+          minLength: 1
+        propertyType:
+          type: string
+          enum:
+          - hotel
+          - apartment
+          - house
+          - villa
+          - cottage
+          - other
+        location:
+          type: object
+          properties:
+            lat:
+              anyOf:
+              - type: number
+              - type: 'null'
+            lng:
+              anyOf:
+              - type: number
+              - type: 'null'
+            city:
+              anyOf:
+              - type: string
+              - type: 'null'
+            region:
+              anyOf:
+              - type: string
+              - type: 'null'
+            country:
+              anyOf:
+              - type: string
+                minLength: 2
+                maxLength: 2
+              - type: 'null'
+            address:
+              anyOf:
+              - type: string
+              - type: 'null'
+          required:
+          - lat
+          - lng
+          - city
+          - region
+          - country
+          - address
+        starRating:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+        guestRating:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+        ratingScale:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+        reviewCount:
+          anyOf:
+          - type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          - type: 'null'
+        maxOccupancy:
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0
+            maximum: 9007199254740991
+          - type: 'null'
+        bedrooms:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+        bathrooms:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+        amenities:
+          type: array
+          items:
+            type: string
+            enum:
+            - pool
+            - hot_tub
+            - kitchen
+            - wifi
+            - air_conditioning
+            - heating
+            - parking_free
+            - parking_paid
+            - pet_friendly
+            - washer
+            - dryer
+            - ev_charger
+            - gym
+            - sea_view
+            - beachfront
+            - balcony
+            - bbq
+            - workspace
+            - crib
+            - elevator
+            - wheelchair_accessible
+            - smoke_alarm
+            - breakfast
+            - spa
+            - garden
+            - fireplace
+            - dishwasher
+            - self_check_in
+            - non_smoking
+            - family_friendly
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+        host:
+          anyOf:
+          - type: object
+            properties:
+              name:
+                anyOf:
+                - type: string
+                - type: 'null'
+              isSuperhost:
+                anyOf:
+                - type: boolean
+                - type: 'null'
+            required:
+            - name
+            - isSuperhost
+          - type: 'null'
+        price:
+          anyOf:
+          - type: object
+            properties:
+              platform:
+                type: string
+                enum:
+                - airbnb
+                - booking
+                - vrbo
+                - expedia
+                - hotels
+                - google
+                - tripadvisor
+              listingId:
+                type: string
+                minLength: 1
+              currency:
+                type: string
+                pattern: ^[A-Z]{3}$
+              nightlyPrice:
+                type: number
+                minimum: 0
+              totalPrice:
+                type: number
+                minimum: 0
+              fees:
+                type: object
+                properties:
+                  cleaning:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                    - type: 'null'
+                  service:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                    - type: 'null'
+                  taxes:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                    - type: 'null'
+                required:
+                - cleaning
+                - service
+                - taxes
+              nights:
+                type: integer
+                exclusiveMinimum: 0
+                maximum: 9007199254740991
+              occupancy:
+                type: object
+                properties:
+                  adults:
+                    type: integer
+                    exclusiveMinimum: 0
+                    maximum: 9007199254740991
+                  children:
+                    type: integer
+                    minimum: 0
+                    maximum: 9007199254740991
+                  childAges:
+                    type: array
+                    items:
+                      type: integer
+                      minimum: 0
+                      maximum: 9007199254740991
+                required:
+                - adults
+                - children
+                - childAges
+              source:
+                type: string
+                minLength: 1
+              url:
+                type: string
+                format: uri
+            required:
+            - platform
+            - listingId
+            - currency
+            - nightlyPrice
+            - totalPrice
+            - fees
+            - nights
+            - occupancy
+            - source
+            - url
+          - type: 'null'
+        identity:
+          anyOf:
+          - type: object
+            properties:
+              requestedId:
+                anyOf:
+                - type: string
+                  minLength: 1
+                - type: 'null'
+                description: The identifier you requested — the {id} path segment (a platform listingId or a URL).
+              resolvedId:
+                anyOf:
+                - type: string
+                  minLength: 1
+                - type: 'null'
+                description: The platform-native canonical id we resolved and returned (equals data.platformListingId). STABLE — use THIS for equality checks and de-duplication, not canonicalUrl.
+              canonicalUrl:
+                anyOf:
+                - type: string
+                  format: uri
+                - type: 'null'
+                description: The exact fetched listing URL. It may include locale/occupancy/tracking query params (e.g. booking `…/casa-de-alba.en-gb.html?selected_currency=USD&group_adults=2…`), so it is NOT safe for naive string-equality or de-duplication — compare on resolvedId instead. Treat it as a navigable link, not an identity key.
+            required:
+            - requestedId
+            - resolvedId
+            - canonicalUrl
+          - type: 'null'
+      required:
+      - id
+      - platform
+      - platformListingId
+      - url
+      - name
+      - propertyType
+      - location
+      - starRating
+      - guestRating
+      - ratingScale
+      - reviewCount
+      - maxOccupancy
+      - bedrooms
+      - bathrooms
+      - amenities
+      - images
+      - host
+    Platform:
+      type: string
+      enum:
+      - airbnb
+      - booking
+      - vrbo
+      - expedia
+      - hotels
+      - google
+      - tripadvisor
+    AsyncAccepted:
+      type: object
+      description: Returned (202) when projected runtime exceeds the 8s async threshold. Poll pollUrl until terminal. A Retry-After header hints the back-off.
+      required:
+      - data
+      - meta
+      properties:
+        data:
+          type: object
+          properties:
+            jobId:
+              type: string
+              example: job_01J8ZK4R2ABCDEF0123456789
+            status:
+              type: string
+              enum:
+              - pending
+            pollUrl:
+              type: string
+              example: /v1/jobs/job_01J8ZK4R2ABCDEF0123456789
+            estimatedSeconds:
+              type: integer
+        meta:
+          type: object
+          properties:
+            requestId:
+              type: string
+            creditsCharged:
+              type: integer
+              enum:
+              - 0
+            platforms:
+              type: array
+              items:
+                $ref: '#/components/schemas/Platform'
+    AnyData:
+      description: Endpoint-specific data payload.
+    Review:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+          - airbnb
+          - booking
+          - vrbo
+          - expedia
+          - hotels
+          - google
+          - tripadvisor
+        listingId:
+          type: string
+          minLength: 1
+        reviewId:
+          type: string
+          minLength: 1
+        rating:
+          type: number
+          minimum: 0
+        ratingScale:
+          type: number
+          minimum: 0
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        text:
+          anyOf:
+          - type: string
+          - type: 'null'
+        author:
+          anyOf:
+          - type: string
+          - type: 'null'
+        date:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        tripType:
+          anyOf:
+          - type: string
+          - type: 'null'
+        language:
+          anyOf:
+          - type: string
+            pattern: ^[a-z]{2}$
+          - type: 'null'
+        ownerResponse:
+          anyOf:
+          - type: string
+          - type: 'null'
+        liked:
+          anyOf:
+          - type: string
+          - type: 'null'
+        disliked:
+          anyOf:
+          - type: string
+          - type: 'null'
+      required:
+      - platform
+      - listingId
+      - reviewId
+      - rating
+      - ratingScale
+      - title
+      - text
+      - author
+      - date
+      - tripType
+      - language
+      - ownerResponse
+      - liked
+      - disliked
+    SuccessEnvelope:
+      type: object
+      required:
+      - data
+      - meta
+      properties:
+        data:
+          $ref: '#/components/schemas/AnyData'
+        meta:
+          $ref: '#/components/schemas/Meta'
+    PlatformResult:
+      type: object
+      properties:
+        platform:
+          $ref: '#/components/schemas/Platform'
+        status:
+          type: string
+          enum:
+          - ok
+          - failed
+          - skipped
+        reason:
+          type: string
+          enum:
+          - not_enabled
+          - requires_dates
+          description: Present on skipped platform results; explains why a requested platform was not called.
+        creditsCharged:
+          type: integer
+          minimum: 0
+        cached:
+          type: boolean
+        count:
+          type: integer
+          minimum: 0
+        error:
+          $ref: '#/components/schemas/PlatformFailureError'
+        message:
+          type: string
+          description: Human-readable reason for skipped platform results.
+    PriceCompare:
+      type: object
+      properties:
+        property:
+          type: string
+          minLength: 1
+        checkIn:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        checkOut:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        currency:
+          type: string
+          pattern: ^[A-Z]{3}$
+        min:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+          description: Cheapest offer IN `currency`. Offers quoted in another currency are excluded — they are not comparable.
+        median:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+          description: Median offer IN `currency`, same exclusion as `min`.
+        offers:
+          type: array
+          items:
+            type: object
+            properties:
+              ota:
+                type: string
+                minLength: 1
+                description: 'The seller. Google mode: the OTA name Google reported. Direct mode: the platform you supplied.'
+              totalPrice:
+                type: number
+                minimum: 0
+              currency:
+                type: string
+                pattern: ^[A-Z]{3}$
+              url:
+                type: string
+                format: uri
+              platform:
+                description: DIRECT MODE ONLY. The platform this leg was priced on.
+                type: string
+                enum:
+                - airbnb
+                - booking
+                - vrbo
+                - expedia
+                - hotels
+                - google
+                - tripadvisor
+              listingId:
+                description: DIRECT MODE ONLY. The platform-native listing id you supplied for this leg.
+                type: string
+                minLength: 1
+              nightlyPrice:
+                description: DIRECT MODE ONLY. Per-night price for the requested stay.
+                type: number
+                minimum: 0
+              fees:
+                description: 'DIRECT MODE ONLY, and BEST-EFFORT: fee coverage differs per platform. Airbnb reports cleaning, service and taxes; Booking.com reports taxes only; Vrbo and Google report none (all null). Compare on totalPrice — it is present and comparable on every platform. Never assume a null fee means the platform does not charge it; it means we could not read it.'
+                type: object
+                properties:
+                  cleaning:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                    - type: 'null'
+                  service:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                    - type: 'null'
+                  taxes:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                    - type: 'null'
+                required:
+                - cleaning
+                - service
+                - taxes
+              nights:
+                description: DIRECT MODE ONLY. Nights priced.
+                type: integer
+                exclusiveMinimum: 0
+                maximum: 9007199254740991
+            required:
+            - ota
+            - totalPrice
+            - currency
+            - url
+        source:
+          description: How the comparison was produced. Absent = google-aggregator (one Google Hotels leg). 'direct_fanout' = one real price call per listing id you supplied.
+          type: string
+          enum:
+          - google_aggregator
+          - direct_fanout
+      required:
+      - property
+      - checkIn
+      - checkOut
+      - currency
+      - min
+      - median
+      - offers
+    Error:
+      type: object
+      description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
+      required:
+      - type
+      - code
+      - message
+      - requestId
+      - creditsCharged
+      - retryable
+      - docUrl
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+          description: Error sub-code; each has a docs page at https://stayingapi.com/docs/errors/<code>.
+        message:
+          type: string
+        param:
+          type:
+          - string
+          - 'null'
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+        creditsCharged:
+          type: integer
+          enum:
+          - 0
+          description: Errors never bill (always 0).
+        retryable:
+          type: boolean
+        docUrl:
+          type: string
+          format: uri
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+    Warning:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        platform:
+          $ref: '#/components/schemas/Platform'
+        docUrl:
+          type: string
+          format: uri
+    Price:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+          - airbnb
+          - booking
+          - vrbo
+          - expedia
+          - hotels
+          - google
+          - tripadvisor
+        listingId:
+          type: string
+          minLength: 1
+        currency:
+          type: string
+          pattern: ^[A-Z]{3}$
+        nightlyPrice:
+          type: number
+          minimum: 0
+        totalPrice:
+          type: number
+          minimum: 0
+        fees:
+          type: object
+          properties:
+            cleaning:
+              anyOf:
+              - type: number
+                minimum: 0
+              - type: 'null'
+            service:
+              anyOf:
+              - type: number
+                minimum: 0
+              - type: 'null'
+            taxes:
+              anyOf:
+              - type: number
+                minimum: 0
+              - type: 'null'
+          required:
+          - cleaning
+          - service
+          - taxes
+        nights:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 9007199254740991
+        occupancy:
+          type: object
+          properties:
+            adults:
+              type: integer
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+            children:
+              type: integer
+              minimum: 0
+              maximum: 9007199254740991
+            childAges:
+              type: array
+              items:
+                type: integer
+                minimum: 0
+                maximum: 9007199254740991
+          required:
+          - adults
+          - children
+          - childAges
+        source:
+          type: string
+          minLength: 1
+        url:
+          type: string
+          format: uri
+      required:
+      - platform
+      - listingId
+      - currency
+      - nightlyPrice
+      - totalPrice
+      - fees
+      - nights
+      - occupancy
+      - source
+      - url
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer API key. stay_test_ = deterministic sandbox (0 credits); stay_live_ = live.
+x-mcp:
+  server: https://mcp.stayingapi.com/mcp
+  serverCard: https://mcp.stayingapi.com/.well-known/mcp.json
+  documentation: https://stayingapi.com/docs/mcp
+  authentication: oauth2.1+pkce
+  description: A native Model Context Protocol server exposes these endpoints as read-only tools for AI agents.
+x-error-codes-by-type:
+  invalid_request:
+  - missing_parameter
+  - invalid_parameter
+  - invalid_date_range
+  - date_in_past
+  - child_ages_mismatch
+  - stay_too_long
+  - window_too_long
+  - invalid_listing_url
+  - invalid_property_type
+  - invalid_amenity
+  - invalid_price_range
+  - invalid_language
+  - invalid_sort
+  - invalid_cursor
+  - limit_out_of_range
+  - mutually_exclusive_params
+  - platform_not_enabled
+  - no_enabled_platform
+  - needs_country
+  authentication_error:
+  - missing_api_key
+  - invalid_api_key
+  - revoked_api_key
+  permission_denied:
+  - scope_insufficient
+  - email_unverified
+  - subscription_required
+  not_found:
+  - listing_not_found
+  - job_not_found
+  - identity_mismatch
+  insufficient_credits:
+  - credit_balance_too_low
+  rate_limited:
+  - rate_limit_exceeded
+  upstream_unavailable:
+  - all_actors_failed
+  - actor_blocked
+  - upstream_degraded
+  upstream_timeout:
+  - actor_timeout
+  internal_error:
+  - internal_error

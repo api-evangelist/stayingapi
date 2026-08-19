@@ -1,0 +1,391 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Staying Data API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Data",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search properties across platforms (per-result: RATE×results per platform, min 5 credits; airbnb 2×, booking/vrbo 1×, google 15/page).",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.stayingapi.com/v1/search",
+            "params": [
+              {
+                "name": "location",
+                "value": "",
+                "type": "query",
+                "description": "Destination (city, region, address)."
+              },
+              {
+                "name": "checkIn",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD."
+              },
+              {
+                "name": "checkOut",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD."
+              },
+              {
+                "name": "platforms",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated platforms; defaults to all enabled. `limit` applies per platform."
+              },
+              {
+                "name": "platform",
+                "value": "",
+                "type": "query",
+                "description": "Alias for `platforms=<value>` when requesting exactly one platform."
+              },
+              {
+                "name": "adults",
+                "value": "",
+                "type": "query",
+                "description": "Default 2."
+              },
+              {
+                "name": "children",
+                "value": "",
+                "type": "query",
+                "description": "Default 0; requires matching childAges."
+              },
+              {
+                "name": "rooms",
+                "value": "",
+                "type": "query",
+                "description": "Default 1."
+              },
+              {
+                "name": "currency",
+                "value": "",
+                "type": "query",
+                "description": "ISO-4217; default USD."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "1–40; default 10. Applies per platform: a 3-platform search with limit=5 returns up to 15 results."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "recommended | price_asc | price_desc | rating_desc."
+              }
+            ]
+          },
+          "docs": "Search properties across platforms (per-result: RATE×results per platform, min 5 credits; airbnb 2×, booking/vrbo 1×, google 15/page)."
+        },
+        {
+          "info": {
+            "name": "Search properties (JSON body form of GET /search).",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.stayingapi.com/v1/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search properties (JSON body form of GET /search)."
+        },
+        {
+          "info": {
+            "name": "Nightly availability for a listing (max(5, ⌈days/2⌉) credits by requested date range).",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.stayingapi.com/v1/availability",
+            "params": [
+              {
+                "name": "platform",
+                "value": "",
+                "type": "query",
+                "description": "Target platform (must be enabled for availability)."
+              },
+              {
+                "name": "listingId",
+                "value": "",
+                "type": "query",
+                "description": "Platform listing id (one identification form)."
+              },
+              {
+                "name": "listingIds",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated listing ids (one identification form)."
+              },
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "Full listing URL for the platform (one identification form)."
+              },
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD (required)."
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD (required)."
+              },
+              {
+                "name": "onlyAvailable",
+                "value": "",
+                "type": "query",
+                "description": "Only return available dates."
+              }
+            ]
+          },
+          "docs": "Provide EXACTLY ONE identification form: listingId, listingIds, or url. None → missing_parameter; conflicting forms → mutually_exclusive_params; a url that is not a well-formed listing URL for the platform → invalid_listing_url."
+        },
+        {
+          "info": {
+            "name": "Full normalized listing (3 credits/leg, flat).",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.stayingapi.com/v1/listing/:platform/:id",
+            "params": [
+              {
+                "name": "platform",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "country",
+                "value": "",
+                "type": "query",
+                "description": "ISO-3166 alpha-2 country hint (booking). Disambiguates a bare booking.com slug (slugs are not globally unique) without the %2F-encoded /hotel/{cc}/{slug} id — e.g. /v1/listing/booking/casa-de-alba?country=co. A bare booking slug with no country returns 400 needs_country."
+              },
+              {
+                "name": "checkIn",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD."
+              },
+              {
+                "name": "checkOut",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD."
+              },
+              {
+                "name": "currency",
+                "value": "",
+                "type": "query",
+                "description": "ISO-4217; default USD."
+              }
+            ]
+          },
+          "docs": "Full normalized listing (3 credits/leg, flat)."
+        },
+        {
+          "info": {
+            "name": "Live price for a listing + dates (3 credits/leg, flat).",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.stayingapi.com/v1/price",
+            "params": [
+              {
+                "name": "platform",
+                "value": "",
+                "type": "query",
+                "description": "Target platform (must be enabled for price)."
+              },
+              {
+                "name": "listingId",
+                "value": "",
+                "type": "query",
+                "description": "Platform listing id."
+              },
+              {
+                "name": "checkIn",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD (required)."
+              },
+              {
+                "name": "checkOut",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD (required)."
+              },
+              {
+                "name": "currency",
+                "value": "",
+                "type": "query",
+                "description": "ISO-4217; default USD."
+              }
+            ]
+          },
+          "docs": "Live price for a listing + dates (3 credits/leg, flat)."
+        },
+        {
+          "info": {
+            "name": "Cross-OTA price comparison — via Google (30 credits, flat) or across listing ids you supply (sum of the per-platform price legs).",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.stayingapi.com/v1/price-compare",
+            "params": [
+              {
+                "name": "listings",
+                "value": "",
+                "type": "query",
+                "description": "DIRECT MODE. 2–6 comma-separated (or repeated) platform:listingId pairs for the same property, e.g. listings=airbnb:12345,booking:co/casa-de-alba,vrbo:987654. Split on the FIRST colon, so a full listing URL works as the id. Mutually exclusive with name/location/googleHotelId. An id containing a comma must be sent as a repeated param."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "GOOGLE MODE. Property name (one of name/location/googleHotelId)."
+              },
+              {
+                "name": "location",
+                "value": "",
+                "type": "query",
+                "description": "GOOGLE MODE. Location hint (one of name/location/googleHotelId)."
+              },
+              {
+                "name": "googleHotelId",
+                "value": "",
+                "type": "query",
+                "description": "GOOGLE MODE. Google hotel id (mutually exclusive with name/location)."
+              },
+              {
+                "name": "checkIn",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD (required)."
+              },
+              {
+                "name": "checkOut",
+                "value": "",
+                "type": "query",
+                "description": "YYYY-MM-DD (required)."
+              },
+              {
+                "name": "adults",
+                "value": "",
+                "type": "query",
+                "description": "Default 2."
+              },
+              {
+                "name": "children",
+                "value": "",
+                "type": "query",
+                "description": "Default 0."
+              },
+              {
+                "name": "currency",
+                "value": "",
+                "type": "query",
+                "description": "ISO-4217; default USD."
+              }
+            ]
+          },
+          "docs": "TWO modes, one response type.\n\n**Google-aggregator mode** (`name` / `location` / `googleHotelId`): we resolve the property on Google Hotels and report the offers it surfaces. You need no ids. Flat 30 credits.\n\n**Direct fan-out mode** (`listings=`): you supply 2–6 `platform:listingId` pairs for the SAME property and we run one real price call per listing, in parallel, then normalize the comparison ourselves. Each offer carries `platform`, `listingId`, `nightlyPrice`, `nights` and a best-effort `f"
+        },
+        {
+          "info": {
+            "name": "Listing reviews (per-review: RATE×reviews, min 5 credits; airbnb 5×, booking/vrbo 1×).",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.stayingapi.com/v1/reviews",
+            "params": [
+              {
+                "name": "platform",
+                "value": "",
+                "type": "query",
+                "description": "Target platform (must be enabled for reviews)."
+              },
+              {
+                "name": "listingId",
+                "value": "",
+                "type": "query",
+                "description": "Platform-native id from /v1/search `platformListingId` (one identification form); a `stays_<platform>_<platformListingId>` id is accepted, normalized, and may supply platform when platform is omitted."
+              },
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "Full listing URL (one identification form)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "1–100; default 20."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor."
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "ISO-639-1 filter."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "recent | rating_desc | rating_asc."
+              }
+            ]
+          },
+          "docs": "Provide EXACTLY ONE of listingId or url. None → missing_parameter; both → mutually_exclusive_params; a bad url → invalid_listing_url. Required params are platform plus either listingId or url. listingId should be the platform-native id from /v1/search `platformListingId`; a `stays_<platform>_<platformListingId>` object id is accepted, normalized, and may supply platform when platform is omitted."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

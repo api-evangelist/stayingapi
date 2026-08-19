@@ -1,0 +1,211 @@
+{
+  "item": [
+    {
+      "id": "df1e5cd0-713a-442d-a261-1b27eb0a72a8",
+      "name": "Account",
+      "description": {
+        "content": "Account, plan and credit balance",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b81c0dc4-a758-4c89-97d2-53397ac799eb",
+          "name": "Account, plan, credit balance and rate limit (0 credits).",
+          "request": {
+            "name": "Account, plan, credit balance and rate limit (0 credits).",
+            "description": {
+              "content": "Programmatic introspection of the authenticated key: credit balance, plan (code/name/status), key env (live | sandbox) and the per-plan rate limit (requests/minute). Works for live and sandbox keys; free and never billed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "account"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d27d7074-5de4-469a-8687-bf4739e3dc73",
+              "name": "Success.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"plan\": {\n      \"code\": \"free\",\n      \"name\": \"Free / Sandbox\",\n      \"status\": \"unpaid\"\n    },\n    \"key\": {\n      \"env\": \"live\"\n    },\n    \"credits\": {\n      \"balance\": 4533,\n      \"available\": 8385,\n      \"held\": 6221,\n      \"expiringSoon\": 2963\n    },\n    \"rateLimit\": {\n      \"requestsPerMinute\": 658\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5239aa05-1659-4ff5-a4fb-a30fcbc3d330",
+              "name": "Authentication error (missing/invalid API key).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"invalid_request\",\n    \"code\": \"internal_error\",\n    \"message\": \"string\",\n    \"requestId\": \"req_4ESRDW9T3MW50XG35WWRV9PYR9\",\n    \"creditsCharged\": 0,\n    \"retryable\": true,\n    \"docUrl\": \"http://YZVRpHQIKrLX.ilIWPMZycmrEJ6H\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7818863e-5e54-4b9d-9b85-2de7604a0638",
+              "name": "Rate limited (rate_limit_exceeded); carries Retry-After.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"invalid_request\",\n    \"code\": \"internal_error\",\n    \"message\": \"string\",\n    \"requestId\": \"req_4ESRDW9T3MW50XG35WWRV9PYR9\",\n    \"creditsCharged\": 0,\n    \"retryable\": true,\n    \"docUrl\": \"http://YZVRpHQIKrLX.ilIWPMZycmrEJ6H\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.stayingapi.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b74d4ec3-02f6-4067-bb8d-d325551d0b60",
+    "name": "Staying Account API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "One accommodation-data API for Airbnb, Booking.com, Vrbo and Google Hotels — availability, search and cross-OTA price comparison in a single unified schema. Every endpoint returns the canonical envelope (§6.3.3); errors use the locked sub-code catalog (§6.4). Failed, empty and blocked calls are never billed; cached results bill at tier (caching is margin, not a discount). Full docs: https://stayingapi.com/docs.\n\nContact Support:\n Name: StayingAPI",
+      "type": "text/plain"
+    }
+  }
+}

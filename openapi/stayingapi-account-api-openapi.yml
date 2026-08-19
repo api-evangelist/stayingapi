@@ -1,0 +1,278 @@
+openapi: 3.2.0
+info:
+  title: Staying Account API
+  version: 1.0.0
+  description: 'One accommodation-data API for Airbnb, Booking.com, Vrbo and Google Hotels — availability, search and cross-OTA price comparison in a single unified schema. Every endpoint returns the canonical envelope (§6.3.3); errors use the locked sub-code catalog (§6.4). Failed, empty and blocked calls are never billed; cached results bill at tier (caching is margin, not a discount). Full docs: https://stayingapi.com/docs.'
+  contact:
+    name: StayingAPI
+    url: https://stayingapi.com/docs
+  license:
+    name: Proprietary
+servers:
+- url: https://api.stayingapi.com/v1
+  description: REST API (v1)
+security:
+- bearerAuth: []
+tags:
+- name: Account
+  description: Account, plan and credit balance
+paths:
+  /account:
+    get:
+      tags:
+      - Account
+      operationId: account
+      summary: Account, plan, credit balance and rate limit (0 credits).
+      description: 'Programmatic introspection of the authenticated key: credit balance, plan (code/name/status), key env (live | sandbox) and the per-plan rate limit (requests/minute). Works for live and sandbox keys; free and never billed.'
+      responses:
+        '200':
+          description: Success.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountEnvelope'
+        '401':
+          description: Authentication error (missing/invalid API key).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limited (rate_limit_exceeded); carries Retry-After.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+components:
+  schemas:
+    Error:
+      type: object
+      description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
+      required:
+      - type
+      - code
+      - message
+      - requestId
+      - creditsCharged
+      - retryable
+      - docUrl
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+          description: Error sub-code; each has a docs page at https://stayingapi.com/docs/errors/<code>.
+        message:
+          type: string
+        param:
+          type:
+          - string
+          - 'null'
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+        creditsCharged:
+          type: integer
+          enum:
+          - 0
+          description: Errors never bill (always 0).
+        retryable:
+          type: boolean
+        docUrl:
+          type: string
+          format: uri
+    Account:
+      type: object
+      description: 'Authenticated account snapshot (§F1): plan, key env, credit balance and rate limit.'
+      required:
+      - plan
+      - key
+      - credits
+      - rateLimit
+      properties:
+        plan:
+          type: object
+          required:
+          - code
+          - name
+          - status
+          properties:
+            code:
+              type: string
+              example: free
+              description: Plan code (free|starter|pro|scale|enterprise).
+            name:
+              type: string
+              example: Free / Sandbox
+            status:
+              type: string
+              enum:
+              - trialing
+              - active
+              - past_due
+              - canceled
+              - incomplete
+              - incomplete_expired
+              - unpaid
+              description: Subscription status.
+        key:
+          type: object
+          required:
+          - env
+          properties:
+            env:
+              type: string
+              enum:
+              - live
+              - sandbox
+              description: 'Key environment: live or sandbox (stay_test_).'
+        credits:
+          type: object
+          required:
+          - balance
+          - available
+          - held
+          - expiringSoon
+          properties:
+            balance:
+              type: integer
+              description: Raw credit balance (latest ledger balance_after; may include not-yet-materialized expired credits).
+            available:
+              type: integer
+              description: Spendable credits now = raw balance minus expired-unconsumed credits and active reservations. This is the number the admission gate uses.
+            held:
+              type: integer
+              minimum: 0
+              description: Credits currently reserved by accepted work that has not settled or released yet.
+            expiringSoon:
+              type: integer
+              description: Credits expiring within the next 7 days.
+        rateLimit:
+          type: object
+          required:
+          - requestsPerMinute
+          properties:
+            requestsPerMinute:
+              type: integer
+              minimum: 1
+              description: Per-plan rate limit (requests/minute).
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+    AccountEnvelope:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/Account'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer API key. stay_test_ = deterministic sandbox (0 credits); stay_live_ = live.
+x-mcp:
+  server: https://mcp.stayingapi.com/mcp
+  serverCard: https://mcp.stayingapi.com/.well-known/mcp.json
+  documentation: https://stayingapi.com/docs/mcp
+  authentication: oauth2.1+pkce
+  description: A native Model Context Protocol server exposes these endpoints as read-only tools for AI agents.
+x-error-codes-by-type:
+  invalid_request:
+  - missing_parameter
+  - invalid_parameter
+  - invalid_date_range
+  - date_in_past
+  - child_ages_mismatch
+  - stay_too_long
+  - window_too_long
+  - invalid_listing_url
+  - invalid_property_type
+  - invalid_amenity
+  - invalid_price_range
+  - invalid_language
+  - invalid_sort
+  - invalid_cursor
+  - limit_out_of_range
+  - mutually_exclusive_params
+  - platform_not_enabled
+  - no_enabled_platform
+  - needs_country
+  authentication_error:
+  - missing_api_key
+  - invalid_api_key
+  - revoked_api_key
+  permission_denied:
+  - scope_insufficient
+  - email_unverified
+  - subscription_required
+  not_found:
+  - listing_not_found
+  - job_not_found
+  - identity_mismatch
+  insufficient_credits:
+  - credit_balance_too_low
+  rate_limited:
+  - rate_limit_exceeded
+  upstream_unavailable:
+  - all_actors_failed
+  - actor_blocked
+  - upstream_degraded
+  upstream_timeout:
+  - actor_timeout
+  internal_error:
+  - internal_error

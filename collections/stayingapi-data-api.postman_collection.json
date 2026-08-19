@@ -1,0 +1,4764 @@
+{
+  "item": [
+    {
+      "id": "7f1f3426-9121-4b59-a2ce-59ce707ef7b1",
+      "name": "Data",
+      "description": {
+        "content": "Accommodation data endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8a1e7cd8-069e-4c83-b780-31f51044d320",
+          "name": "Search properties across platforms (per-result: RATE×results per platform, min 5 credits; airbnb 2×, booking/vrbo 1×, google 15/page).",
+          "request": {
+            "name": "Search properties across platforms (per-result: RATE×results per platform, min 5 credits; airbnb 2×, booking/vrbo 1×, google 15/page).",
+            "description": {},
+            "url": {
+              "path": [
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "location",
+                  "value": "<string>",
+                  "description": "(Required) Destination (city, region, address)."
+                },
+                {
+                  "disabled": false,
+                  "key": "checkIn",
+                  "value": "<string>",
+                  "description": "YYYY-MM-DD."
+                },
+                {
+                  "disabled": false,
+                  "key": "checkOut",
+                  "value": "<string>",
+                  "description": "YYYY-MM-DD."
+                },
+                {
+                  "disabled": false,
+                  "key": "platforms",
+                  "value": "<string>",
+                  "description": "Comma-separated platforms; defaults to all enabled. `limit` applies per platform."
+                },
+                {
+                  "disabled": false,
+                  "key": "platform",
+                  "value": "<string>",
+                  "description": "Alias for `platforms=<value>` when requesting exactly one platform."
+                },
+                {
+                  "disabled": false,
+                  "key": "adults",
+                  "value": "<integer>",
+                  "description": "Default 2."
+                },
+                {
+                  "disabled": false,
+                  "key": "children",
+                  "value": "<integer>",
+                  "description": "Default 0; requires matching childAges."
+                },
+                {
+                  "disabled": false,
+                  "key": "rooms",
+                  "value": "<integer>",
+                  "description": "Default 1."
+                },
+                {
+                  "disabled": false,
+                  "key": "currency",
+                  "value": "<string>",
+                  "description": "ISO-4217; default USD."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "1–40; default 10. Applies per platform: a 3-platform search with limit=5 returns up to 15 results."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "<string>",
+                  "description": "recommended | price_asc | price_desc | rating_desc."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4a4ae268-2301-44e9-ad84-153466913eea",
+              "name": "Success.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platforms",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "rooms",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6669c5d9-abbf-49ea-a379-2e8ee6eb0a5c",
+              "name": "Accepted — async job created; poll pollUrl. Retry-After hints the back-off.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platforms",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "rooms",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before polling.",
+                  "key": "Retry-After",
+                  "value": "1030"
+                },
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"jobId\": \"job_01J8ZK4R2ABCDEF0123456789\",\n    \"status\": \"pending\",\n    \"pollUrl\": \"/v1/jobs/job_01J8ZK4R2ABCDEF0123456789\",\n    \"estimatedSeconds\": 9829\n  },\n  \"meta\": {\n    \"requestId\": \"string\",\n    \"creditsCharged\": 0,\n    \"platforms\": [\n      \"airbnb\",\n      \"google\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "265ffbdb-1c03-450e-8c87-62cb8c0a02e7",
+              "name": "Validation error (invalid_request).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platforms",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "rooms",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "53b368a0-c257-46fc-9a4e-f4c704b89e4f",
+              "name": "Authentication error (missing/invalid API key).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platforms",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "rooms",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eadf3b87-9b84-4d80-bcb6-e3fb1e75d864",
+              "name": "Insufficient credits (credit_balance_too_low).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platforms",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "rooms",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6ba88d18-a285-4634-9541-8a0804a0c8bd",
+              "name": "Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platforms",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "rooms",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9c6ee940-7bbb-4b7b-b49a-0069ebf83e33",
+              "name": "Rate limited (rate_limit_exceeded); carries Retry-After.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platforms",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "rooms",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b83e2be4-3cce-4f59-ae0a-bd7f1fb2f773",
+              "name": "All upstream sources failed or were blocked (no charge).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platforms",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "rooms",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cb6d1dd7-6984-4aa6-89fb-99ffc82abcb6",
+          "name": "Search properties (JSON body form of GET /search).",
+          "request": {
+            "name": "Search properties (JSON body form of GET /search).",
+            "description": {},
+            "url": {
+              "path": [
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key_0\": false,\n  \"key_1\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "53b2a40b-bc42-45e8-816c-07b69fd0a28d",
+              "name": "Success.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 9155.865589722658,\n  \"key_1\": 5720\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4a34170d-a38e-46f5-a06b-9fd8afbb6c0b",
+              "name": "Accepted — async job created; poll pollUrl. Retry-After hints the back-off.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 9155.865589722658,\n  \"key_1\": 5720\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before polling.",
+                  "key": "Retry-After",
+                  "value": "1030"
+                },
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"jobId\": \"job_01J8ZK4R2ABCDEF0123456789\",\n    \"status\": \"pending\",\n    \"pollUrl\": \"/v1/jobs/job_01J8ZK4R2ABCDEF0123456789\",\n    \"estimatedSeconds\": 9430\n  },\n  \"meta\": {\n    \"requestId\": \"string\",\n    \"creditsCharged\": 0,\n    \"platforms\": [\n      \"google\",\n      \"vrbo\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a11c638c-898b-42ce-958e-1901e50c8ade",
+              "name": "Validation error (invalid_request).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 9155.865589722658,\n  \"key_1\": 5720\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6a762c9c-a3af-4eaf-a820-382947e47348",
+              "name": "Authentication error (missing/invalid API key).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 9155.865589722658,\n  \"key_1\": 5720\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e6fae3e1-487d-441b-8384-0d80d068ae66",
+              "name": "Insufficient credits (credit_balance_too_low).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 9155.865589722658,\n  \"key_1\": 5720\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c6762479-e9b3-40b1-8f23-547429c7b26e",
+              "name": "Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 9155.865589722658,\n  \"key_1\": 5720\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "340c9fbd-0c84-44f1-b69d-0a049b5b35c6",
+              "name": "Rate limited (rate_limit_exceeded); carries Retry-After.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 9155.865589722658,\n  \"key_1\": 5720\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6776380c-6e5a-4737-8739-adb70ede7465",
+              "name": "All upstream sources failed or were blocked (no charge).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 9155.865589722658,\n  \"key_1\": 5720\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f0b972eb-3147-4ae5-a0c9-88b129495aed",
+          "name": "Nightly availability for a listing (max(5, ⌈days/2⌉) credits by requested date range).",
+          "request": {
+            "name": "Nightly availability for a listing (max(5, ⌈days/2⌉) credits by requested date range).",
+            "description": {
+              "content": "Provide EXACTLY ONE identification form: listingId, listingIds, or url. None → missing_parameter; conflicting forms → mutually_exclusive_params; a url that is not a well-formed listing URL for the platform → invalid_listing_url.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "availability"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "platform",
+                  "value": "<string>",
+                  "description": "(Required) Target platform (must be enabled for availability)."
+                },
+                {
+                  "disabled": false,
+                  "key": "listingId",
+                  "value": "<string>",
+                  "description": "Platform listing id (one identification form)."
+                },
+                {
+                  "disabled": false,
+                  "key": "listingIds",
+                  "value": "<string>",
+                  "description": "Comma-separated listing ids (one identification form)."
+                },
+                {
+                  "disabled": false,
+                  "key": "url",
+                  "value": "<string>",
+                  "description": "Full listing URL for the platform (one identification form)."
+                },
+                {
+                  "disabled": false,
+                  "key": "startDate",
+                  "value": "<string>",
+                  "description": "(Required) YYYY-MM-DD (required)."
+                },
+                {
+                  "disabled": false,
+                  "key": "endDate",
+                  "value": "<string>",
+                  "description": "(Required) YYYY-MM-DD (required)."
+                },
+                {
+                  "disabled": false,
+                  "key": "onlyAvailable",
+                  "value": "<boolean>",
+                  "description": "Only return available dates."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "33d6ace7-4eb8-4c37-a23c-e0abd3f19938",
+              "name": "Success.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingIds",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "onlyAvailable",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8b274eb9-5fbe-4356-bdb8-8e29aece9deb",
+              "name": "Accepted — async job created; poll pollUrl. Retry-After hints the back-off.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingIds",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "onlyAvailable",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before polling.",
+                  "key": "Retry-After",
+                  "value": "1030"
+                },
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"jobId\": \"job_01J8ZK4R2ABCDEF0123456789\",\n    \"status\": \"pending\",\n    \"pollUrl\": \"/v1/jobs/job_01J8ZK4R2ABCDEF0123456789\",\n    \"estimatedSeconds\": 6446\n  },\n  \"meta\": {\n    \"requestId\": \"string\",\n    \"creditsCharged\": 0,\n    \"platforms\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3a4ea914-34d0-4076-8b12-f380e7e5f496",
+              "name": "Validation error (invalid_request).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingIds",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "onlyAvailable",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1d097ec6-60da-4a9e-b253-78206801128b",
+              "name": "Authentication error (missing/invalid API key).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingIds",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "onlyAvailable",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6537ceb1-534a-4934-bdbb-cac5465219bc",
+              "name": "Insufficient credits (credit_balance_too_low).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingIds",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "onlyAvailable",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4d507ea7-e7af-47de-b2c2-8db399b64f26",
+              "name": "Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingIds",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "onlyAvailable",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "17b55a61-c92f-4f84-81d0-30afea134101",
+              "name": "Rate limited (rate_limit_exceeded); carries Retry-After.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingIds",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "onlyAvailable",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7b8fcdaf-91f6-4905-85a2-9b04708b9b96",
+              "name": "All upstream sources failed or were blocked (no charge).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingIds",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "onlyAvailable",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "37a16cd9-b9b0-49bb-a316-10a7fca30ea8",
+          "name": "Full normalized listing (3 credits/leg, flat).",
+          "request": {
+            "name": "Full normalized listing (3 credits/leg, flat).",
+            "description": {},
+            "url": {
+              "path": [
+                "listing",
+                ":platform",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "country",
+                  "value": "<string>",
+                  "description": "ISO-3166 alpha-2 country hint (booking). Disambiguates a bare booking.com slug (slugs are not globally unique) without the %2F-encoded /hotel/{cc}/{slug} id — e.g. /v1/listing/booking/casa-de-alba?country=co. A bare booking slug with no country returns 400 needs_country."
+                },
+                {
+                  "disabled": false,
+                  "key": "checkIn",
+                  "value": "<string>",
+                  "description": "YYYY-MM-DD."
+                },
+                {
+                  "disabled": false,
+                  "key": "checkOut",
+                  "value": "<string>",
+                  "description": "YYYY-MM-DD."
+                },
+                {
+                  "disabled": false,
+                  "key": "currency",
+                  "value": "<string>",
+                  "description": "ISO-4217; default USD."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "platform",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1f0f5195-85a0-48bd-8c6d-0e78370e8693",
+              "name": "Success.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "listing",
+                    ":platform",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "country",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "platform",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"string\",\n    \"platform\": \"tripadvisor\",\n    \"platformListingId\": \"string\",\n    \"url\": \"http://UBodGpYaNQBKaumGBjAWtpczC.naNpvJ4J5Sdik2js\",\n    \"name\": \"string\",\n    \"propertyType\": \"cottage\",\n    \"location\": {\n      \"lat\": 6637.765154556143,\n      \"lng\": 9782.888000933926,\n      \"city\": \"string\",\n      \"region\": \"string\",\n      \"country\": \"st\",\n      \"address\": \"string\"\n    },\n    \"starRating\": 2009.1456709443933,\n    \"guestRating\": 3132.6578141989235,\n    \"ratingScale\": 1245.186156202631,\n    \"reviewCount\": 8311898506116667,\n    \"maxOccupancy\": 8335096304831906,\n    \"bedrooms\": 6225.361142891208,\n    \"bathrooms\": 2139.76284548109,\n    \"amenities\": [\n      \"beachfront\",\n      \"smoke_alarm\"\n    ],\n    \"images\": [\n      \"http://lFKEXfKyIkBlk.yseklujKf-Fg9caK.eJL7q7RF3,\",\n      \"https://CPNiLbkYKNljO.yroxWq6.D7RofZrWH7fo,ck5TQ1knUo2NdiaTR7au9KAM7USh4sGIr\"\n    ],\n    \"host\": {\n      \"name\": \"string\",\n      \"isSuperhost\": true\n    },\n    \"price\": {\n      \"platform\": \"booking\",\n      \"listingId\": \"string\",\n      \"currency\": \"LFQ\",\n      \"nightlyPrice\": 4885.89822408506,\n      \"totalPrice\": 8532.971714767422,\n      \"fees\": {\n        \"cleaning\": 9580.783759644703,\n        \"service\": 1911.7790107794053,\n        \"taxes\": 4232.137676084\n      },\n      \"nights\": 2251069932867091,\n      \"occupancy\": {\n        \"adults\": 1769334330666617,\n        \"children\": 5946666856688083,\n        \"childAges\": [\n          3493924232054824,\n          6578468755847931\n        ]\n      },\n      \"source\": \"string\",\n      \"url\": \"http://rmWbEIiTeRJaTdzbKxCmlWQTbAO.tyrKE+BjvYpmTtgSq8S6IO\"\n    },\n    \"identity\": {\n      \"requestedId\": \"string\",\n      \"resolvedId\": \"string\",\n      \"canonicalUrl\": \"http://IwWyUbCtMcMqWGzxRUaCsr.sgqE+vmMvYOBJfZfX+gPu1KripRBwWmJJsSINPy3FCRturq6xL\"\n    }\n  },\n  \"meta\": {\n    \"requestId\": \"req_01J8ZK3QF9ABCDEF0123456789\",\n    \"platforms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"cached\": true,\n    \"partial\": false,\n    \"creditsCharged\": 1713,\n    \"currency\": \"USD\",\n    \"environment\": \"test\",\n    \"sandbox\": true,\n    \"pagination\": {\n      \"limit\": 4630,\n      \"cursor\": \"string\",\n      \"nextCursor\": null,\n      \"hasMore\": true\n    },\n    \"platformResults\": [\n      {\n        \"platform\": \"<string>\",\n        \"status\": \"failed\",\n        \"reason\": \"not_enabled\",\n        \"creditsCharged\": 4495,\n        \"cached\": false,\n        \"count\": 8733,\n        \"error\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"message\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"retryable\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"message\": \"string\"\n      },\n      {\n        \"platform\": \"<string>\",\n        \"status\": \"ok\",\n        \"reason\": \"requires_dates\",\n        \"creditsCharged\": 2121,\n        \"cached\": false,\n        \"count\": 9802,\n        \"error\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"message\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"retryable\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"message\": \"string\"\n      }\n    ],\n    \"warnings\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"platform\": \"<string>\",\n        \"docUrl\": \"https://ndzklyoazSlFXtXtPWbTvTElOcBNB.bmntZS5j1F-s\"\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"platform\": \"<string>\",\n        \"docUrl\": \"https://yUPDorFLeCxPALtGTYRcxCcDmqAs.dxodZMLj0viRoXTvO-sXUslU7hb7DA.hGLv2ityg\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5bdd89ff-240d-457f-96ef-c1fa91fc9295",
+              "name": "Accepted — async job created; poll pollUrl. Retry-After hints the back-off.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "listing",
+                    ":platform",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "country",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "platform",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before polling.",
+                  "key": "Retry-After",
+                  "value": "1030"
+                },
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"jobId\": \"job_01J8ZK4R2ABCDEF0123456789\",\n    \"status\": \"pending\",\n    \"pollUrl\": \"/v1/jobs/job_01J8ZK4R2ABCDEF0123456789\",\n    \"estimatedSeconds\": 6446\n  },\n  \"meta\": {\n    \"requestId\": \"string\",\n    \"creditsCharged\": 0,\n    \"platforms\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "297d1356-efc7-4f45-b6c9-5e7123f31237",
+              "name": "Validation error (invalid_request).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "listing",
+                    ":platform",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "country",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "platform",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "98ae20ff-d7e7-49e9-af0b-b8d73955ed4e",
+              "name": "Authentication error (missing/invalid API key).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "listing",
+                    ":platform",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "country",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "platform",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7c74c13a-555d-4df9-915b-13def038ec5b",
+              "name": "Insufficient credits (credit_balance_too_low).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "listing",
+                    ":platform",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "country",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "platform",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ee740c7c-b1cf-43b8-999e-6796a029dd24",
+              "name": "Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "listing",
+                    ":platform",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "country",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "platform",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "015fba73-4797-44e5-b2cc-3916f8953ea0",
+              "name": "Rate limited (rate_limit_exceeded); carries Retry-After.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "listing",
+                    ":platform",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "country",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "platform",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a5acfd38-94e7-43a0-b75d-4add042624e8",
+              "name": "All upstream sources failed or were blocked (no charge).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "listing",
+                    ":platform",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "country",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "platform",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b179b903-12a3-46b7-ac10-c63e2e88c272",
+          "name": "Live price for a listing + dates (3 credits/leg, flat).",
+          "request": {
+            "name": "Live price for a listing + dates (3 credits/leg, flat).",
+            "description": {},
+            "url": {
+              "path": [
+                "price"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "platform",
+                  "value": "<string>",
+                  "description": "(Required) Target platform (must be enabled for price)."
+                },
+                {
+                  "disabled": false,
+                  "key": "listingId",
+                  "value": "<string>",
+                  "description": "(Required) Platform listing id."
+                },
+                {
+                  "disabled": false,
+                  "key": "checkIn",
+                  "value": "<string>",
+                  "description": "(Required) YYYY-MM-DD (required)."
+                },
+                {
+                  "disabled": false,
+                  "key": "checkOut",
+                  "value": "<string>",
+                  "description": "(Required) YYYY-MM-DD (required)."
+                },
+                {
+                  "disabled": false,
+                  "key": "currency",
+                  "value": "<string>",
+                  "description": "ISO-4217; default USD."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "242f51ce-37a1-47a1-9710-897819a490f4",
+              "name": "Success.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"platform\": \"airbnb\",\n    \"listingId\": \"string\",\n    \"currency\": \"FEC\",\n    \"nightlyPrice\": 180.7624334395752,\n    \"totalPrice\": 6725.74845996568,\n    \"fees\": {\n      \"cleaning\": 1274.3961148935557,\n      \"service\": 4108.801794078956,\n      \"taxes\": 2194.246500285929\n    },\n    \"nights\": 2988862051613182,\n    \"occupancy\": {\n      \"adults\": 4717348162820000,\n      \"children\": 2331053835466811,\n      \"childAges\": [\n        6361196177397679,\n        4117689869133793\n      ]\n    },\n    \"source\": \"string\",\n    \"url\": \"https://MtwMnuZlo.krMrF5.u44BTuci1IuV2rg\"\n  },\n  \"meta\": {\n    \"requestId\": \"req_01J8ZK3QF9ABCDEF0123456789\",\n    \"platforms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"cached\": true,\n    \"partial\": false,\n    \"creditsCharged\": 6659,\n    \"currency\": \"USD\",\n    \"environment\": \"live\",\n    \"sandbox\": false,\n    \"pagination\": {\n      \"limit\": 6210,\n      \"cursor\": \"string\",\n      \"nextCursor\": null,\n      \"hasMore\": false\n    },\n    \"platformResults\": [\n      {\n        \"platform\": \"<string>\",\n        \"status\": \"failed\",\n        \"reason\": \"requires_dates\",\n        \"creditsCharged\": 4765,\n        \"cached\": false,\n        \"count\": 9437,\n        \"error\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"message\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"retryable\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"message\": \"string\"\n      },\n      {\n        \"platform\": \"<string>\",\n        \"status\": \"ok\",\n        \"reason\": \"not_enabled\",\n        \"creditsCharged\": 8364,\n        \"cached\": false,\n        \"count\": 8035,\n        \"error\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"message\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"retryable\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"message\": \"string\"\n      }\n    ],\n    \"warnings\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"platform\": \"<string>\",\n        \"docUrl\": \"https://owbWQEjAfMNZyYaxroRznTWhzubMftLk.swqe7DJ6smV,zWV6jqyrOZIvoIL-KMgi0Nw+b64ls-pECAc-LO947,.W\"\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"platform\": \"<string>\",\n        \"docUrl\": \"https://h.uwuQ0APEg9VK6.6XKjoTKAoUAeBmpeGZeVMpcsALWcP1QahWw8BVZd\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d876a59b-7554-49f7-999c-569ffddfadfa",
+              "name": "Accepted — async job created; poll pollUrl. Retry-After hints the back-off.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before polling.",
+                  "key": "Retry-After",
+                  "value": "1030"
+                },
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"jobId\": \"job_01J8ZK4R2ABCDEF0123456789\",\n    \"status\": \"pending\",\n    \"pollUrl\": \"/v1/jobs/job_01J8ZK4R2ABCDEF0123456789\",\n    \"estimatedSeconds\": 6446\n  },\n  \"meta\": {\n    \"requestId\": \"string\",\n    \"creditsCharged\": 0,\n    \"platforms\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0907c0e2-d4f3-4d35-8405-85a8dbce7922",
+              "name": "Validation error (invalid_request).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "45fb46d8-3e23-4a95-b38b-786628a5fcd4",
+              "name": "Authentication error (missing/invalid API key).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7a858f2e-77cc-43a3-a430-0b3b9b3d95e8",
+              "name": "Insufficient credits (credit_balance_too_low).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5cb16d71-a2bf-4ba7-abef-5f8dd1d3db9b",
+              "name": "Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3d2d24ed-4173-460f-b3af-4613cc11d66f",
+              "name": "Rate limited (rate_limit_exceeded); carries Retry-After.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c470f83e-b308-469e-b7ef-2f45f10e0da0",
+              "name": "All upstream sources failed or were blocked (no charge).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7db54152-2908-42cd-8edf-b92e4449c1ab",
+          "name": "Cross-OTA price comparison — via Google (30 credits, flat) or across listing ids you supply (sum of the per-platform price legs).",
+          "request": {
+            "name": "Cross-OTA price comparison — via Google (30 credits, flat) or across listing ids you supply (sum of the per-platform price legs).",
+            "description": {
+              "content": "TWO modes, one response type.\n\n**Google-aggregator mode** (`name` / `location` / `googleHotelId`): we resolve the property on Google Hotels and report the offers it surfaces. You need no ids. Flat 30 credits.\n\n**Direct fan-out mode** (`listings=`): you supply 2–6 `platform:listingId` pairs for the SAME property and we run one real price call per listing, in parallel, then normalize the comparison ourselves. Each offer carries `platform`, `listingId`, `nightlyPrice`, `nights` and a best-effort `fees` breakdown, and the response is marked `source: 'direct_fanout'`. Billed as the SUM of the per-platform price legs; a leg that fails or returns nothing is charged 0 and is reported in `meta.platformResults` with `meta.partial: true`.\n\nFEE COVERAGE IS UNEVEN and this is deliberate rather than a gap we hide: Airbnb reports cleaning, service and taxes; Booking.com reports taxes only; Vrbo and Google report none. Compare on `totalPrice`, which is present and comparable everywhere. A null fee means we could not read it, NOT that the platform does not charge it.\n\n`min` and `median` cover only the offers quoted in the response `currency`; offers in another currency are still returned but excluded from the summary.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "price-compare"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "listings",
+                  "value": "<string>",
+                  "description": "DIRECT MODE. 2–6 comma-separated (or repeated) platform:listingId pairs for the same property, e.g. listings=airbnb:12345,booking:co/casa-de-alba,vrbo:987654. Split on the FIRST colon, so a full listing URL works as the id. Mutually exclusive with name/location/googleHotelId. An id containing a comma must be sent as a repeated param."
+                },
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "GOOGLE MODE. Property name (one of name/location/googleHotelId)."
+                },
+                {
+                  "disabled": false,
+                  "key": "location",
+                  "value": "<string>",
+                  "description": "GOOGLE MODE. Location hint (one of name/location/googleHotelId)."
+                },
+                {
+                  "disabled": false,
+                  "key": "googleHotelId",
+                  "value": "<string>",
+                  "description": "GOOGLE MODE. Google hotel id (mutually exclusive with name/location)."
+                },
+                {
+                  "disabled": false,
+                  "key": "checkIn",
+                  "value": "<string>",
+                  "description": "(Required) YYYY-MM-DD (required)."
+                },
+                {
+                  "disabled": false,
+                  "key": "checkOut",
+                  "value": "<string>",
+                  "description": "(Required) YYYY-MM-DD (required)."
+                },
+                {
+                  "disabled": false,
+                  "key": "adults",
+                  "value": "<integer>",
+                  "description": "Default 2."
+                },
+                {
+                  "disabled": false,
+                  "key": "children",
+                  "value": "<integer>",
+                  "description": "Default 0."
+                },
+                {
+                  "disabled": false,
+                  "key": "currency",
+                  "value": "<string>",
+                  "description": "ISO-4217; default USD."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ba66848b-6364-4be5-9da7-3d138c1b57dd",
+              "name": "Success.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price-compare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "listings",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "googleHotelId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"property\": \"string\",\n    \"checkIn\": \"0833-75-42\",\n    \"checkOut\": \"5126-68-96\",\n    \"currency\": \"QSZ\",\n    \"min\": 2498.3988458162075,\n    \"median\": 1991.0955462029833,\n    \"offers\": [\n      {\n        \"ota\": \"string\",\n        \"totalPrice\": 4538.905358062332,\n        \"currency\": \"WXD\",\n        \"url\": \"https://nkWTxdRw.iaem+U1eua-YX6Nd4tAcKip5MZAKZa\",\n        \"platform\": \"expedia\",\n        \"listingId\": \"string\",\n        \"nightlyPrice\": 8937.384102272732,\n        \"fees\": {\n          \"cleaning\": 8550.580733740266,\n          \"service\": 7835.965405302906,\n          \"taxes\": 5504.645546763647\n        },\n        \"nights\": 2667583845040974\n      },\n      {\n        \"ota\": \"string\",\n        \"totalPrice\": 2572.34205534043,\n        \"currency\": \"APH\",\n        \"url\": \"https://A.silPhN,XqnAu,5vNLPRgeO9OwzJXSoLXqy1rngD33g5eOfkSoTlQyHlJpY+9snkT58Ouxj9xxa\",\n        \"platform\": \"airbnb\",\n        \"listingId\": \"string\",\n        \"nightlyPrice\": 5965.473637608716,\n        \"fees\": {\n          \"cleaning\": 1427.0354861804358,\n          \"service\": 9577.906999499348,\n          \"taxes\": 5009.115842847699\n        },\n        \"nights\": 4595974419362416\n      }\n    ],\n    \"source\": \"google_aggregator\"\n  },\n  \"meta\": {\n    \"requestId\": \"req_01J8ZK3QF9ABCDEF0123456789\",\n    \"platforms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"cached\": true,\n    \"partial\": true,\n    \"creditsCharged\": 658,\n    \"currency\": \"USD\",\n    \"environment\": \"live\",\n    \"sandbox\": true,\n    \"pagination\": {\n      \"limit\": 7216,\n      \"cursor\": null,\n      \"nextCursor\": \"string\",\n      \"hasMore\": true\n    },\n    \"platformResults\": [\n      {\n        \"platform\": \"<string>\",\n        \"status\": \"skipped\",\n        \"reason\": \"requires_dates\",\n        \"creditsCharged\": 421,\n        \"cached\": false,\n        \"count\": 9689,\n        \"error\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"message\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"retryable\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"message\": \"string\"\n      },\n      {\n        \"platform\": \"<string>\",\n        \"status\": \"ok\",\n        \"reason\": \"not_enabled\",\n        \"creditsCharged\": 926,\n        \"cached\": true,\n        \"count\": 6633,\n        \"error\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"message\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"retryable\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"message\": \"string\"\n      }\n    ],\n    \"warnings\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"platform\": \"<string>\",\n        \"docUrl\": \"https://zKwRgjPBOXaqwhS.akD74vbML2KSTmCmcaBHbAQO4mm61hXtbQgEkWPfePt9iOV\"\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"platform\": \"<string>\",\n        \"docUrl\": \"https://rfBVJf.afgbHEvVOHzYa+iIZoQCNfChlixdBnf4LI.v+YoPpIvFvyQkrryZJO\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a113665c-5d0b-449e-97c4-5eafe6e4fe2f",
+              "name": "Accepted — async job created; poll pollUrl. Retry-After hints the back-off.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price-compare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "listings",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "googleHotelId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before polling.",
+                  "key": "Retry-After",
+                  "value": "1030"
+                },
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"jobId\": \"job_01J8ZK4R2ABCDEF0123456789\",\n    \"status\": \"pending\",\n    \"pollUrl\": \"/v1/jobs/job_01J8ZK4R2ABCDEF0123456789\",\n    \"estimatedSeconds\": 6446\n  },\n  \"meta\": {\n    \"requestId\": \"string\",\n    \"creditsCharged\": 0,\n    \"platforms\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38fff79e-c6d9-4bfa-a066-caa620b8b349",
+              "name": "Validation error (invalid_request).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price-compare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "listings",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "googleHotelId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6fa0b0db-d2d6-4166-b725-29305397df10",
+              "name": "Authentication error (missing/invalid API key).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price-compare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "listings",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "googleHotelId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "901a0a04-f9d8-4efd-9533-d71683090eb6",
+              "name": "Insufficient credits (credit_balance_too_low).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price-compare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "listings",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "googleHotelId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c17cbbf0-5255-4092-af20-b626dcc939ce",
+              "name": "Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price-compare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "listings",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "googleHotelId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a638ffb6-af17-4bc2-86c0-55637eec9d3d",
+              "name": "Rate limited (rate_limit_exceeded); carries Retry-After.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price-compare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "listings",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "googleHotelId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f3dc73c7-6386-43e4-ae1c-660c2fb8252a",
+              "name": "All upstream sources failed or were blocked (no charge).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price-compare"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "listings",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "googleHotelId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkIn",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "checkOut",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "children",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8d5725f5-17e8-417d-8db4-d67d35958c80",
+          "name": "Listing reviews (per-review: RATE×reviews, min 5 credits; airbnb 5×, booking/vrbo 1×).",
+          "request": {
+            "name": "Listing reviews (per-review: RATE×reviews, min 5 credits; airbnb 5×, booking/vrbo 1×).",
+            "description": {
+              "content": "Provide EXACTLY ONE of listingId or url. None → missing_parameter; both → mutually_exclusive_params; a bad url → invalid_listing_url. Required params are platform plus either listingId or url. listingId should be the platform-native id from /v1/search `platformListingId`; a `stays_<platform>_<platformListingId>` object id is accepted, normalized, and may supply platform when platform is omitted.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "reviews"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "platform",
+                  "value": "<string>",
+                  "description": "(Required) Target platform (must be enabled for reviews)."
+                },
+                {
+                  "disabled": false,
+                  "key": "listingId",
+                  "value": "<string>",
+                  "description": "Platform-native id from /v1/search `platformListingId` (one identification form); a `stays_<platform>_<platformListingId>` id is accepted, normalized, and may supply platform when platform is omitted."
+                },
+                {
+                  "disabled": false,
+                  "key": "url",
+                  "value": "<string>",
+                  "description": "Full listing URL (one identification form)."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "1–100; default 20."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor."
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "ISO-639-1 filter."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "<string>",
+                  "description": "recent | rating_desc | rating_asc."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2c9e054f-4caf-42e3-932e-9415e294bf98",
+              "name": "Success.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reviews"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ec0e596b-2a38-4751-b33e-95ea310aef7a",
+              "name": "Accepted — async job created; poll pollUrl. Retry-After hints the back-off.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reviews"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before polling.",
+                  "key": "Retry-After",
+                  "value": "1030"
+                },
+                {
+                  "disabled": false,
+                  "key": "X-Request-Id",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"jobId\": \"job_01J8ZK4R2ABCDEF0123456789\",\n    \"status\": \"pending\",\n    \"pollUrl\": \"/v1/jobs/job_01J8ZK4R2ABCDEF0123456789\",\n    \"estimatedSeconds\": 6446\n  },\n  \"meta\": {\n    \"requestId\": \"string\",\n    \"creditsCharged\": 0,\n    \"platforms\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6ec669c2-1af8-48ac-918f-a2c2d462cdcb",
+              "name": "Validation error (invalid_request).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reviews"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "438fde2f-e5f9-49eb-ac53-467e61ba99a5",
+              "name": "Authentication error (missing/invalid API key).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reviews"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "877ff7de-aa2f-4b09-81be-1c10288a7959",
+              "name": "Insufficient credits (credit_balance_too_low).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reviews"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d89a34be-ec28-479e-bea4-6b2d9e4322cb",
+              "name": "Permission denied (e.g. email_unverified on live credits; subscription_required on top-ups).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reviews"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a454bf70-248b-4355-bd44-e2bcd31a5faf",
+              "name": "Rate limited (rate_limit_exceeded); carries Retry-After.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reviews"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "498b2619-86af-4485-9d17-2c01d6472134",
+              "name": "All upstream sources failed or were blocked (no charge).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reviews"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "platform",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "listingId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "url",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "language",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"upstream_unavailable\",\n    \"code\": \"missing_parameter\",\n    \"message\": \"string\",\n    \"requestId\": \"req_TJFKJC4F4S64QK32V21P6TVFVN\",\n    \"creditsCharged\": 0,\n    \"retryable\": false,\n    \"docUrl\": \"http://Gisj.cyclhwfBiIS1bJuIPxOrrvlxrOQfstqjyeAaeQVTgrtP0bQXEqXzN,iRz22C\",\n    \"param\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.stayingapi.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "77a96329-c858-48af-b56d-ad3613ec51a2",
+    "name": "Staying Data API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "One accommodation-data API for Airbnb, Booking.com, Vrbo and Google Hotels — availability, search and cross-OTA price comparison in a single unified schema. Every endpoint returns the canonical envelope (§6.3.3); errors use the locked sub-code catalog (§6.4). Failed, empty and blocked calls are never billed; cached results bill at tier (caching is margin, not a discount). Full docs: https://stayingapi.com/docs.\n\nContact Support:\n Name: StayingAPI",
+      "type": "text/plain"
+    }
+  }
+}

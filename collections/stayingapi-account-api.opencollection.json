@@ -1,0 +1,35 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Staying Account API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Account, plan, credit balance and rate limit (0 credits).",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.stayingapi.com/v1/account"
+          },
+          "docs": "Programmatic introspection of the authenticated key: credit balance, plan (code/name/status), key env (live | sandbox) and the per-plan rate limit (requests/minute). Works for live and sandbox keys; free and never billed."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

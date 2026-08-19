@@ -1,0 +1,23 @@
+{
+  "provider": "stayingapi",
+  "sources": [
+    "stayingapi-account-api-openapi.yml",
+    "stayingapi-data-api-openapi.yml",
+    "stayingapi-jobs-api-openapi.yml"
+  ],
+  "outputs": [
+    "stayingapi-account-api-openapi.yml",
+    "stayingapi-data-api-openapi.yml",
+    "stayingapi-jobs-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "stayingapi-account-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "stayingapi-data-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "stayingapi-jobs-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}

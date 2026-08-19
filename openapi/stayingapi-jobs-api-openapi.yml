@@ -1,0 +1,501 @@
+openapi: 3.2.0
+info:
+  title: Staying Jobs API
+  version: 1.0.0
+  description: 'One accommodation-data API for Airbnb, Booking.com, Vrbo and Google Hotels — availability, search and cross-OTA price comparison in a single unified schema. Every endpoint returns the canonical envelope (§6.3.3); errors use the locked sub-code catalog (§6.4). Failed, empty and blocked calls are never billed; cached results bill at tier (caching is margin, not a discount). Full docs: https://stayingapi.com/docs.'
+  contact:
+    name: StayingAPI
+    url: https://stayingapi.com/docs
+  license:
+    name: Proprietary
+servers:
+- url: https://api.stayingapi.com/v1
+  description: REST API (v1)
+security:
+- bearerAuth: []
+tags:
+- name: Jobs
+  description: Async job polling
+paths:
+  /jobs/{jobId}:
+    get:
+      tags:
+      - Jobs
+      operationId: pollJob
+      summary: Poll an async job (always 0 credits).
+      description: Poll until status is terminal (completed | failed). While pending/running the response carries a Retry-After header. Enforces jobs.user_id == caller; unknown/not-owned/expired → job_not_found (404).
+      parameters:
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: job_-prefixed id.
+      responses:
+        '200':
+          description: Job status. pending/running carry a Retry-After header; completed carries the payload at data.result; FAILED is HTTP 200 with the failure nested at data.error (NOT a top-level error) and creditsCharged 0. Branch on data.status — see JobResponse.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Present while the job is in progress.
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '401':
+          description: Authentication error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: job_not_found (unknown, not owned, or expired).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+components:
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        cursor:
+          type:
+          - string
+          - 'null'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          description: Opaque base64 cursor for the next page; null on the last page.
+        hasMore:
+          type: boolean
+    PlatformFailureError:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+        message:
+          type: string
+          minLength: 1
+        retryable:
+          type: boolean
+      required:
+      - type
+      - code
+      - message
+      - retryable
+    Meta:
+      type: object
+      description: Canonical response metadata present on every 200 (§6.3.3).
+      required:
+      - requestId
+      - platforms
+      - cached
+      - partial
+      - creditsCharged
+      - currency
+      properties:
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+          description: 'Correlation id (also the X-Request-Id header): req_ + 26-char Crockford ULID.'
+          example: req_01J8ZK3QF9ABCDEF0123456789
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Platform'
+        environment:
+          type: string
+          enum:
+          - live
+          - test
+          description: Authenticated key environment used for this response. `test` means deterministic sandbox fixtures, never a live scrape.
+        sandbox:
+          type: boolean
+          description: True when the response came from the deterministic sandbox (`stay_test_` key).
+        cached:
+          type: boolean
+          description: Served fully from cache. Cached results still bill at tier (margin, not discount).
+        partial:
+          type: boolean
+          description: At least one fan-out leg failed; failed legs are charged 0.
+        creditsCharged:
+          type: integer
+          minimum: 0
+        currency:
+          type: string
+          example: USD
+        pagination:
+          oneOf:
+          - $ref: '#/components/schemas/Pagination'
+          - type: 'null'
+        platformResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformResult'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Warning'
+    Platform:
+      type: string
+      enum:
+      - airbnb
+      - booking
+      - vrbo
+      - expedia
+      - hotels
+      - google
+      - tripadvisor
+    JobResponse:
+      oneOf:
+      - type: object
+        title: JobInProgress
+        description: pending | running — carries a Retry-After header; poll again after the back-off.
+        required:
+        - data
+        - meta
+        properties:
+          data:
+            type: object
+            required:
+            - jobId
+            - status
+            - pollUrl
+            - estimatedSeconds
+            properties:
+              jobId:
+                type: string
+              status:
+                type: string
+                enum:
+                - pending
+                - running
+              pollUrl:
+                type: string
+              estimatedSeconds:
+                type: integer
+          meta:
+            type: object
+            required:
+            - requestId
+            - creditsCharged
+            - platforms
+            properties:
+              requestId:
+                type: string
+              creditsCharged:
+                type: integer
+                enum:
+                - 0
+                description: Polling and in-progress/failed states never bill.
+              platforms:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Platform'
+      - type: object
+        title: JobCompleted
+        description: completed — the endpoint payload is at data.result and meta carries the full success meta (credits charged once, platformResults, warnings; pagination is null on a job result).
+        required:
+        - data
+        - meta
+        properties:
+          data:
+            type: object
+            required:
+            - jobId
+            - status
+            - result
+            properties:
+              jobId:
+                type: string
+              status:
+                type: string
+                enum:
+                - completed
+              result:
+                description: The endpoint payload — the SAME unified schema the synchronous call returns (Property[] | Availability[] | Price | PriceCompare | Review[]).
+          meta:
+            $ref: '#/components/schemas/Meta'
+      - type: object
+        title: JobFailed
+        description: failed — HTTP 200 with the failure nested at data.error (a PlatformFailureError, incl. `retryable`). creditsCharged is 0 (failed work is free). Detect via data.status === "failed", NOT via a top-level `error`.
+        required:
+        - data
+        - meta
+        properties:
+          data:
+            type: object
+            required:
+            - jobId
+            - status
+            - error
+            properties:
+              jobId:
+                type: string
+              status:
+                type: string
+                enum:
+                - failed
+              error:
+                $ref: '#/components/schemas/PlatformFailureError'
+          meta:
+            type: object
+            required:
+            - requestId
+            - creditsCharged
+            - platforms
+            properties:
+              requestId:
+                type: string
+              creditsCharged:
+                type: integer
+                enum:
+                - 0
+                description: Polling and in-progress/failed states never bill.
+              platforms:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Platform'
+    PlatformResult:
+      type: object
+      properties:
+        platform:
+          $ref: '#/components/schemas/Platform'
+        status:
+          type: string
+          enum:
+          - ok
+          - failed
+          - skipped
+        reason:
+          type: string
+          enum:
+          - not_enabled
+          - requires_dates
+          description: Present on skipped platform results; explains why a requested platform was not called.
+        creditsCharged:
+          type: integer
+          minimum: 0
+        cached:
+          type: boolean
+        count:
+          type: integer
+          minimum: 0
+        error:
+          $ref: '#/components/schemas/PlatformFailureError'
+        message:
+          type: string
+          description: Human-readable reason for skipped platform results.
+    Error:
+      type: object
+      description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
+      required:
+      - type
+      - code
+      - message
+      - requestId
+      - creditsCharged
+      - retryable
+      - docUrl
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+          description: Error sub-code; each has a docs page at https://stayingapi.com/docs/errors/<code>.
+        message:
+          type: string
+        param:
+          type:
+          - string
+          - 'null'
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+        creditsCharged:
+          type: integer
+          enum:
+          - 0
+          description: Errors never bill (always 0).
+        retryable:
+          type: boolean
+        docUrl:
+          type: string
+          format: uri
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+    Warning:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        platform:
+          $ref: '#/components/schemas/Platform'
+        docUrl:
+          type: string
+          format: uri
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer API key. stay_test_ = deterministic sandbox (0 credits); stay_live_ = live.
+x-mcp:
+  server: https://mcp.stayingapi.com/mcp
+  serverCard: https://mcp.stayingapi.com/.well-known/mcp.json
+  documentation: https://stayingapi.com/docs/mcp
+  authentication: oauth2.1+pkce
+  description: A native Model Context Protocol server exposes these endpoints as read-only tools for AI agents.
+x-error-codes-by-type:
+  invalid_request:
+  - missing_parameter
+  - invalid_parameter
+  - invalid_date_range
+  - date_in_past
+  - child_ages_mismatch
+  - stay_too_long
+  - window_too_long
+  - invalid_listing_url
+  - invalid_property_type
+  - invalid_amenity
+  - invalid_price_range
+  - invalid_language
+  - invalid_sort
+  - invalid_cursor
+  - limit_out_of_range
+  - mutually_exclusive_params
+  - platform_not_enabled
+  - no_enabled_platform
+  - needs_country
+  authentication_error:
+  - missing_api_key
+  - invalid_api_key
+  - revoked_api_key
+  permission_denied:
+  - scope_insufficient
+  - email_unverified
+  - subscription_required
+  not_found:
+  - listing_not_found
+  - job_not_found
+  - identity_mismatch
+  insufficient_credits:
+  - credit_balance_too_low
+  rate_limited:
+  - rate_limit_exceeded
+  upstream_unavailable:
+  - all_actors_failed
+  - actor_blocked
+  - upstream_degraded
+  upstream_timeout:
+  - actor_timeout
+  internal_error:
+  - internal_error
