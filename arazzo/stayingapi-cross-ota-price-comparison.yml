@@ -10,98 +10,98 @@ info:
     which case poll GET /v1/jobs/{jobId} (see stayingapi-async-job-poll.yml).
   version: 1.0.0
 sourceDescriptions:
-  - name: stayingapi
-    url: ../openapi/stayingapi-openapi-original.json
-    type: openapi
+- name: dataApi
+  url: ../openapi/stayingapi-data-api-openapi.yml
+  type: openapi
 workflows:
-  - workflowId: cross-ota-price-comparison
-    summary: Search a location, then compare one property's price across booking platforms.
-    description: >-
-      Step 1 discovers candidate properties. Step 2 asks StayingAPI to price the named
-      property across every OTA Google reports and returns min / median plus the offer list.
-    inputs:
-      type: object
-      required:
-        - location
-        - checkIn
-        - checkOut
-      properties:
-        location:
-          type: string
-          description: 'City or lat,lng — e.g. "Split, HR"'
-        checkIn:
-          type: string
-          description: YYYY-MM-DD
-        checkOut:
-          type: string
-          description: YYYY-MM-DD
-        platforms:
-          type: string
-          description: CSV of airbnb,booking,vrbo,google
-          default: airbnb,booking
-        adults:
-          type: integer
-          default: 2
-    steps:
-      - stepId: searchStays
-        description: Cross-platform discovery for the location and stay window.
-        operationId: searchGet
-        parameters:
-          - name: location
-            in: query
-            value: $inputs.location
-          - name: checkIn
-            in: query
-            value: $inputs.checkIn
-          - name: checkOut
-            in: query
-            value: $inputs.checkOut
-          - name: platforms
-            in: query
-            value: $inputs.platforms
-          - name: adults
-            in: query
-            value: $inputs.adults
-          - name: limit
-            in: query
-            value: 5
-        successCriteria:
-          - condition: $statusCode == 200
-        outputs:
-          propertyName: $response.body#/data/0/name
-          platform: $response.body#/data/0/platform
-          listingId: $response.body#/data/0/platformListingId
-          requestId: $response.body#/meta/requestId
-      - stepId: comparePrices
-        description: >-
-          Compare that property across OTAs. min and median are StayingAPI-computed and
-          exclude offers quoted in another currency.
-        operationId: priceCompare
-        parameters:
-          - name: name
-            in: query
-            value: $steps.searchStays.outputs.propertyName
-          - name: location
-            in: query
-            value: $inputs.location
-          - name: checkIn
-            in: query
-            value: $inputs.checkIn
-          - name: checkOut
-            in: query
-            value: $inputs.checkOut
-        successCriteria:
-          - condition: $statusCode == 200
-        outputs:
-          min: $response.body#/data/min
-          median: $response.body#/data/median
-          offers: $response.body#/data/offers
-          creditsCharged: $response.body#/meta/creditsCharged
+- workflowId: cross-ota-price-comparison
+  summary: Search a location, then compare one property's price across booking platforms.
+  description: >-
+    Step 1 discovers candidate properties. Step 2 asks StayingAPI to price the named
+    property across every OTA Google reports and returns min / median plus the offer list.
+  inputs:
+    type: object
+    required:
+    - location
+    - checkIn
+    - checkOut
+    properties:
+      location:
+        type: string
+        description: 'City or lat,lng — e.g. "Split, HR"'
+      checkIn:
+        type: string
+        description: YYYY-MM-DD
+      checkOut:
+        type: string
+        description: YYYY-MM-DD
+      platforms:
+        type: string
+        description: CSV of airbnb,booking,vrbo,google
+        default: airbnb,booking
+      adults:
+        type: integer
+        default: 2
+  steps:
+  - stepId: searchStays
+    description: Cross-platform discovery for the location and stay window.
+    operationId: searchGet
+    parameters:
+    - name: location
+      in: query
+      value: $inputs.location
+    - name: checkIn
+      in: query
+      value: $inputs.checkIn
+    - name: checkOut
+      in: query
+      value: $inputs.checkOut
+    - name: platforms
+      in: query
+      value: $inputs.platforms
+    - name: adults
+      in: query
+      value: $inputs.adults
+    - name: limit
+      in: query
+      value: 5
+    successCriteria:
+    - condition: $statusCode == 200
     outputs:
-      propertyName: $steps.searchStays.outputs.propertyName
-      cheapestTotal: $steps.comparePrices.outputs.min
-      medianTotal: $steps.comparePrices.outputs.median
-      offers: $steps.comparePrices.outputs.offers
+      propertyName: $response.body#/data/0/name
+      platform: $response.body#/data/0/platform
+      listingId: $response.body#/data/0/platformListingId
+      requestId: $response.body#/meta/requestId
+  - stepId: comparePrices
+    description: >-
+      Compare that property across OTAs. min and median are StayingAPI-computed and
+      exclude offers quoted in another currency.
+    operationId: priceCompare
+    parameters:
+    - name: name
+      in: query
+      value: $steps.searchStays.outputs.propertyName
+    - name: location
+      in: query
+      value: $inputs.location
+    - name: checkIn
+      in: query
+      value: $inputs.checkIn
+    - name: checkOut
+      in: query
+      value: $inputs.checkOut
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      min: $response.body#/data/min
+      median: $response.body#/data/median
+      offers: $response.body#/data/offers
+      creditsCharged: $response.body#/meta/creditsCharged
+  outputs:
+    propertyName: $steps.searchStays.outputs.propertyName
+    cheapestTotal: $steps.comparePrices.outputs.min
+    medianTotal: $steps.comparePrices.outputs.median
+    offers: $steps.comparePrices.outputs.offers
 x-apievangelist:
   generated: '2026-08-09'
   method: generated

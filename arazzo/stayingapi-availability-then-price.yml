@@ -9,118 +9,121 @@ info:
     zero-credit balance check first so an agent knows whether it can afford the work.
   version: 1.0.0
 sourceDescriptions:
-  - name: stayingapi
-    url: ../openapi/stayingapi-openapi-original.json
-    type: openapi
+- name: accountApi
+  url: ../openapi/stayingapi-account-api-openapi.yml
+  type: openapi
+- name: dataApi
+  url: ../openapi/stayingapi-data-api-openapi.yml
+  type: openapi
 workflows:
-  - workflowId: availability-then-price
-    summary: Balance check, availability window, price quote, and reviews for one listing.
-    inputs:
-      type: object
-      required:
-        - platform
-        - listingId
-        - checkIn
-        - checkOut
-      properties:
-        platform:
-          type: string
-          description: airbnb | booking | vrbo | google
-        listingId:
-          type: string
-          description: >-
-            Platform-native id — numeric on Airbnb/Vrbo, a slug on Booking.com/Google. A bare
-            Booking.com slug needs a country (see error code needs_country).
-        checkIn:
-          type: string
-          description: YYYY-MM-DD
-        checkOut:
-          type: string
-          description: YYYY-MM-DD
-        adults:
-          type: integer
-          default: 2
-    steps:
-      - stepId: checkBalance
-        description: Read plan, spendable credits and rate limit. Always 0 credits.
-        operationId: account
-        successCriteria:
-          - condition: $statusCode == 200
-        outputs:
-          available: $response.body#/data/credits/available
-          env: $response.body#/data/key/env
-          rpm: $response.body#/data/rateLimit/requestsPerMinute
-      - stepId: checkAvailability
-        description: Day-by-day availability for the listing across the requested window.
-        operationId: availability
-        parameters:
-          - name: platform
-            in: query
-            value: $inputs.platform
-          - name: listingId
-            in: query
-            value: $inputs.listingId
-          - name: startDate
-            in: query
-            value: $inputs.checkIn
-          - name: endDate
-            in: query
-            value: $inputs.checkOut
-        successCriteria:
-          - condition: $statusCode == 200
-        outputs:
-          dates: $response.body#/data/0/dates
-      - stepId: getPrice
-        description: A real quote for the same listing, dates and occupancy.
-        operationId: price
-        parameters:
-          - name: platform
-            in: query
-            value: $inputs.platform
-          - name: listingId
-            in: query
-            value: $inputs.listingId
-          - name: checkIn
-            in: query
-            value: $inputs.checkIn
-          - name: checkOut
-            in: query
-            value: $inputs.checkOut
-          - name: adults
-            in: query
-            value: $inputs.adults
-        successCriteria:
-          - condition: $statusCode == 200
-        outputs:
-          totalPrice: $response.body#/data/totalPrice
-          nightlyPrice: $response.body#/data/nightlyPrice
-          currency: $response.body#/data/currency
-          bookingUrl: $response.body#/data/url
-      - stepId: getReviews
-        description: Normalized reviews for the same listing, first page.
-        operationId: reviews
-        parameters:
-          - name: platform
-            in: query
-            value: $inputs.platform
-          - name: listingId
-            in: query
-            value: $inputs.listingId
-          - name: limit
-            in: query
-            value: 20
-        successCriteria:
-          - condition: $statusCode == 200
-        outputs:
-          reviews: $response.body#/data
-          nextCursor: $response.body#/meta/pagination/nextCursor
+- workflowId: availability-then-price
+  summary: Balance check, availability window, price quote, and reviews for one listing.
+  inputs:
+    type: object
+    required:
+    - platform
+    - listingId
+    - checkIn
+    - checkOut
+    properties:
+      platform:
+        type: string
+        description: airbnb | booking | vrbo | google
+      listingId:
+        type: string
+        description: >-
+          Platform-native id — numeric on Airbnb/Vrbo, a slug on Booking.com/Google. A bare
+          Booking.com slug needs a country (see error code needs_country).
+      checkIn:
+        type: string
+        description: YYYY-MM-DD
+      checkOut:
+        type: string
+        description: YYYY-MM-DD
+      adults:
+        type: integer
+        default: 2
+  steps:
+  - stepId: checkBalance
+    description: Read plan, spendable credits and rate limit. Always 0 credits.
+    operationId: account
+    successCriteria:
+    - condition: $statusCode == 200
     outputs:
-      creditsAvailable: $steps.checkBalance.outputs.available
-      availability: $steps.checkAvailability.outputs.dates
-      totalPrice: $steps.getPrice.outputs.totalPrice
-      currency: $steps.getPrice.outputs.currency
-      bookingUrl: $steps.getPrice.outputs.bookingUrl
-      reviews: $steps.getReviews.outputs.reviews
+      available: $response.body#/data/credits/available
+      env: $response.body#/data/key/env
+      rpm: $response.body#/data/rateLimit/requestsPerMinute
+  - stepId: checkAvailability
+    description: Day-by-day availability for the listing across the requested window.
+    operationId: availability
+    parameters:
+    - name: platform
+      in: query
+      value: $inputs.platform
+    - name: listingId
+      in: query
+      value: $inputs.listingId
+    - name: startDate
+      in: query
+      value: $inputs.checkIn
+    - name: endDate
+      in: query
+      value: $inputs.checkOut
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      dates: $response.body#/data/0/dates
+  - stepId: getPrice
+    description: A real quote for the same listing, dates and occupancy.
+    operationId: price
+    parameters:
+    - name: platform
+      in: query
+      value: $inputs.platform
+    - name: listingId
+      in: query
+      value: $inputs.listingId
+    - name: checkIn
+      in: query
+      value: $inputs.checkIn
+    - name: checkOut
+      in: query
+      value: $inputs.checkOut
+    - name: adults
+      in: query
+      value: $inputs.adults
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      totalPrice: $response.body#/data/totalPrice
+      nightlyPrice: $response.body#/data/nightlyPrice
+      currency: $response.body#/data/currency
+      bookingUrl: $response.body#/data/url
+  - stepId: getReviews
+    description: Normalized reviews for the same listing, first page.
+    operationId: reviews
+    parameters:
+    - name: platform
+      in: query
+      value: $inputs.platform
+    - name: listingId
+      in: query
+      value: $inputs.listingId
+    - name: limit
+      in: query
+      value: 20
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      reviews: $response.body#/data
+      nextCursor: $response.body#/meta/pagination/nextCursor
+  outputs:
+    creditsAvailable: $steps.checkBalance.outputs.available
+    availability: $steps.checkAvailability.outputs.dates
+    totalPrice: $steps.getPrice.outputs.totalPrice
+    currency: $steps.getPrice.outputs.currency
+    bookingUrl: $steps.getPrice.outputs.bookingUrl
+    reviews: $steps.getReviews.outputs.reviews
 x-apievangelist:
   generated: '2026-08-09'
   method: generated
