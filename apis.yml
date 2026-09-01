@@ -25,20 +25,20 @@ modified: '2026-08-09'
 specificationVersion: '0.23'
 image: https://stayingapi.com/icon.svg
 tags:
-  - travel
-  - hospitality
+  - Travel
+  - Hospitality
   - accommodation-data
   - hotel-api
-  - vacation-rental
-  - short-term-rental
-  - airbnb
-  - booking.com
-  - vrbo
+  - Vacation Rental
+  - Short-Term Rental
+  - Airbnb
+  - Booking.com
+  - Vrbo
   - google-hotels
   - cross-ota-price-comparison
   - Availability
   - Reviews
-  - rest
+  - REST
   - MCP
   - agent-native
   - OpenAPI
@@ -69,20 +69,20 @@ apis:
   humanURL: https://stayingapi.com/docs
   baseURL: https://mcp.stayingapi.com/mcp
   tags:
-  - travel
-  - hospitality
+  - Travel
+  - Hospitality
   - accommodation-data
   - hotel-api
-  - vacation-rental
-  - short-term-rental
-  - airbnb
-  - booking.com
-  - vrbo
+  - Vacation Rental
+  - Short-Term Rental
+  - Airbnb
+  - Booking.com
+  - Vrbo
   - google-hotels
   - cross-ota-price-comparison
   - Availability
   - Reviews
-  - rest
+  - REST
   - MCP
   - agent-native
   - OpenAPI
@@ -120,20 +120,20 @@ apis:
   humanURL: https://github.com/stayingapi/travel-skills
   baseURL: https://github.com/stayingapi/travel-skills
   tags:
-  - travel
-  - hospitality
+  - Travel
+  - Hospitality
   - accommodation-data
   - hotel-api
-  - vacation-rental
-  - short-term-rental
-  - airbnb
-  - booking.com
-  - vrbo
+  - Vacation Rental
+  - Short-Term Rental
+  - Airbnb
+  - Booking.com
+  - Vrbo
   - google-hotels
   - cross-ota-price-comparison
   - Availability
   - Reviews
-  - rest
+  - REST
   - MCP
   - agent-native
   - OpenAPI
