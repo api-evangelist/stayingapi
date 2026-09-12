@@ -231,6 +231,8 @@ generated:
   confidence: 95
   at: '2026-08-03T11:56:23.475Z'
 common:
+- type: Website
+  url: https://www.stayingapi.com/
 - type: DomainSecurity
   url: security/stayingapi-domain-security.yml
 - type: AgenticAccess
