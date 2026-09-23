@@ -22,7 +22,7 @@ paths:
       tags:
       - Account
       operationId: account
-      summary: Account, plan, credit balance and rate limit (0 credits).
+      summary: Account, plan, credit balance and rate limit (0 credits)
       description: 'Programmatic introspection of the authenticated key: credit balance, plan (code/name/status), key env (live | sandbox) and the per-plan rate limit (requests/minute). Works for live and sandbox keys; free and never billed.'
       responses:
         '200':
@@ -49,6 +49,81 @@ paths:
                 $ref: '#/components/schemas/ErrorEnvelope'
 components:
   schemas:
+    Account:
+      type: object
+      description: 'Authenticated account snapshot (§F1): plan, key env, credit balance and rate limit.'
+      required:
+      - plan
+      - key
+      - credits
+      - rateLimit
+      properties:
+        plan:
+          type: object
+          required:
+          - code
+          - name
+          - status
+          properties:
+            code:
+              type: string
+              example: free
+              description: Plan code (free|starter|pro|scale|enterprise).
+            name:
+              type: string
+              example: Free / Sandbox
+            status:
+              type: string
+              enum:
+              - trialing
+              - active
+              - past_due
+              - canceled
+              - incomplete
+              - incomplete_expired
+              - unpaid
+              description: Subscription status.
+        key:
+          type: object
+          required:
+          - env
+          properties:
+            env:
+              type: string
+              enum:
+              - live
+              - sandbox
+              description: 'Key environment: live or sandbox (stay_test_).'
+        credits:
+          type: object
+          required:
+          - balance
+          - available
+          - held
+          - expiringSoon
+          properties:
+            balance:
+              type: integer
+              description: Raw credit balance (latest ledger balance_after; may include not-yet-materialized expired credits).
+            available:
+              type: integer
+              description: Spendable credits now = raw balance minus expired-unconsumed credits and active reservations. This is the number the admission gate uses.
+            held:
+              type: integer
+              minimum: 0
+              description: Credits currently reserved by accepted work that has not settled or released yet.
+            expiringSoon:
+              type: integer
+              description: Credits expiring within the next 7 days.
+        rateLimit:
+          type: object
+          required:
+          - requestsPerMinute
+          properties:
+            requestsPerMinute:
+              type: integer
+              minimum: 1
+              description: Per-plan rate limit (requests/minute).
     Error:
       type: object
       description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
@@ -131,88 +206,6 @@ components:
         docUrl:
           type: string
           format: uri
-    Account:
-      type: object
-      description: 'Authenticated account snapshot (§F1): plan, key env, credit balance and rate limit.'
-      required:
-      - plan
-      - key
-      - credits
-      - rateLimit
-      properties:
-        plan:
-          type: object
-          required:
-          - code
-          - name
-          - status
-          properties:
-            code:
-              type: string
-              example: free
-              description: Plan code (free|starter|pro|scale|enterprise).
-            name:
-              type: string
-              example: Free / Sandbox
-            status:
-              type: string
-              enum:
-              - trialing
-              - active
-              - past_due
-              - canceled
-              - incomplete
-              - incomplete_expired
-              - unpaid
-              description: Subscription status.
-        key:
-          type: object
-          required:
-          - env
-          properties:
-            env:
-              type: string
-              enum:
-              - live
-              - sandbox
-              description: 'Key environment: live or sandbox (stay_test_).'
-        credits:
-          type: object
-          required:
-          - balance
-          - available
-          - held
-          - expiringSoon
-          properties:
-            balance:
-              type: integer
-              description: Raw credit balance (latest ledger balance_after; may include not-yet-materialized expired credits).
-            available:
-              type: integer
-              description: Spendable credits now = raw balance minus expired-unconsumed credits and active reservations. This is the number the admission gate uses.
-            held:
-              type: integer
-              minimum: 0
-              description: Credits currently reserved by accepted work that has not settled or released yet.
-            expiringSoon:
-              type: integer
-              description: Credits expiring within the next 7 days.
-        rateLimit:
-          type: object
-          required:
-          - requestsPerMinute
-          properties:
-            requestsPerMinute:
-              type: integer
-              minimum: 1
-              description: Per-plan rate limit (requests/minute).
-    ErrorEnvelope:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/Error'
     AccountEnvelope:
       type: object
       required:
@@ -220,6 +213,13 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/Account'
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

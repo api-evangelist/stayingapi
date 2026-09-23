@@ -1,9 +1,7 @@
 {
   "provider": "stayingapi",
   "sources": [
-    "stayingapi-account-api-openapi.yml",
-    "stayingapi-data-api-openapi.yml",
-    "stayingapi-jobs-api-openapi.yml"
+    "_original/stayingapi-openapi-original.json"
   ],
   "outputs": [
     "stayingapi-account-api-openapi.yml",
@@ -14,10 +12,13 @@
   "errors": [],
   "warnings": [],
   "notes": [
-    "stayingapi-account-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "stayingapi-data-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "stayingapi-jobs-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "stayingapi-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "stayingapi-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "stayingapi-data-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "stayingapi-jobs-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

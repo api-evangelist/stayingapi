@@ -22,7 +22,7 @@ paths:
       tags:
       - Jobs
       operationId: pollJob
-      summary: Poll an async job (always 0 credits).
+      summary: Poll an async job (always 0 credits)
       description: Poll until status is terminal (completed | failed). While pending/running the response carries a Retry-After header. Enforces jobs.user_id == caller; unknown/not-owned/expired → job_not_found (404).
       parameters:
       - name: jobId
@@ -139,6 +139,36 @@ components:
       - code
       - message
       - retryable
+    PlatformResult:
+      type: object
+      properties:
+        platform:
+          $ref: '#/components/schemas/Platform'
+        status:
+          type: string
+          enum:
+          - ok
+          - failed
+          - skipped
+        reason:
+          type: string
+          enum:
+          - not_enabled
+          - requires_dates
+          description: Present on skipped platform results; explains why a requested platform was not called.
+        creditsCharged:
+          type: integer
+          minimum: 0
+        cached:
+          type: boolean
+        count:
+          type: integer
+          minimum: 0
+        error:
+          $ref: '#/components/schemas/PlatformFailureError'
+        message:
+          type: string
+          description: Human-readable reason for skipped platform results.
     Meta:
       type: object
       description: Canonical response metadata present on every 200 (§6.3.3).
@@ -192,6 +222,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Warning'
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
     Platform:
       type: string
       enum:
@@ -202,6 +239,88 @@ components:
       - hotels
       - google
       - tripadvisor
+    Error:
+      type: object
+      description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
+      required:
+      - type
+      - code
+      - message
+      - requestId
+      - creditsCharged
+      - retryable
+      - docUrl
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+          description: Error sub-code; each has a docs page at https://stayingapi.com/docs/errors/<code>.
+        message:
+          type: string
+        param:
+          type:
+          - string
+          - 'null'
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+        creditsCharged:
+          type: integer
+          enum:
+          - 0
+          description: Errors never bill (always 0).
+        retryable:
+          type: boolean
+        docUrl:
+          type: string
+          format: uri
     JobResponse:
       oneOf:
       - type: object
@@ -312,125 +431,6 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/Platform'
-    PlatformResult:
-      type: object
-      properties:
-        platform:
-          $ref: '#/components/schemas/Platform'
-        status:
-          type: string
-          enum:
-          - ok
-          - failed
-          - skipped
-        reason:
-          type: string
-          enum:
-          - not_enabled
-          - requires_dates
-          description: Present on skipped platform results; explains why a requested platform was not called.
-        creditsCharged:
-          type: integer
-          minimum: 0
-        cached:
-          type: boolean
-        count:
-          type: integer
-          minimum: 0
-        error:
-          $ref: '#/components/schemas/PlatformFailureError'
-        message:
-          type: string
-          description: Human-readable reason for skipped platform results.
-    Error:
-      type: object
-      description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
-      required:
-      - type
-      - code
-      - message
-      - requestId
-      - creditsCharged
-      - retryable
-      - docUrl
-      properties:
-        type:
-          type: string
-          enum:
-          - invalid_request
-          - authentication_error
-          - permission_denied
-          - not_found
-          - insufficient_credits
-          - rate_limited
-          - upstream_unavailable
-          - upstream_timeout
-          - internal_error
-        code:
-          type: string
-          enum:
-          - missing_parameter
-          - invalid_parameter
-          - invalid_date_range
-          - date_in_past
-          - child_ages_mismatch
-          - stay_too_long
-          - window_too_long
-          - invalid_listing_url
-          - invalid_property_type
-          - invalid_amenity
-          - invalid_price_range
-          - invalid_language
-          - invalid_sort
-          - invalid_cursor
-          - limit_out_of_range
-          - mutually_exclusive_params
-          - platform_not_enabled
-          - no_enabled_platform
-          - needs_country
-          - missing_api_key
-          - invalid_api_key
-          - revoked_api_key
-          - scope_insufficient
-          - email_unverified
-          - subscription_required
-          - listing_not_found
-          - job_not_found
-          - identity_mismatch
-          - credit_balance_too_low
-          - rate_limit_exceeded
-          - all_actors_failed
-          - actor_blocked
-          - upstream_degraded
-          - actor_timeout
-          - internal_error
-          description: Error sub-code; each has a docs page at https://stayingapi.com/docs/errors/<code>.
-        message:
-          type: string
-        param:
-          type:
-          - string
-          - 'null'
-        requestId:
-          type: string
-          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
-        creditsCharged:
-          type: integer
-          enum:
-          - 0
-          description: Errors never bill (always 0).
-        retryable:
-          type: boolean
-        docUrl:
-          type: string
-          format: uri
-    ErrorEnvelope:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/Error'
     Warning:
       type: object
       properties:
