@@ -60,85 +60,6 @@ paths:
                 $ref: '#/components/schemas/ErrorEnvelope'
 components:
   schemas:
-    Pagination:
-      type: object
-      properties:
-        limit:
-          type: integer
-        cursor:
-          type:
-          - string
-          - 'null'
-        nextCursor:
-          type:
-          - string
-          - 'null'
-          description: Opaque base64 cursor for the next page; null on the last page.
-        hasMore:
-          type: boolean
-    PlatformFailureError:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - invalid_request
-          - authentication_error
-          - permission_denied
-          - not_found
-          - insufficient_credits
-          - rate_limited
-          - upstream_unavailable
-          - upstream_timeout
-          - internal_error
-        code:
-          type: string
-          enum:
-          - missing_parameter
-          - invalid_parameter
-          - invalid_date_range
-          - date_in_past
-          - child_ages_mismatch
-          - stay_too_long
-          - window_too_long
-          - invalid_listing_url
-          - invalid_property_type
-          - invalid_amenity
-          - invalid_price_range
-          - invalid_language
-          - invalid_sort
-          - invalid_cursor
-          - limit_out_of_range
-          - mutually_exclusive_params
-          - platform_not_enabled
-          - no_enabled_platform
-          - needs_country
-          - missing_api_key
-          - invalid_api_key
-          - revoked_api_key
-          - scope_insufficient
-          - email_unverified
-          - subscription_required
-          - listing_not_found
-          - job_not_found
-          - identity_mismatch
-          - credit_balance_too_low
-          - rate_limit_exceeded
-          - all_actors_failed
-          - actor_blocked
-          - upstream_degraded
-          - actor_timeout
-          - internal_error
-        message:
-          type: string
-          minLength: 1
-        retryable:
-          type: boolean
-      required:
-      - type
-      - code
-      - message
-      - retryable
     PlatformResult:
       type: object
       properties:
@@ -169,59 +90,6 @@ components:
         message:
           type: string
           description: Human-readable reason for skipped platform results.
-    Meta:
-      type: object
-      description: Canonical response metadata present on every 200 (§6.3.3).
-      required:
-      - requestId
-      - platforms
-      - cached
-      - partial
-      - creditsCharged
-      - currency
-      properties:
-        requestId:
-          type: string
-          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
-          description: 'Correlation id (also the X-Request-Id header): req_ + 26-char Crockford ULID.'
-          example: req_01J8ZK3QF9ABCDEF0123456789
-        platforms:
-          type: array
-          items:
-            $ref: '#/components/schemas/Platform'
-        environment:
-          type: string
-          enum:
-          - live
-          - test
-          description: Authenticated key environment used for this response. `test` means deterministic sandbox fixtures, never a live scrape.
-        sandbox:
-          type: boolean
-          description: True when the response came from the deterministic sandbox (`stay_test_` key).
-        cached:
-          type: boolean
-          description: Served fully from cache. Cached results still bill at tier (margin, not discount).
-        partial:
-          type: boolean
-          description: At least one fan-out leg failed; failed legs are charged 0.
-        creditsCharged:
-          type: integer
-          minimum: 0
-        currency:
-          type: string
-          example: USD
-        pagination:
-          oneOf:
-          - $ref: '#/components/schemas/Pagination'
-          - type: 'null'
-        platformResults:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlatformResult'
-        warnings:
-          type: array
-          items:
-            $ref: '#/components/schemas/Warning'
     ErrorEnvelope:
       type: object
       required:
@@ -239,88 +107,6 @@ components:
       - hotels
       - google
       - tripadvisor
-    Error:
-      type: object
-      description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
-      required:
-      - type
-      - code
-      - message
-      - requestId
-      - creditsCharged
-      - retryable
-      - docUrl
-      properties:
-        type:
-          type: string
-          enum:
-          - invalid_request
-          - authentication_error
-          - permission_denied
-          - not_found
-          - insufficient_credits
-          - rate_limited
-          - upstream_unavailable
-          - upstream_timeout
-          - internal_error
-        code:
-          type: string
-          enum:
-          - missing_parameter
-          - invalid_parameter
-          - invalid_date_range
-          - date_in_past
-          - child_ages_mismatch
-          - stay_too_long
-          - window_too_long
-          - invalid_listing_url
-          - invalid_property_type
-          - invalid_amenity
-          - invalid_price_range
-          - invalid_language
-          - invalid_sort
-          - invalid_cursor
-          - limit_out_of_range
-          - mutually_exclusive_params
-          - platform_not_enabled
-          - no_enabled_platform
-          - needs_country
-          - missing_api_key
-          - invalid_api_key
-          - revoked_api_key
-          - scope_insufficient
-          - email_unverified
-          - subscription_required
-          - listing_not_found
-          - job_not_found
-          - identity_mismatch
-          - credit_balance_too_low
-          - rate_limit_exceeded
-          - all_actors_failed
-          - actor_blocked
-          - upstream_degraded
-          - actor_timeout
-          - internal_error
-          description: Error sub-code; each has a docs page at https://stayingapi.com/docs/errors/<code>.
-        message:
-          type: string
-        param:
-          type:
-          - string
-          - 'null'
-        requestId:
-          type: string
-          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
-        creditsCharged:
-          type: integer
-          enum:
-          - 0
-          description: Errors never bill (always 0).
-        retryable:
-          type: boolean
-        docUrl:
-          type: string
-          format: uri
     JobResponse:
       oneOf:
       - type: object
@@ -431,6 +217,151 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/Platform'
+    PlatformFailureError:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+        message:
+          type: string
+          minLength: 1
+        retryable:
+          type: boolean
+      required:
+      - type
+      - code
+      - message
+      - retryable
+    Error:
+      type: object
+      description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
+      required:
+      - type
+      - code
+      - message
+      - requestId
+      - creditsCharged
+      - retryable
+      - docUrl
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+          description: Error sub-code; each has a docs page at https://stayingapi.com/docs/errors/<code>.
+        message:
+          type: string
+        param:
+          type:
+          - string
+          - 'null'
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+        creditsCharged:
+          type: integer
+          enum:
+          - 0
+          description: Errors never bill (always 0).
+        retryable:
+          type: boolean
+        docUrl:
+          type: string
+          format: uri
     Warning:
       type: object
       properties:
@@ -443,6 +374,75 @@ components:
         docUrl:
           type: string
           format: uri
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        cursor:
+          type:
+          - string
+          - 'null'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          description: Opaque base64 cursor for the next page; null on the last page.
+        hasMore:
+          type: boolean
+    Meta:
+      type: object
+      description: Canonical response metadata present on every 200 (§6.3.3).
+      required:
+      - requestId
+      - platforms
+      - cached
+      - partial
+      - creditsCharged
+      - currency
+      properties:
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+          description: 'Correlation id (also the X-Request-Id header): req_ + 26-char Crockford ULID.'
+          example: req_01J8ZK3QF9ABCDEF0123456789
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Platform'
+        environment:
+          type: string
+          enum:
+          - live
+          - test
+          description: Authenticated key environment used for this response. `test` means deterministic sandbox fixtures, never a live scrape.
+        sandbox:
+          type: boolean
+          description: True when the response came from the deterministic sandbox (`stay_test_` key).
+        cached:
+          type: boolean
+          description: Served fully from cache. Cached results still bill at tier (margin, not discount).
+        partial:
+          type: boolean
+          description: At least one fan-out leg failed; failed legs are charged 0.
+        creditsCharged:
+          type: integer
+          minimum: 0
+        currency:
+          type: string
+          example: USD
+        pagination:
+          oneOf:
+          - $ref: '#/components/schemas/Pagination'
+          - type: 'null'
+        platformResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformResult'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Warning'
   securitySchemes:
     bearerAuth:
       type: http

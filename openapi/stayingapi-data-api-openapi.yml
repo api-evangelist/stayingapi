@@ -832,6 +832,131 @@ paths:
                 $ref: '#/components/schemas/ErrorEnvelope'
 components:
   schemas:
+    SuccessEnvelope:
+      type: object
+      required:
+      - data
+      - meta
+      properties:
+        data:
+          $ref: '#/components/schemas/AnyData'
+        meta:
+          $ref: '#/components/schemas/Meta'
+    PlatformResult:
+      type: object
+      properties:
+        platform:
+          $ref: '#/components/schemas/Platform'
+        status:
+          type: string
+          enum:
+          - ok
+          - failed
+          - skipped
+        reason:
+          type: string
+          enum:
+          - not_enabled
+          - requires_dates
+          description: Present on skipped platform results; explains why a requested platform was not called.
+        creditsCharged:
+          type: integer
+          minimum: 0
+        cached:
+          type: boolean
+        count:
+          type: integer
+          minimum: 0
+        error:
+          $ref: '#/components/schemas/PlatformFailureError'
+        message:
+          type: string
+          description: Human-readable reason for skipped platform results.
+    AnyData:
+      description: Endpoint-specific data payload.
+    Review:
+      type: object
+      properties:
+        platform:
+          type: string
+          enum:
+          - airbnb
+          - booking
+          - vrbo
+          - expedia
+          - hotels
+          - google
+          - tripadvisor
+        listingId:
+          type: string
+          minLength: 1
+        reviewId:
+          type: string
+          minLength: 1
+        rating:
+          type: number
+          minimum: 0
+        ratingScale:
+          type: number
+          minimum: 0
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+        text:
+          anyOf:
+          - type: string
+          - type: 'null'
+        author:
+          anyOf:
+          - type: string
+          - type: 'null'
+        date:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        tripType:
+          anyOf:
+          - type: string
+          - type: 'null'
+        language:
+          anyOf:
+          - type: string
+            pattern: ^[a-z]{2}$
+          - type: 'null'
+        ownerResponse:
+          anyOf:
+          - type: string
+          - type: 'null'
+        liked:
+          anyOf:
+          - type: string
+          - type: 'null'
+        disliked:
+          anyOf:
+          - type: string
+          - type: 'null'
+      required:
+      - platform
+      - listingId
+      - reviewId
+      - rating
+      - ratingScale
+      - title
+      - text
+      - author
+      - date
+      - tripType
+      - language
+      - ownerResponse
+      - liked
+      - disliked
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
     Availability:
       type: object
       properties:
@@ -879,22 +1004,6 @@ components:
       - platform
       - listingId
       - dates
-    Pagination:
-      type: object
-      properties:
-        limit:
-          type: integer
-        cursor:
-          type:
-          - string
-          - 'null'
-        nextCursor:
-          type:
-          - string
-          - 'null'
-          description: Opaque base64 cursor for the next page; null on the last page.
-        hasMore:
-          type: boolean
     Property:
       type: object
       properties:
@@ -1194,36 +1303,16 @@ components:
       - amenities
       - images
       - host
-    PlatformResult:
-      type: object
-      properties:
-        platform:
-          $ref: '#/components/schemas/Platform'
-        status:
-          type: string
-          enum:
-          - ok
-          - failed
-          - skipped
-        reason:
-          type: string
-          enum:
-          - not_enabled
-          - requires_dates
-          description: Present on skipped platform results; explains why a requested platform was not called.
-        creditsCharged:
-          type: integer
-          minimum: 0
-        cached:
-          type: boolean
-        count:
-          type: integer
-          minimum: 0
-        error:
-          $ref: '#/components/schemas/PlatformFailureError'
-        message:
-          type: string
-          description: Human-readable reason for skipped platform results.
+    Platform:
+      type: string
+      enum:
+      - airbnb
+      - booking
+      - vrbo
+      - expedia
+      - hotels
+      - google
+      - tripadvisor
     PlatformFailureError:
       type: object
       properties:
@@ -1287,94 +1376,59 @@ components:
       - code
       - message
       - retryable
-    AnyData:
-      description: Endpoint-specific data payload.
-    Review:
+    Meta:
       type: object
+      description: Canonical response metadata present on every 200 (§6.3.3).
+      required:
+      - requestId
+      - platforms
+      - cached
+      - partial
+      - creditsCharged
+      - currency
       properties:
-        platform:
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+          description: 'Correlation id (also the X-Request-Id header): req_ + 26-char Crockford ULID.'
+          example: req_01J8ZK3QF9ABCDEF0123456789
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Platform'
+        environment:
           type: string
           enum:
-          - airbnb
-          - booking
-          - vrbo
-          - expedia
-          - hotels
-          - google
-          - tripadvisor
-        listingId:
-          type: string
-          minLength: 1
-        reviewId:
-          type: string
-          minLength: 1
-        rating:
-          type: number
+          - live
+          - test
+          description: Authenticated key environment used for this response. `test` means deterministic sandbox fixtures, never a live scrape.
+        sandbox:
+          type: boolean
+          description: True when the response came from the deterministic sandbox (`stay_test_` key).
+        cached:
+          type: boolean
+          description: Served fully from cache. Cached results still bill at tier (margin, not discount).
+        partial:
+          type: boolean
+          description: At least one fan-out leg failed; failed legs are charged 0.
+        creditsCharged:
+          type: integer
           minimum: 0
-        ratingScale:
-          type: number
-          minimum: 0
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-        text:
-          anyOf:
-          - type: string
-          - type: 'null'
-        author:
-          anyOf:
-          - type: string
-          - type: 'null'
-        date:
+        currency:
           type: string
-          pattern: ^\d{4}-\d{2}-\d{2}$
-        tripType:
-          anyOf:
-          - type: string
+          example: USD
+        pagination:
+          oneOf:
+          - $ref: '#/components/schemas/Pagination'
           - type: 'null'
-        language:
-          anyOf:
-          - type: string
-            pattern: ^[a-z]{2}$
-          - type: 'null'
-        ownerResponse:
-          anyOf:
-          - type: string
-          - type: 'null'
-        liked:
-          anyOf:
-          - type: string
-          - type: 'null'
-        disliked:
-          anyOf:
-          - type: string
-          - type: 'null'
-      required:
-      - platform
-      - listingId
-      - reviewId
-      - rating
-      - ratingScale
-      - title
-      - text
-      - author
-      - date
-      - tripType
-      - language
-      - ownerResponse
-      - liked
-      - disliked
-    SuccessEnvelope:
-      type: object
-      required:
-      - data
-      - meta
-      properties:
-        data:
-          $ref: '#/components/schemas/AnyData'
-        meta:
-          $ref: '#/components/schemas/Meta'
+        platformResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformResult'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Warning'
     Price:
       type: object
       properties:
@@ -1464,76 +1518,6 @@ components:
       - occupancy
       - source
       - url
-    Meta:
-      type: object
-      description: Canonical response metadata present on every 200 (§6.3.3).
-      required:
-      - requestId
-      - platforms
-      - cached
-      - partial
-      - creditsCharged
-      - currency
-      properties:
-        requestId:
-          type: string
-          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
-          description: 'Correlation id (also the X-Request-Id header): req_ + 26-char Crockford ULID.'
-          example: req_01J8ZK3QF9ABCDEF0123456789
-        platforms:
-          type: array
-          items:
-            $ref: '#/components/schemas/Platform'
-        environment:
-          type: string
-          enum:
-          - live
-          - test
-          description: Authenticated key environment used for this response. `test` means deterministic sandbox fixtures, never a live scrape.
-        sandbox:
-          type: boolean
-          description: True when the response came from the deterministic sandbox (`stay_test_` key).
-        cached:
-          type: boolean
-          description: Served fully from cache. Cached results still bill at tier (margin, not discount).
-        partial:
-          type: boolean
-          description: At least one fan-out leg failed; failed legs are charged 0.
-        creditsCharged:
-          type: integer
-          minimum: 0
-        currency:
-          type: string
-          example: USD
-        pagination:
-          oneOf:
-          - $ref: '#/components/schemas/Pagination'
-          - type: 'null'
-        platformResults:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlatformResult'
-        warnings:
-          type: array
-          items:
-            $ref: '#/components/schemas/Warning'
-    Platform:
-      type: string
-      enum:
-      - airbnb
-      - booking
-      - vrbo
-      - expedia
-      - hotels
-      - google
-      - tripadvisor
-    ErrorEnvelope:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/Error'
     Error:
       type: object
       description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
@@ -1613,6 +1597,18 @@ components:
           description: Errors never bill (always 0).
         retryable:
           type: boolean
+        docUrl:
+          type: string
+          format: uri
+    Warning:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        platform:
+          $ref: '#/components/schemas/Platform'
         docUrl:
           type: string
           format: uri
@@ -1727,6 +1723,22 @@ components:
       - min
       - median
       - offers
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        cursor:
+          type:
+          - string
+          - 'null'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          description: Opaque base64 cursor for the next page; null on the last page.
+        hasMore:
+          type: boolean
     AsyncAccepted:
       type: object
       description: Returned (202) when projected runtime exceeds the 8s async threshold. Poll pollUrl until terminal. A Retry-After header hints the back-off.
@@ -1762,18 +1774,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Platform'
-    Warning:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        platform:
-          $ref: '#/components/schemas/Platform'
-        docUrl:
-          type: string
-          format: uri
   securitySchemes:
     bearerAuth:
       type: http
