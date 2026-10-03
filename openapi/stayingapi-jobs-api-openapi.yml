@@ -60,36 +60,6 @@ paths:
                 $ref: '#/components/schemas/ErrorEnvelope'
 components:
   schemas:
-    PlatformResult:
-      type: object
-      properties:
-        platform:
-          $ref: '#/components/schemas/Platform'
-        status:
-          type: string
-          enum:
-          - ok
-          - failed
-          - skipped
-        reason:
-          type: string
-          enum:
-          - not_enabled
-          - requires_dates
-          description: Present on skipped platform results; explains why a requested platform was not called.
-        creditsCharged:
-          type: integer
-          minimum: 0
-        cached:
-          type: boolean
-        count:
-          type: integer
-          minimum: 0
-        error:
-          $ref: '#/components/schemas/PlatformFailureError'
-        message:
-          type: string
-          description: Human-readable reason for skipped platform results.
     ErrorEnvelope:
       type: object
       required:
@@ -97,16 +67,75 @@ components:
       properties:
         error:
           $ref: '#/components/schemas/Error'
-    Platform:
-      type: string
-      enum:
-      - airbnb
-      - booking
-      - vrbo
-      - expedia
-      - hotels
-      - google
-      - tripadvisor
+    Meta:
+      type: object
+      description: Canonical response metadata present on every 200 (§6.3.3).
+      required:
+      - requestId
+      - platforms
+      - cached
+      - partial
+      - creditsCharged
+      - currency
+      properties:
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+          description: 'Correlation id (also the X-Request-Id header): req_ + 26-char Crockford ULID.'
+          example: req_01J8ZK3QF9ABCDEF0123456789
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Platform'
+        environment:
+          type: string
+          enum:
+          - live
+          - test
+          description: Authenticated key environment used for this response. `test` means deterministic sandbox fixtures, never a live scrape.
+        sandbox:
+          type: boolean
+          description: True when the response came from the deterministic sandbox (`stay_test_` key).
+        cached:
+          type: boolean
+          description: Served fully from cache. Cached results still bill at tier (margin, not discount).
+        partial:
+          type: boolean
+          description: At least one fan-out leg failed; failed legs are charged 0.
+        creditsCharged:
+          type: integer
+          minimum: 0
+        currency:
+          type: string
+          example: USD
+        pagination:
+          oneOf:
+          - $ref: '#/components/schemas/Pagination'
+          - type: 'null'
+        platformResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformResult'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Warning'
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        cursor:
+          type:
+          - string
+          - 'null'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          description: Opaque base64 cursor for the next page; null on the last page.
+        hasMore:
+          type: boolean
     JobResponse:
       oneOf:
       - type: object
@@ -217,6 +246,36 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/Platform'
+    PlatformResult:
+      type: object
+      properties:
+        platform:
+          $ref: '#/components/schemas/Platform'
+        status:
+          type: string
+          enum:
+          - ok
+          - failed
+          - skipped
+        reason:
+          type: string
+          enum:
+          - not_enabled
+          - requires_dates
+          description: Present on skipped platform results; explains why a requested platform was not called.
+        creditsCharged:
+          type: integer
+          minimum: 0
+        cached:
+          type: boolean
+        count:
+          type: integer
+          minimum: 0
+        error:
+          $ref: '#/components/schemas/PlatformFailureError'
+        message:
+          type: string
+          description: Human-readable reason for skipped platform results.
     PlatformFailureError:
       type: object
       properties:
@@ -280,6 +339,28 @@ components:
       - code
       - message
       - retryable
+    Platform:
+      type: string
+      enum:
+      - airbnb
+      - booking
+      - vrbo
+      - expedia
+      - hotels
+      - google
+      - tripadvisor
+    Warning:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        platform:
+          $ref: '#/components/schemas/Platform'
+        docUrl:
+          type: string
+          format: uri
     Error:
       type: object
       description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
@@ -362,87 +443,6 @@ components:
         docUrl:
           type: string
           format: uri
-    Warning:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        platform:
-          $ref: '#/components/schemas/Platform'
-        docUrl:
-          type: string
-          format: uri
-    Pagination:
-      type: object
-      properties:
-        limit:
-          type: integer
-        cursor:
-          type:
-          - string
-          - 'null'
-        nextCursor:
-          type:
-          - string
-          - 'null'
-          description: Opaque base64 cursor for the next page; null on the last page.
-        hasMore:
-          type: boolean
-    Meta:
-      type: object
-      description: Canonical response metadata present on every 200 (§6.3.3).
-      required:
-      - requestId
-      - platforms
-      - cached
-      - partial
-      - creditsCharged
-      - currency
-      properties:
-        requestId:
-          type: string
-          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
-          description: 'Correlation id (also the X-Request-Id header): req_ + 26-char Crockford ULID.'
-          example: req_01J8ZK3QF9ABCDEF0123456789
-        platforms:
-          type: array
-          items:
-            $ref: '#/components/schemas/Platform'
-        environment:
-          type: string
-          enum:
-          - live
-          - test
-          description: Authenticated key environment used for this response. `test` means deterministic sandbox fixtures, never a live scrape.
-        sandbox:
-          type: boolean
-          description: True when the response came from the deterministic sandbox (`stay_test_` key).
-        cached:
-          type: boolean
-          description: Served fully from cache. Cached results still bill at tier (margin, not discount).
-        partial:
-          type: boolean
-          description: At least one fan-out leg failed; failed legs are charged 0.
-        creditsCharged:
-          type: integer
-          minimum: 0
-        currency:
-          type: string
-          example: USD
-        pagination:
-          oneOf:
-          - $ref: '#/components/schemas/Pagination'
-          - type: 'null'
-        platformResults:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlatformResult'
-        warnings:
-          type: array
-          items:
-            $ref: '#/components/schemas/Warning'
   securitySchemes:
     bearerAuth:
       type: http
