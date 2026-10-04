@@ -49,13 +49,6 @@ paths:
                 $ref: '#/components/schemas/ErrorEnvelope'
 components:
   schemas:
-    ErrorEnvelope:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/Error'
     AccountEnvelope:
       type: object
       required:
@@ -63,6 +56,13 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/Account'
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
     Account:
       type: object
       description: 'Authenticated account snapshot (§F1): plan, key env, credit balance and rate limit.'
