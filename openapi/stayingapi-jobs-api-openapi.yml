@@ -90,168 +90,6 @@ components:
         message:
           type: string
           description: Human-readable reason for skipped platform results.
-    PlatformFailureError:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - invalid_request
-          - authentication_error
-          - permission_denied
-          - not_found
-          - insufficient_credits
-          - rate_limited
-          - upstream_unavailable
-          - upstream_timeout
-          - internal_error
-        code:
-          type: string
-          enum:
-          - missing_parameter
-          - invalid_parameter
-          - invalid_date_range
-          - date_in_past
-          - child_ages_mismatch
-          - stay_too_long
-          - window_too_long
-          - invalid_listing_url
-          - invalid_property_type
-          - invalid_amenity
-          - invalid_price_range
-          - invalid_language
-          - invalid_sort
-          - invalid_cursor
-          - limit_out_of_range
-          - mutually_exclusive_params
-          - platform_not_enabled
-          - no_enabled_platform
-          - needs_country
-          - missing_api_key
-          - invalid_api_key
-          - revoked_api_key
-          - scope_insufficient
-          - email_unverified
-          - subscription_required
-          - listing_not_found
-          - job_not_found
-          - identity_mismatch
-          - credit_balance_too_low
-          - rate_limit_exceeded
-          - all_actors_failed
-          - actor_blocked
-          - upstream_degraded
-          - actor_timeout
-          - internal_error
-        message:
-          type: string
-          minLength: 1
-        retryable:
-          type: boolean
-      required:
-      - type
-      - code
-      - message
-      - retryable
-    Platform:
-      type: string
-      enum:
-      - airbnb
-      - booking
-      - vrbo
-      - expedia
-      - hotels
-      - google
-      - tripadvisor
-    ErrorEnvelope:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/Error'
-    Error:
-      type: object
-      description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
-      required:
-      - type
-      - code
-      - message
-      - requestId
-      - creditsCharged
-      - retryable
-      - docUrl
-      properties:
-        type:
-          type: string
-          enum:
-          - invalid_request
-          - authentication_error
-          - permission_denied
-          - not_found
-          - insufficient_credits
-          - rate_limited
-          - upstream_unavailable
-          - upstream_timeout
-          - internal_error
-        code:
-          type: string
-          enum:
-          - missing_parameter
-          - invalid_parameter
-          - invalid_date_range
-          - date_in_past
-          - child_ages_mismatch
-          - stay_too_long
-          - window_too_long
-          - invalid_listing_url
-          - invalid_property_type
-          - invalid_amenity
-          - invalid_price_range
-          - invalid_language
-          - invalid_sort
-          - invalid_cursor
-          - limit_out_of_range
-          - mutually_exclusive_params
-          - platform_not_enabled
-          - no_enabled_platform
-          - needs_country
-          - missing_api_key
-          - invalid_api_key
-          - revoked_api_key
-          - scope_insufficient
-          - email_unverified
-          - subscription_required
-          - listing_not_found
-          - job_not_found
-          - identity_mismatch
-          - credit_balance_too_low
-          - rate_limit_exceeded
-          - all_actors_failed
-          - actor_blocked
-          - upstream_degraded
-          - actor_timeout
-          - internal_error
-          description: Error sub-code; each has a docs page at https://stayingapi.com/docs/errors/<code>.
-        message:
-          type: string
-        param:
-          type:
-          - string
-          - 'null'
-        requestId:
-          type: string
-          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
-        creditsCharged:
-          type: integer
-          enum:
-          - 0
-          description: Errors never bill (always 0).
-        retryable:
-          type: boolean
-        docUrl:
-          type: string
-          format: uri
     JobResponse:
       oneOf:
       - type: object
@@ -374,22 +212,95 @@ components:
         docUrl:
           type: string
           format: uri
-    Pagination:
+    ErrorEnvelope:
       type: object
+      required:
+      - error
       properties:
-        limit:
+        error:
+          $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      description: The canonical error object (§6.4). `code` is the SINGLE source of truth for error sub-codes.
+      required:
+      - type
+      - code
+      - message
+      - requestId
+      - creditsCharged
+      - retryable
+      - docUrl
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+          description: Error sub-code; each has a docs page at https://stayingapi.com/docs/errors/<code>.
+        message:
+          type: string
+        param:
+          type:
+          - string
+          - 'null'
+        requestId:
+          type: string
+          pattern: ^req_[0-9A-HJKMNP-TV-Z]{26}$
+        creditsCharged:
           type: integer
-        cursor:
-          type:
-          - string
-          - 'null'
-        nextCursor:
-          type:
-          - string
-          - 'null'
-          description: Opaque base64 cursor for the next page; null on the last page.
-        hasMore:
+          enum:
+          - 0
+          description: Errors never bill (always 0).
+        retryable:
           type: boolean
+        docUrl:
+          type: string
+          format: uri
     Meta:
       type: object
       description: Canonical response metadata present on every 200 (§6.3.3).
@@ -443,6 +354,95 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Warning'
+    PlatformFailureError:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - invalid_request
+          - authentication_error
+          - permission_denied
+          - not_found
+          - insufficient_credits
+          - rate_limited
+          - upstream_unavailable
+          - upstream_timeout
+          - internal_error
+        code:
+          type: string
+          enum:
+          - missing_parameter
+          - invalid_parameter
+          - invalid_date_range
+          - date_in_past
+          - child_ages_mismatch
+          - stay_too_long
+          - window_too_long
+          - invalid_listing_url
+          - invalid_property_type
+          - invalid_amenity
+          - invalid_price_range
+          - invalid_language
+          - invalid_sort
+          - invalid_cursor
+          - limit_out_of_range
+          - mutually_exclusive_params
+          - platform_not_enabled
+          - no_enabled_platform
+          - needs_country
+          - missing_api_key
+          - invalid_api_key
+          - revoked_api_key
+          - scope_insufficient
+          - email_unverified
+          - subscription_required
+          - listing_not_found
+          - job_not_found
+          - identity_mismatch
+          - credit_balance_too_low
+          - rate_limit_exceeded
+          - all_actors_failed
+          - actor_blocked
+          - upstream_degraded
+          - actor_timeout
+          - internal_error
+        message:
+          type: string
+          minLength: 1
+        retryable:
+          type: boolean
+      required:
+      - type
+      - code
+      - message
+      - retryable
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        cursor:
+          type:
+          - string
+          - 'null'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          description: Opaque base64 cursor for the next page; null on the last page.
+        hasMore:
+          type: boolean
+    Platform:
+      type: string
+      enum:
+      - airbnb
+      - booking
+      - vrbo
+      - expedia
+      - hotels
+      - google
+      - tripadvisor
   securitySchemes:
     bearerAuth:
       type: http
