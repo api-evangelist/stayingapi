@@ -1,4 +1,4 @@
-# StayingAPI (stayingapi)
+# StayingAPI
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,215 +66,150 @@
 
 Unified accommodation-data API returning live search, availability, price, cross-OTA price comparison, and normalized reviews across Airbnb, Booking.com, Vrbo, and Google Hotels via a single normalized JSON schema, so one integration covers four platforms. Delivered over a nine-operation REST API, a hosted MCP server with seven read-only tools, and a typed TypeScript SDK, all drawing on one shared credit balance. Live calls are asynchronous — a scrape returns HTTP 202 with a jobId to poll — while a deterministic stay_test_ sandbox answers synchronously at zero credits. Failed, empty and blocked calls are never billed. Launched July 2026 with a published stability policy, a locked 35-code error catalog, an llms.txt, an RFC 9727 api-catalog and fourteen installable agent skills.
 
-**APIs.json:** [https://stayingapi.apievangelist.com/apis.yml](https://stayingapi.apievangelist.com/apis.yml)
+**Areas:** Travel · Hospitality · accommodation-data · hotel-api · Vacation Rentals · Short-Term Rental · Airbnb · Booking.com · Vrbo · google-hotels · cross-ota-price-comparison · Availability
 
-## Tags
+## StayingAPI on APIs.io
 
-- travel
-- hospitality
-- accommodation-data
-- hotel-api
-- vacation-rental
-- short-term-rental
-- airbnb
-- booking.com
-- vrbo
-- google-hotels
-- cross-ota-price-comparison
-- availability
-- reviews
-- rest
-- mcp
-- agent-native
-- openapi
+Everything profiled for StayingAPI is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/stayingapi/](https://apis.io/providers/stayingapi/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (5)
 
-- **Created:** 2026-08-03
-- **Modified:** 2026-08-09
+- [StayingAPI MCP Server](https://apis.io/apis/stayingapi/stayingapi-mcp-server/) — Hosted MCP server (Streamable HTTP, OAuth 2.1/PKCE) exposing 7 read-only tools mapping 1:1 to the REST endpoints: search_stays, check_availability,…
+- [StayingAPI Agent Skills](https://apis.io/apis/stayingapi/stayingapi-agent-skills/) — Published portable SKILL.md agent skill in the stayingapi/travel-skills GitHub repo, referenced from the SDK docs, plus n8n workflow recipes.
+- [StayingAPI Account API](https://apis.io/apis/stayingapi/stayingapi-account-api/) — Account, plan and credit balance
+- [StayingAPI Data API](https://apis.io/apis/stayingapi/stayingapi-data-api/) — Accommodation data endpoints
+- [StayingAPI Jobs API](https://apis.io/apis/stayingapi/stayingapi-jobs-api/) — Async job polling
 
-## APIs
+### Published properties
 
-### StayingAPI MCP Server
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Hosted MCP server (Streamable HTTP, OAuth 2.1/PKCE) exposing 7 read-only tools mapping 1:1 to the REST endpoints: search_stays, check_availability, get_listing, get_price, compare_prices, get_reviews, get_job.
+#### Arazzo workflows (2)
 
-- **Human URL:** [https://stayingapi.com/docs](https://stayingapi.com/docs)
-- **Base URL:** `https://mcp.stayingapi.com/mcp`
+Multi-step workflows that chain operations into a business task.
 
-#### Tags
+- [StayingAPI — check availability, then price the stay](https://apis.io/arazzos/stayingapi/stayingapi-availability-then-price/)
+- [StayingAPI — cross-OTA price comparison](https://apis.io/arazzos/stayingapi/stayingapi-cross-ota-price-comparison/)
 
-- travel
-- hospitality
-- accommodation-data
-- hotel-api
-- vacation-rental
-- short-term-rental
-- airbnb
-- booking.com
-- vrbo
-- google-hotels
-- cross-ota-price-comparison
-- availability
-- reviews
-- rest
-- mcp
-- agent-native
-- openapi
+#### MCP servers (1)
 
-#### Properties
+Model Context Protocol servers that expose the API to agents.
 
-- [M C P](https://mcp.stayingapi.com/mcp)
-- [M C P Server](mcp/stayingapi-mcp.yml)
-- [Tool Crosswalk](mcp/stayingapi-tool-crosswalk.yml)
-- [Documentation](https://stayingapi.com/docs/mcp)
-- [Postman Collection](collections/stayingapi-account-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/stayingapi-account-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/stayingapi-data-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/stayingapi-data-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/stayingapi-jobs-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/stayingapi-jobs-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [StayingAPI](https://apis.io/servers/stayingapi/stayingapi/)
 
-### StayingAPI Agent Skills
+#### Agentic access (1)
 
-Published portable SKILL.md agent skill in the stayingapi/travel-skills GitHub repo, referenced from the SDK docs, plus n8n workflow recipes.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- **Human URL:** [https://github.com/stayingapi/travel-skills](https://github.com/stayingapi/travel-skills)
-- **Base URL:** `https://github.com/stayingapi/travel-skills`
+- [Stayingapi Agentic Access](https://apis.io/agentic-access/stayingapi/stayingapi-agentic-access/)
 
-#### Tags
+#### Collections (3)
 
-- travel
-- hospitality
-- accommodation-data
-- hotel-api
-- vacation-rental
-- short-term-rental
-- airbnb
-- booking.com
-- vrbo
-- google-hotels
-- cross-ota-price-comparison
-- availability
-- reviews
-- rest
-- mcp
-- agent-native
-- openapi
+Postman and Open Collection request collections.
 
-#### Properties
+- [Staying Account API](https://apis.io/collections/stayingapi/open-stayingapi-account-api/)
+- [Staying Data API](https://apis.io/collections/stayingapi/open-stayingapi-data-api/)
+- [Staying Jobs API](https://apis.io/collections/stayingapi/open-stayingapi-jobs-api/)
 
-- [Agent Skills](https://github.com/stayingapi/travel-skills)
-- [Agent Skill](skills/_index.yml)
-- [Postman Collection](collections/stayingapi-account-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/stayingapi-account-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/stayingapi-data-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/stayingapi-data-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Postman Collection](collections/stayingapi-jobs-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/stayingapi-jobs-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Overlays (1)
 
-### StayingAPI Account API
+OpenAPI overlays, including conversational phrasing for each operation.
 
-Account, plan and credit balance
+- [Stayingapi Openapi Overlay](https://apis.io/overlays/stayingapi/stayingapi-openapi-overlay/)
 
-- **Human URL:** [https://stayingapi.com/docs/endpoints/search](https://stayingapi.com/docs/endpoints/search)
-- **Base URL:** `https://api.stayingapi.com/v1`
+#### Security (2)
 
-#### Tags
+Authentication, trust centre, and vulnerability disclosure.
 
-- Account
+- [Stayingapi Authentication](https://apis.io/security/stayingapi/stayingapi-authentication/)
+- [Stayingapi Domain Security](https://apis.io/security/stayingapi/stayingapi-domain-security/)
 
-#### Properties
+#### OAuth scopes (1)
 
-- [OpenAPI](openapi/stayingapi-account-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/stayingapi-account-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/stayingapi-account-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+The permissions the API asks for.
+
+- [Stayingapi Scopes](https://apis.io/scopes/stayingapi/stayingapi-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Stayingapi Plans](https://apis.io/plans/stayingapi/stayingapi-plans/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Stayingapi Rate Limits](https://apis.io/rate-limits/stayingapi/stayingapi-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.stayingapi.com/)
 - [Documentation](https://stayingapi.com/docs)
-- [API Reference](https://stayingapi.com/docs/endpoints/search)
-
-### StayingAPI Data API
-
-Accommodation data endpoints
-
-- **Human URL:** [https://stayingapi.com/docs/endpoints/search](https://stayingapi.com/docs/endpoints/search)
-- **Base URL:** `https://api.stayingapi.com/v1`
-
-#### Tags
-
-- Data
-
-#### Properties
-
-- [OpenAPI](openapi/stayingapi-data-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/stayingapi-data-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/stayingapi-data-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://stayingapi.com/docs)
-- [API Reference](https://stayingapi.com/docs/endpoints/search)
-
-### StayingAPI Jobs API
-
-Async job polling
-
-- **Human URL:** [https://stayingapi.com/docs/endpoints/search](https://stayingapi.com/docs/endpoints/search)
-- **Base URL:** `https://api.stayingapi.com/v1`
-
-#### Tags
-
-- Jobs
-
-#### Properties
-
-- [OpenAPI](openapi/stayingapi-jobs-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/stayingapi-jobs-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/stayingapi-jobs-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Documentation](https://stayingapi.com/docs)
-- [API Reference](https://stayingapi.com/docs/endpoints/search)
-
-## Common Properties
-
-- [Domain Security](security/stayingapi-domain-security.yml)
-- [Agentic Access](agentic-access/stayingapi-agentic-access.yml)
-- [Authentication](authentication/stayingapi-authentication.yml)
-- [OpenAPI](openapi/_original/stayingapi-openapi-original.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [L L Ms Txt](llms/stayingapi-llms.txt)
-- [Well Known](well-known/stayingapi-well-known.yml)
-- [A P I Catalog](https://stayingapi.com/.well-known/api-catalog)
-- [M C P Server](mcp/stayingapi-mcp.yml)
-- [Tool Crosswalk](mcp/stayingapi-tool-crosswalk.yml)
-- [Agent Skill](skills/_index.yml)
-- [Packages](packages/stayingapi-packages.yml)
-- [S D Ks](packages/stayingapi-packages.yml)
-- [O Auth Scopes](scopes/stayingapi-scopes.yml)
-- [Conventions](conventions/stayingapi-conventions.yml)
-- [Error Catalog](errors/stayingapi-error-codes.yml)
-- [Lifecycle](lifecycle/stayingapi-lifecycle.yml)
-- [Status Page](https://status.stayingapi.com)
-- [Deprecation](https://stayingapi.com/docs/stability)
-- [Changelog](changelog/stayingapi-changelog.yml)
-- [Changelog](https://stayingapi.com/changelog)
-- [Sandbox](sandbox/stayingapi-sandbox.yml)
-- [Console](https://stayingapi.com/docs/try-it)
-- [Conformance](conformance/stayingapi-conformance.yml)
-- [Data Model](data-model/stayingapi-data-model.yml)
-- [Overlay](overlays/stayingapi-openapi-overlay.yaml)
-- [Rate Limits](rate-limits/stayingapi-rate-limits.yml)
-- [Plans](plans/stayingapi-plans.yml)
-- [Arazzo](arazzo/stayingapi-cross-ota-price-comparison.yml) — [Arazzo Specification](https://spec.openapis.org/arazzo/latest.html)
-- [Arazzo](arazzo/stayingapi-availability-then-price.yml) — [Arazzo Specification](https://spec.openapis.org/arazzo/latest.html)
-- [Developer Portal](https://stayingapi.com/docs)
-- [Documentation](https://stayingapi.com/docs)
-- [API Reference](https://stayingapi.com/docs/endpoints/search)
-- [Getting Started](https://stayingapi.com/docs/quickstart)
-- [Support](https://stayingapi.com/contact)
-- [GitHub Organization](https://github.com/stayingapi)
+- [Getting started](https://stayingapi.com/docs/quickstart)
+- [API reference](https://stayingapi.com/docs/endpoints/search)
 - [Pricing](https://stayingapi.com/pricing)
-- [Sign Up](https://stayingapi.com/signup)
-- [Login](https://stayingapi.com/login)
-- [Terms of Service](https://stayingapi.com/terms)
-- [Privacy Policy](https://stayingapi.com/privacy)
+- [Sign up](https://stayingapi.com/signup)
+- [Support](https://stayingapi.com/contact)
+- [Changelog](https://stayingapi.com/changelog)
+- [Terms of service](https://stayingapi.com/terms)
+- [Privacy policy](https://stayingapi.com/privacy)
+- [GitHub](https://github.com/stayingapi)
+- [Status](https://status.stayingapi.com)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** StayingAPI
-**Email:** hello@stayingapi.com
-**URL:** https://stayingapi.com
+**Kin Score 64.9** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 85.0 |
+| Contract quality | 51.4 |
+| Contract governance | 4.5 |
+| Operational transparency | 73.7 |
+| Developer ergonomics | 76.2 |
+| Access clarity | 76.3 |
+
+**Agent readiness 60.2** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | yes |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 34.3** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/stayingapi/](https://apis.io/providers/stayingapi/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for StayingAPI: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/stayingapi/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
