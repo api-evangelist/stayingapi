@@ -1,0 +1,155 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://stayingapi.com/pricing
+sources:
+- https://stayingapi.com/pricing
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T141238
+  grounding: every price_text was found verbatim in the fetched page text
+audience: developer-api
+pricing_basis: per-call
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-28'
+published: true
+note: Credit-based API pricing with per-endpoint credit costs (e.g. /v1/price-compare 30 credits, /v1/search
+  2+ credits); 1 credit ≈ $0.01 nominal. Failed/empty calls free.
+plan_count: 8
+currency: USD
+plans:
+- name: Free / Sandbox
+  price_text: $0 forever
+  price: 0
+  currency: USD
+  period: month
+  unit: credits
+  included_quota: 300 one-time complimentary credits (valid 90 days); deterministic sandbox unlimited
+- name: Starter
+  price_text: $19 /mo
+  price: 19
+  currency: USD
+  period: month
+  unit: credits
+  included_quota: 1,900 credits / month
+  overage: Top-ups available anytime
+- name: Pro
+  price_text: $99 /mo
+  price: 99
+  currency: USD
+  period: month
+  unit: credits
+  included_quota: 9,900 credits / month
+  overage: Usage analytics & top-ups
+- name: Scale
+  price_text: $499 /mo
+  price: 499
+  currency: USD
+  period: month
+  unit: credits
+  included_quota: 49,900 credits / month
+- name: Enterprise
+  price_text: Custom
+  period: none
+  included_quota: Custom volume credit pricing; 99.9% uptime SLA
+- name: Top-up 1,000 credits
+  price_text: $10
+  price: 10
+  currency: USD
+  period: one-time
+  unit: 1,000 credits
+  included_quota: $0.0100 / credit
+- name: Top-up 5,000 credits
+  price_text: $50
+  price: 50
+  currency: USD
+  period: one-time
+  unit: 5,000 credits
+  included_quota: $0.0100 / credit
+- name: Top-up 20,000 credits
+  price_text: $200
+  price: 200
+  currency: USD
+  period: one-time
+  unit: 20,000 credits
+  included_quota: $0.0100 / credit
+rate_limit_statements:
+- 30 requests / min
+- 60 requests / min
+- 120 requests / min
+- 300 requests / min
+- 'Live calls: fair-use limit (may end before all credits are used — see FAQ)'
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - metered
+  units:
+  - credit
+  plans:
+  - name: Free / Sandbox
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - credit
+    periods:
+    - month
+  - name: Starter
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    periods:
+    - month
+  - name: Pro
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    periods:
+    - month
+  - name: Scale
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    periods:
+    - month
+  - name: Enterprise
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Top-up 1,000 credits
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    periods:
+    - one-time
+  - name: Top-up 5,000 credits
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    periods:
+    - one-time
+  - name: Top-up 20,000 credits
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    periods:
+    - one-time
